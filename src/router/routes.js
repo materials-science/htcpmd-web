@@ -6,76 +6,48 @@ const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
 /**
  * 在主框架内显示
  */
-const frameIn = [
-  {
-    path: '/',
-    redirect: { name: 'index' },
-    component: layoutHeaderAside,
-    children: [
-      // 首页
-      {
-        path: 'index',
-        name: 'index',
-        meta: {
-          auth: true
-        },
-        component: _import('system/index')
+const frameIn = [{
+  path: '/',
+  redirect: {
+    name: 'index'
+  },
+  component: layoutHeaderAside,
+  children: [
+    // 首页
+    {
+      path: 'index',
+      name: 'index',
+      meta: {
+        auth: true
       },
-      // 演示页面
-      {
-        path: 'page1',
-        name: 'page1',
-        meta: {
-          title: '页面 1',
-          auth: true
-        },
-        component: _import('demo/page1')
+      component: _import('dashboard/index')
+    },
+    // 系统 前端日志
+    {
+      path: 'log',
+      name: 'log',
+      meta: {
+        title: '前端日志',
+        auth: true
       },
-      {
-        path: 'page2',
-        name: 'page2',
-        meta: {
-          title: '页面 2',
-          auth: true
-        },
-        component: _import('demo/page2')
-      },
-      {
-        path: 'page3',
-        name: 'page3',
-        meta: {
-          title: '页面 3',
-          auth: true
-        },
-        component: _import('demo/page3')
-      },
-      // 系统 前端日志
-      {
-        path: 'log',
-        name: 'log',
-        meta: {
-          title: '前端日志',
-          auth: true
-        },
-        component: _import('system/log')
-      },
-      // 刷新页面 必须保留
-      {
-        path: 'refresh',
-        name: 'refresh',
-        hidden: true,
-        component: _import('system/function/refresh')
-      },
-      // 页面重定向 必须保留
-      {
-        path: 'redirect/:route*',
-        name: 'redirect',
-        hidden: true,
-        component: _import('system/function/redirect')
-      }
-    ]
-  }
-]
+      component: _import('system/log')
+    },
+    // 刷新页面 必须保留
+    {
+      path: 'refresh',
+      name: 'refresh',
+      hidden: true,
+      component: _import('system/function/refresh')
+    },
+    // 页面重定向 必须保留
+    {
+      path: 'redirect/:route*',
+      name: 'redirect',
+      hidden: true,
+      component: _import('system/function/redirect')
+    }
+  ]
+}]
 
 /**
  * 在主框架之外显示
@@ -85,20 +57,30 @@ const frameOut = [
   {
     path: '/login',
     name: 'login',
-    component: _import('system/login')
+    component: _import('system/account/login')
+  },
+  // 注册
+  {
+    path: '/signup',
+    name: 'registration',
+    component: _import('system/account/registration'),
+  },
+  // 验证邮箱
+  {
+    path: '/verify_email',
+    name: 'verify_email',
+    component: _import('system/account/verify'),
   }
 ]
 
 /**
  * 错误页面
  */
-const errorPage = [
-  {
-    path: '*',
-    name: '404',
-    component: _import('system/error/404')
-  }
-]
+const errorPage = [{
+  path: '*',
+  name: '404',
+  component: _import('system/error/404')
+}]
 
 // 导出需要显示菜单的
 export const frameInRoutes = frameIn
