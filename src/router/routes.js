@@ -22,6 +22,15 @@ const frameIn = [{
       },
       component: _import('dashboard/index')
     },
+    {
+      path: 'users',
+      name: 'users',
+      meta: {
+        title: 'User Table',
+        auth: true
+      },
+      component: _import('dashboard/user-table')
+    },
     // 系统 前端日志
     {
       path: 'log',
@@ -67,8 +76,8 @@ const frameOut = [
   },
   // 验证邮箱
   {
-    path: '/verify_email',
-    name: 'verify_email',
+    path: '/verify-email',
+    name: 'verify-email',
     component: _import('system/account/verify'),
   }
 ]

@@ -49,7 +49,18 @@ export default ({
    */
   SYS_USER_SIGNUP(data = {}) {
     return request({
-      url: '/accounts/signup/',
+      url: '/accounts/registration/',
+      method: 'post',
+      data
+    })
+  },
+  /**
+   * @description 邮箱验证
+   * @param {Object} data 验证携带的信息
+   */
+  SYS_USER_VERIFY_EMAIL(data = {}) {
+    return request({
+      url: '/accounts/registration/verify-email/',
       method: 'post',
       data
     })

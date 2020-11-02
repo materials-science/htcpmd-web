@@ -16,9 +16,10 @@ function supplementPath (menu) {
 }
 
 export const menuHeader = supplementPath([
-  { path: '/index', title: '首页', icon: 'home' },
+//   { path: '/index', title: '首页', icon: 'home' },
 ])
 
 export const menuAside = supplementPath([
   { path: '/index', title: '首页', icon: 'home' },
+  { path: '/users', title: 'User Table', icon: 'home' },
 ])

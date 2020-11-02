@@ -1,10 +1,22 @@
 import Vue from 'vue'
 // import d2Crud from '@d2-project/d2-crud'
 import d2CrudX from 'd2-crud-x'
-import { d2CrudPlus } from 'd2-crud-plus'
-import { D2pAreaSelector, D2pFileUploader, D2pIconSelector, D2pTreeSelector, D2pFullEditor, D2pUploader, D2pDemoExtend } from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
+import {
+  d2CrudPlus
+} from 'd2-crud-plus'
+import {
+  D2pAreaSelector,
+  D2pFileUploader,
+  D2pIconSelector,
+  D2pTreeSelector,
+  D2pFullEditor,
+  D2pUploader,
+  D2pDemoExtend
+} from 'd2p-extends' // 源码方式引入，上传组件支持懒加载
 // http请求
-import { request } from '@/api/service'
+import {
+  request
+} from '@/api/service'
 
 /**
  // vxe0
@@ -16,14 +28,16 @@ Vue.use(VXETable)
 
 // 按如下重命名引入可与官方版共存，index.vue中标签用<d2-crud-x />使用加强版
 // 不传name，则d2CrudX的标签仍为<d2-crud>,不可与官方版共存
-Vue.use(d2CrudX, { name: 'd2-crud-x' })
+Vue.use(d2CrudX, {
+  name: 'd2-crud-x'
+})
 
 // // 官方版【此处为演示与官方版共存而引入，全新项目中可以用d2-crud-x完全替代官方版】
 // Vue.use(d2Crud)
 
 // 引入d2CrudPlus
 Vue.use(d2CrudPlus, {
-  getRemoteDictFunc (url, dict) {
+  getRemoteDictFunc(url, dict) {
     // 此处配置你的字典http请求方法
     // 实际使用请改成request
     return request({
@@ -34,20 +48,20 @@ Vue.use(d2CrudPlus, {
       return ret.data
     })
   },
-  commonOption () { // 公共配置
+  commonOption() { // 公共配置
     return {
       format: {
         page: { // page接口返回的数据结构配置，
           request: {
-            current: 'current',
+            current: 'page',
             size: 'size'
           },
           response: {
-            current: 'current', // 当前页码 ret.data.current
-            size: 'size', // 当前页码 ret.data.current
-            // size: (data) => { return data.size }, // 每页条数，ret.data.size, 你也可以配置一个方法，自定义返回
-            total: 'total', // 总记录数 ret.data.total
-            records: 'records' // 列表数组 ret.data.records
+            current: 'page', // 当前页码 ret.data.current
+            // size: 'size', // 当前页码 ret.data.current
+            size: (data) => { return data.size }, // 每页条数，ret.data.size, 你也可以配置一个方法，自定义返回
+            total: 'count', // 总记录数 ret.data.total
+            records: 'results' // 列表数组 ret.data.records
           }
         }
       },
@@ -94,7 +108,7 @@ Vue.use(D2pUploader, {
     region: 'ap-guangzhou',
     secretId: '', //
     secretKey: '', // 传了secretKey 和secretId 代表使用本地签名模式（不安全，生产环境不推荐）
-    getAuthorization  (custom) { // 不传secretKey代表使用临时签名模式,此时此参数必传（安全，生产环境推荐）
+    getAuthorization(custom) { // 不传secretKey代表使用临时签名模式,此时此参数必传（安全，生产环境推荐）
       return request({
         url: '/upload/cos/getAuthorization',
         method: 'get'
@@ -116,7 +130,7 @@ Vue.use(D2pUploader, {
     region: 'oss-cn-shenzhen',
     accessKeyId: '',
     accessKeySecret: '',
-    getAuthorization  (custom, context) { // 不传accessKeySecret代表使用临时签名模式,此时此参数必传（安全，生产环境推荐）
+    getAuthorization(custom, context) { // 不传accessKeySecret代表使用临时签名模式,此时此参数必传（安全，生产环境推荐）
       return request({
         url: '/upload/alioss/getAuthorization',
         method: 'get'
@@ -130,7 +144,7 @@ Vue.use(D2pUploader, {
   },
   qiniu: {
     bucket: 'd2p-demo',
-    getToken (custom) {
+    getToken(custom) {
       return request({
         url: '/upload/qiniu/getToken',
         method: 'get'

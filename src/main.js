@@ -15,6 +15,8 @@ import { frameInRoutes } from '@/router/routes'
 // d2-crud-plus 安装与初始化
 import './crud'
 
+import vuetify from '@/plugin/vuetify'
+
 // 核心插件
 Vue.use(d2Admin)
 
@@ -42,5 +44,6 @@ new Vue({
     this.$store.commit('d2admin/ua/get')
     // 初始化全屏监听
     this.$store.dispatch('d2admin/fullscreen/listen')
-  }
+  },
+  vuetify
 }).$mount('#app')

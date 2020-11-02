@@ -63,7 +63,7 @@ function createService() {
                 }
               }
             } else {
-              msg_str = dataAxios
+              msg_str = msg
             }
             // errorCreate(`${msg_str}: ${response.config.url}`)
             errorCreate(`Error ${code}: ${msg_str}`)

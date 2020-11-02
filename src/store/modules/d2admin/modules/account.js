@@ -71,17 +71,25 @@ export default {
         type: 'success',
         duration: 5 * 1000
       })
-      //   util.cookies.set('uuid', res.user.pk)
-      //   util.cookies.set('token', res.key)
-      // 设置 vuex 用户信息
-      //   await dispatch('d2admin/user/set', {
-      //     name: res.user.username,
-      //     email: email
-      //   }, {
-      //     root: true
-      //   })
-      // 用户登录后从持久化数据加载一系列的设置
-      //   await dispatch('load')
+    },
+    /**
+     * @description 邮箱验证
+     * @param {Object} context
+     * @param {Object} payload key {String} Token
+     */
+    async verify_email({
+      dispatch
+    }, {
+      key = ''
+    } = {}) {
+      let res = await api.SYS_USER_VERIFY_EMAIL({
+        key
+      })
+      Message({
+        message: res.data.detail || 'No response',
+        type: res.msg || 'fail',
+        duration: 5 * 1000
+      })
     },
     /**
      * @description 注销用户并返回登录页面

@@ -4,7 +4,7 @@ import util from '@/libs/util'
 
 Vue.use(VueI18n)
 
-function loadLocaleMessages () {
+function loadLocaleMessages() {
   const locales = require.context('./locales', true, /[A-Za-z0-9-_,\s]+\.json$/i)
   const messages = {}
   for (const key of locales.keys()) {
@@ -31,7 +31,8 @@ Vue.prototype.$languages = Object.keys(messages).map(langlage => ({
 const i18n = new VueI18n({
   locale: util.cookies.get('lang') || process.env.VUE_APP_I18N_LOCALE,
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE,
-  messages
+  messages,
+  silentTranslationWarn: true,
 })
 
 export default i18n
