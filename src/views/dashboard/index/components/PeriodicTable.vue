@@ -5,11 +5,12 @@
 				class="item"
 				v-for="el in Elements.first"
 				:key="el.name_small"
-				@click="openModal(el)"
+				@click="selectElement(el)"
 				@mouseover="showElement(el)"
 				:class="[
 					`color-${el.group_id}`,
 					{ blur: blur && blur != el.group_id },
+					selected_id.includes(el.id) ? 'hover-element-class' : '',
 				]"
 			>
 				<span class="small">{{ Math.floor(el.molar * 10) / 10 }}</span>
@@ -65,7 +66,7 @@
 				class="item"
 				v-for="el in Elements.second"
 				:key="el.name_small"
-				@click="openModal(el)"
+				@click="selectElement(el)"
 				@mouseover="showElement(el)"
 				:class="[
 					{
@@ -73,6 +74,7 @@
 						blur: blur && blur != el.group_id,
 					},
 					`color-${el.group_id}`,
+					selected_id.includes(el.id) ? 'hover-element-class' : '',
 				]"
 			>
 				<span class="small">{{ Math.floor(el.molar * 10) / 10 }}</span>
@@ -84,13 +86,14 @@
 			<button
 				type="button"
 				class="item"
-				@click="openModal(el)"
+				@click="selectElement(el)"
 				@mouseover="showElement(el)"
 				v-for="el in Elements.body"
 				:key="el.name_small"
 				:class="[
 					{ blur: blur && blur != el.group_id },
 					`color-${el.group_id}`,
+					selected_id.includes(el.id) ? 'hover-element-class' : '',
 				]"
 			>
 				<span class="small">{{
@@ -105,7 +108,7 @@
 				type="button"
 				class="item"
 				v-for="el in Elements.bottom"
-				@click="openModal(el)"
+				@click="selectElement(el)"
 				@mouseover="showElement(el)"
 				:key="el.name_small"
 				:class="[
@@ -115,6 +118,7 @@
 						blur: blur && blur != el.group_id,
 					},
 					`color-${el.group_id}`,
+					selected_id.includes(el.id) ? 'hover-element-class' : '',
 				]"
 			>
 				<span class="small">{{ Math.floor(el.molar * 10) / 10 }}</span>
@@ -139,6 +143,10 @@
 				showModal: false,
 				ModalData: [],
 				info: {},
+				element: {
+					number: 78,
+				},
+				animations: true,
 				nonMetal: [1, 6, 7, 8, 15, 16, 34],
 				alkali: [3, 11, 19, 37, 55, 87],
 				akaliEarth: [4, 12, 20, 38, 56, 88],
@@ -183,6 +191,8 @@
 					103,
 				],
 				atomModel: null,
+				selected_elements: [],
+				selected_id: [],
 			};
 		},
 		components: {
@@ -191,15 +201,57 @@
 		computed: {
 			...mapGetters("periodic", ["Elements", "darkMode", "lang"]),
 		},
+		watch: {
+			element: function () {
+				this.atomModel.destroy();
+				var orbitalRotationConfig = {
+					pattern: {
+						alternating: false,
+						clockwise: false,
+						preset: "cubedNegative",
+					},
+				};
+				this.atomModel.numElectrons = this.atomModel.ensureAtomicExistence(
+					this.element.number
+				);
+				this.atomModel.idNumber = this.element.number;
+				this.atomModel.nucleusColor = this.classify(this.element)[3];
+				this.atomModel.electronColor = this.classify(this.element)[2];
+				this.atomModel.orbitalColor = this.classify(this.element)[3];
+				this.atomModel._redrawAtom();
+				if (this.animations) {
+					this.atomModel.rotateOrbitals(orbitalRotationConfig);
+				}
+			},
+			animations: function () {
+				this.atomModel.destroy();
+				var orbitalRotationConfig = {
+					pattern: {
+						alternating: false,
+						clockwise: false,
+						preset: "cubedNegative",
+					},
+				};
+				this.atomModel._redrawAtom();
+				if (this.animations) {
+					this.atomModel.rotateOrbitals(orbitalRotationConfig);
+				}
+			},
+		},
 		methods: {
 			...mapActions("periodic", ["getElements"]),
-			openModal(element) {
+			selectElement(element) {
 				if (element.number === "57-71" || element.number === "89-103") {
 					return;
 				}
-				this.ModalData = element;
-				this.info = element;
-				this.showModal = true;
+				if (this.selected_id.includes(element.id)) {
+					this.selected_id.remove(element.id);
+					this.selected_elements.remove(element.name_small);
+				} else {
+					this.selected_id.push(element.id);
+					this.selected_elements.push(element.name_small);
+				}
+				this.$emit("selectedElements", this.selected_elements);
 			},
 			closeModal() {
 				this.ModalData = [];
@@ -209,22 +261,18 @@
 				if (element.number === "57-71" || element.number === "89-103") {
 					return;
 				}
-				let isNotCurrentElement = true;
-				if (this.info.number == element.number) {
-					isNotCurrentElement = false;
-				}
 				this.info = element;
 				if (!this.atomModel) {
 					var atomicConfig = {
 						containerId: "#bohr-model-container",
 						numElectrons: this.info.number,
 						nucleusColor: this.classify(this.info)[3],
-						electronRadius: 1.5,
+						electronRadius: 1.2,
 						electronColor: this.classify(this.info)[2],
-						// orbitalWidth: 1,
+						// orbitalWidth: 0.05,
 						orbitalColor: this.classify(this.info)[3],
 						idNumber: this.info.number,
-						animationTime: 300,
+						animationTime: 0,
 						orbitalRotationConfig: {
 							pattern: {
 								alternating: false,
@@ -236,17 +284,8 @@
 						drawSymbol: true,
 					};
 					this.atomModel = new Atom(atomicConfig);
-				} else if (isNotCurrentElement) {
-					this.atomModel.destroy();
-					this.atomModel.numElectrons = this.atomModel.ensureAtomicExistence(
-						element.number
-					);
-					this.atomModel.idNumber = element.number;
-					this.atomModel.nucleusColor = this.classify(this.info)[3];
-					this.atomModel.electronColor = this.classify(this.info)[2];
-					this.atomModel.orbitalColor = this.classify(this.info)[3];
-					this.atomModel._redrawAtom();
 				}
+				this.element = element;
 			},
 			blurOthers(group) {
 				this.blur = group;
@@ -352,7 +391,6 @@
 
 <style lang="scss">
 	@import "@/assets/style/variable.scss";
-
 	.elementinfo {
 		position: absolute;
 		left: calc(((#{$element-size} + 0.46vw) * 2) + 0.3vw);
@@ -375,16 +413,20 @@
 		}
 		.header {
 			display: flex;
-			justify-content: space-between;
+			justify-content: space-around;
 			align-self: center;
+			height: 8rem;
+			width: 100%;
+			padding: 0 1rem;
 			#bohr-model-container {
-				width: 5rem;
-				height: 5rem;
+				width: 8rem;
+				height: 8rem;
 				transform: scale(1.5);
 			}
 			.title {
 				display: flex;
 				margin-left: 1rem;
+				align-items: center;
 				.name {
 					padding: 1rem;
 					h3 {
@@ -404,7 +446,7 @@
 					width: 5rem;
 					height: 5rem;
 					display: flex;
-					font-size: 3vw;
+					font-size: 2vw;
 					align-items: center;
 					justify-content: center;
 					border-radius: 8px;
@@ -609,8 +651,13 @@
 	}
 
 	/* //  */
-
 	.periodictable {
+		@mixin hover-element-class() {
+			background: #fff !important;
+			color: #000000;
+			transform: scale(1.1);
+			opacity: 1;
+		}
 		.item {
 			.small {
 				font-size: 50%;
@@ -656,12 +703,11 @@
 				background: rgba($actinide, 0.7);
 				border: 1px solid $actinide;
 			}
-
 			&:hover {
-				background: #fff !important;
-				color: #000000;
-				transform: scale(1.1);
-				opacity: 1;
+				@include hover-element-class();
+			}
+			&.hover-element-class {
+				@include hover-element-class();
 			}
 			&.second {
 				margin-right: calc(((#{$element-size} + 0.46vw) * 10) + 0.69vw);

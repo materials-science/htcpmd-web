@@ -1,7 +1,104 @@
 <template>
 	<d2-container type="ghost">
-		<template slot="header">Header</template>
-		<PeriodicTable class="periodic-table-wrap" />
+		<PeriodicTable
+			v-on:selectedElements="selectedElements"
+			class="periodic-table-wrap"
+		/>
+		<template slot="footer">
+			<div class="query-container">
+				<el-form
+					inline="true"
+					:model="queryForm"
+					class="query-form-inline"
+				>
+					<el-collapse class="footer-collapse">
+						<el-collapse-item>
+							<template slot="title">
+								<div v-on:click.stop>
+									<el-form-item label="Elements">
+										<el-input
+											v-model="queryForm.elements"
+											placeholder="Elements"
+											readonly
+										>
+										</el-input>
+									</el-form-item>
+									<el-form-item label="Mode">
+										<el-select
+											v-model="queryForm.mode"
+											placeholder="ALL/ANY"
+										>
+											<el-option
+												label="ALL"
+												value="ALL"
+											></el-option>
+											<el-option
+												label="ANY"
+												value="ANY"
+											></el-option>
+										</el-select>
+									</el-form-item>
+
+									<el-form-item>
+										<el-button
+											icon="el-icon-search"
+											circle
+											@click="querySubmit"
+										></el-button>
+									</el-form-item>
+									<el-tooltip
+										class="item"
+										effect="dark"
+										content="Click the blank to show more info"
+										placement="top-start"
+									>
+										<el-button
+											circle
+											icon="el-icon-question"
+											style="
+												background: none;
+												border: none;
+												position: relative;
+												top: -3px;
+											"
+										></el-button>
+									</el-tooltip>
+								</div>
+							</template>
+							<div class="collapse-content">
+								<el-form-item label="Number of Atoms">
+									<el-input
+										type="number"
+										v-model="queryForm.number_of_atoms"
+										placeholder="Number of Atoms"
+									>
+									</el-input>
+								</el-form-item>
+								<el-form-item label="Volume">
+									<el-col :span="11">
+										<el-input
+											type="number"
+											placeholder="Min"
+											v-model="queryForm.volume_min"
+											style="width: 100%"
+										></el-input>
+									</el-col>
+									<el-col class="line" :span="2">-</el-col>
+									<el-col :span="11">
+										<el-input
+											type="number"
+											placeholder="Max"
+											v-model="queryForm.volume_max"
+											style="width: 100%"
+										></el-input>
+									</el-col>
+								</el-form-item>
+							</div>
+						</el-collapse-item>
+					</el-collapse>
+				</el-form>
+			</div>
+		</template>
 	</d2-container>
 </template>
 
@@ -12,20 +109,112 @@
 		components: {
 			PeriodicTable,
 		},
+		data() {
+			return {
+				queryForm: {
+					elements: "",
+					mode: "ALL",
+					number_of_atoms: "",
+					volume_max: "",
+					volume_min: "",
+				},
+				elements: [],
+			};
+		},
+		methods: {
+			selectedElements(elements) {
+				this.elements = elements;
+				this.queryForm.elements = elements.join("-");
+			},
+			querySubmit() {
+				let queryForm = this.queryForm;
+				if (queryForm.elements == "") {
+					return this.$message.error("Elements cannot be null!");
+				}
+				let query = {};
+				query.elements = queryForm.elements;
+				query.mode = queryForm.mode;
+				if (queryForm.number_of_atoms != "")
+					query.number_of_atoms = queryForm.number_of_atoms;
+				if (queryForm.volume_max != "")
+					query.volume_max = queryForm.volume_max;
+				if (queryForm.volume_min != "")
+					query.volume_min = queryForm.volume_min;
+				this.$router.push({
+					name: "data-structures",
+					params: {
+						queryForm: query,
+					},
+				});
+			},
+		},
 	};
 </script>
 
 <style lang="scss">
+	@import "@/assets/style/variable.scss";
 	.periodic-table-wrap {
 		position: absolute;
 		left: 0;
 		right: 0;
 		top: 0;
 		bottom: 0;
-		padding: 20px;
-		overflow: hidden;
+		padding: 3vh 1vw;
+		// transform: scale(0.8);
+		// overflow: hidden;
 		.periodictable {
 			margin: 0 auto;
 		}
+	}
+	.d2-container-ghost__footer {
+		background: rgba(255, 255, 255, 0.8) !important;
+		.el-collapse {
+			border: none;
+		}
+		.el-collapse-item__header {
+			background: none;
+			justify-content: center;
+			border: none;
+			.el-form-item {
+				margin: 0 20px;
+				height: 40px;
+				line-height: 40px;
+			}
+			.footer-collapse {
+				background: none;
+			}
+			.el-collapse-item__arrow.el-icon-arrow-right {
+				display: none;
+			}
+		}
+		.el-collapse-item__wrap {
+			background: none;
+			border: none;
+			.el-collapse-item__content {
+				padding: 20px 0 0 0;
+				.collapse-content {
+					@extend %flex-center-row;
+					text-align: center;
+					.el-form-item {
+						margin: 0 20px;
+						height: 40px;
+						line-height: 40px;
+					}
+				}
+			}
+		}
+
+		// .query-form-inline {
+		// 	// text-align: center;
+		// 	.el-form-item {
+		// 		margin: 20px;
+		// 	}
+		// }
+		// .query-container {
+		// 	padding: 0 10%;
+		// 	.el-form-item {
+		// 		// width: 40%;
+		// 	}
+		// }
 	}
 </style>

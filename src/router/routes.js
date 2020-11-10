@@ -1,4 +1,6 @@
 import layoutHeaderAside from '@/layout/header-aside'
+import dataUpload from './modules/data-upload'
+import dataViewer from './modules/data-viewer'
 
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
@@ -18,7 +20,8 @@ const frameIn = [{
       path: 'index',
       name: 'index',
       meta: {
-        auth: true
+        title: 'Home',
+        auth: true,
       },
       component: _import('dashboard/index')
     },
@@ -56,7 +59,7 @@ const frameIn = [{
       component: _import('system/function/redirect')
     }
   ]
-}]
+}, dataUpload, dataViewer]
 
 /**
  * 在主框架之外显示

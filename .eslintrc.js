@@ -1,7 +1,8 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
+    jquery: true
   },
   'extends': [
     'plugin:vue/essential',
@@ -14,15 +15,13 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
-  overrides: [
-    {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)'
-      ],
-      env: {
-        jest: true
-      }
+  overrides: [{
+    files: [
+      '**/__tests__/*.{j,t}s?(x)',
+      '**/tests/unit/**/*.spec.{j,t}s?(x)'
+    ],
+    env: {
+      jest: true
     }
-  ]
+  }]
 }
