@@ -1,10 +1,10 @@
 import screenfull from 'screenfull'
-
+import setting from '@/setting.js'
 export default {
   namespaced: true,
   state: {
     // 全屏激活
-    active: false
+    active: setting.activeFullscreen
   },
   actions: {
     /**

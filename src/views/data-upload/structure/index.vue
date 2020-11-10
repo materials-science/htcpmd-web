@@ -98,7 +98,7 @@
 		data() {
 			return {
 				fileList: null,
-				uploadUrl: "/api/structure/upload/",
+				uploadUrl: "/api/structures/files/",
 				uploadHeaders: {
 					Authorization: `Token ${util.cookies.get("token")}`,
 				},

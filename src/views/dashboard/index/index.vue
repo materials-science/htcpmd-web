@@ -145,6 +145,9 @@
 					params: {
 						queryForm: query,
 					},
+					query: {
+						...query,
+					},
 				});
 			},
 		},

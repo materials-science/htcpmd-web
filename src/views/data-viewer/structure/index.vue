@@ -226,13 +226,10 @@
 			},
 		},
 		mounted() {
-			if (
-				!this.$route.params.queryForm ||
-				!this.$route.params.queryForm.elements
-			) {
+			if (!this.$route.query.elements || !this.$route.query.mode) {
 				return;
 			}
-			this.queryForm = this.$route.params.queryForm;
+			this.queryForm = this.$route.query;
 			this.pageRequest().then((resp) => {
 				let data = resp.data;
 				this.tableData = data.results;
@@ -241,10 +238,7 @@
 			});
 		},
 		beforeCreate() {
-			if (
-				!this.$route.params.queryForm ||
-				!this.$route.params.queryForm.elements
-			) {
+			if (!this.$route.query.elements || !this.$route.query.mode) {
 				this.$message.warning("Please go to Home Page for searching!");
 				setTimeout(() => {
 					this.$router.replace("/index");

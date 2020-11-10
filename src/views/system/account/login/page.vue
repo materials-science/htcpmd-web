@@ -120,8 +120,8 @@ export default {
       ],
       // 表单
       formLogin: {
-        email: "ias@szu.edu.cn",
-        password: "ias2020",
+        email: "poryoung@outlook.com",
+        password: "PorYoung",
         code: "v9am",
       },
       // 表单校验

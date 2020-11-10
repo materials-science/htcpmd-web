@@ -28,7 +28,7 @@ export default {
     component: _import('data-viewer/structure/detail.vue'),
     meta: {
       ...meta,
-    //   cache: true,
+      cache: true,
       title: 'Structure Data'
     }
   }])('data-')

@@ -42,20 +42,10 @@ export function GetObj(id) {
     method: 'get'
   })
 }
-/* export function GetRoleList() {
+
+export function GetFileStream(id) {
   return request({
-    url: apiPrefix + '/getAllRole',
+    url: apiPrefix + `files/${id}/`,
     method: 'get'
   })
 }
-
-export function DoAuthz(userId, roleIds) {
-  return request({
-    url: apiPrefix + '/authz',
-    method: 'post',
-    params: {
-      userId
-    },
-    data: roleIds
-  })
-} */

@@ -22,6 +22,7 @@ const frameIn = [{
       meta: {
         title: 'Home',
         auth: true,
+        cache: true,
       },
       component: _import('dashboard/index')
     },

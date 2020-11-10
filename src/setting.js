@@ -9,21 +9,20 @@ export default {
   },
   // 侧边栏默认配置
   menu: {
-    asideCollapse: false,
+    asideCollapse: true,
     asideTransition: true
   },
+  activeFullscreen: false,
   // 在读取持久化数据失败时默认页面
   page: {
-    opened: [
-      {
-        name: 'index',
-        fullPath: '/index',
-        meta: {
-          title: 'Home',
-          auth: false
-        }
+    opened: [{
+      name: 'index',
+      fullPath: '/index',
+      meta: {
+        title: 'Home',
+        auth: false
       }
-    ]
+    }]
   },
   // 菜单搜索
   search: {
@@ -31,9 +30,14 @@ export default {
   },
   // 注册的主题
   theme: {
-    list: [
+    list: [{
+        title: '简约线条',
+        name: 'line',
+        backgroundImage: 'image/theme/line/bg.jpg',
+        preview: 'image/theme/line/preview@2x.png'
+      },
       {
-        title: 'd2admin 经典',
+        title: 'd2admin classical',
         name: 'd2',
         preview: 'image/theme/d2/preview@2x.png'
       },
@@ -51,12 +55,6 @@ export default {
         title: '紫罗兰',
         name: 'violet',
         preview: 'image/theme/violet/preview@2x.png'
-      },
-      {
-        title: '简约线条',
-        name: 'line',
-        backgroundImage: 'image/theme/line/bg.jpg',
-        preview: 'image/theme/line/preview@2x.png'
       },
       {
         title: '流星',

@@ -245,17 +245,32 @@
 							</el-col>
 						</el-row>
 					</el-col>
-					<el-col :span="12" class="material-viewer-container">
-						<div
-							id="structure-viewer"
-							:style="{
-								'background-image': `url(${structure.cover_img}}})`,
-							}"
-							v-loading="viewerLoading"
-						>
+					<el-col
+						:span="12"
+						class="material-viewer-container"
+						v-loading="viewerLoading"
+					>
+						<el-row>
+							<el-col :span="DetailSpan">
+								<p class="viewer-title">Crystal Structure</p>
+							</el-col>
+						</el-row>
+						<div id="structure-viewer">
+							<div
+								class="structure-viewer-cover"
+								v-if="viewerCoverTip"
+								:style="{
+									'background-image': structure.cover_img
+										? `url('/static${structure.cover_img}')`
+										: '',
+									'background-position': 'center',
+									'background-blend-mode': 'darken',
+								}"
+							></div>
 							<p
 								class="cover-tip"
-								@dblclick="showStructureViewer"
+								v-if="viewerCoverTip"
+								@dblclick="displayViewer"
 							>
 								Double click to show
 							</p>
@@ -263,9 +278,9 @@
 					</el-col>
 				</el-row>
 			</el-tab-pane>
-			<el-tab-pane label="配置管理"></el-tab-pane>
-			<el-tab-pane label="角色管理"></el-tab-pane>
-			<el-tab-pane label="定时任务补偿"></el-tab-pane>
+			<el-tab-pane label="Band Structure"></el-tab-pane>
+			<el-tab-pane label="Phonon Dispersion"></el-tab-pane>
+			<el-tab-pane label="Conductivity"></el-tab-pane>
 		</el-tabs>
 		<!-- </template> -->
 	</d2-container>
@@ -278,6 +293,7 @@
 	let viewer = null;
 	const viewer_id = "#structure-viewer";
 	const viewer_config = {
+		// backgroundColor: "#73757C",
 		backgroundColor: "white",
 	};
 	export default {
@@ -290,13 +306,62 @@
 				numberPrecision: 6,
 				DetailSpan: 24,
 				viewerLoading: false,
+				viewerCoverTip: true,
 			};
 		},
 		methods: {
-			showStructureViewer() {
-                this.viewerLoading = true;
+			displayViewer() {
+				this.viewerLoading = true;
+				api.GetFileStream(this.id).then((resp) => {
+					this.structureFileData = resp.data;
+					this.showStructureViewer(this.structureFileData);
+					this.viewerLoading = false;
+					this.viewerCoverTip = false;
+				});
 			},
-			
+			showStructureViewer(fileString, ext_name = "cif") {
+				if ($3Dmol) {
+					this.$message.success("3Dmol loaded!");
+					viewer = $3Dmol.createViewer($(viewer_id), viewer_config);
+				}
+				viewer.clear();
+				let m = viewer.addModel(fileString, ext_name);
+				viewer.addUnitCell(m, {
+					box: { color: "purple" },
+				});
+				viewer.addUnitCell(m);
+				viewer.setHoverable(
+					{},
+					true,
+					function (atom, viewer, event, container) {
+						if (!atom.label) {
+							atom.label = viewer.addLabel(atom.elem, {
+								position: atom,
+								backgroundColor: "darkgreen",
+								backgroundOpacity: 0.5,
+								fontColor: "white",
+							});
+						}
+					},
+					function (atom) {
+						if (atom.label) {
+							viewer.removeLabel(atom.label);
+							delete atom.label;
+						}
+					}
+				);
+
+				viewer.setStyle({
+					stick: { radius: 0.15, opacity: 0.7, singleBonds: true },
+					sphere: { scale: 0.4 },
+				});
+				viewer.zoomTo();
+				viewer.render();
+			},
+			goBack() {
+				this.$router.back();
+			},
+		},
 		mounted() {
 			this.id = this.$route.params.id;
 			if (this.id == "") {
@@ -311,27 +376,52 @@
 				this.fullscreenLoading = false;
 			});
 		},
+		beforeRouteLeave(to, from, next) {
+			if (viewer) {
+				viewer.clear();
+			}
+			this.viewerCoverTip = true;
+			next();
+		},
 	};
 </script>
 
 <style lang='scss'>
 	@import "@/assets/style/public.scss";
 	.tab-container {
+		.el-tabs__content {
+			margin-bottom: 100px;
+		}
 		.el-tabs__header {
 			display: flex;
 			justify-content: center;
+			position: fixed;
+			width: 50%;
+			left: 25%;
+			bottom: 20px;
+			padding: 10px;
+			height: 80px;
+			background: rgba($color: #fff, $alpha: 0.8);
+			transform: scale(1.2);
+			border-radius: 5px;
+		}
+		.el-tabs__active-bar.is-bottom {
+			transform: translateX(5px);
 		}
 	}
 	.meterial-panel {
 		padding: 20px 40px;
 	}
+	@mixin detail-title() {
+		text-align: center;
+		font-size: 24px;
+		font-weight: bold;
+		border-bottom: 1px solid #99a9bf;
+	}
 	.material-detail {
 		text-transform: uppercase;
 		.material-detail-title {
-			text-align: center;
-			font-size: 24px;
-			font-weight: bold;
-			border-bottom: 1px solid #99a9bf;
+			@include detail-title();
 		}
 		.label {
 			// color: #99a9bf;
@@ -357,17 +447,39 @@
 	}
 
 	.material-viewer-container {
-		padding: 20px;
 		height: 50vh;
+		> .el-row {
+			padding: 8px 0;
+		}
+		.viewer-title {
+			@include detail-title();
+		}
 		#structure-viewer {
 			@extend %flex-center-col;
 			background-color: rgba($color: #fff, $alpha: 0.1);
 			color: #99a9bf;
+			border: none;
+			padding: 10px;
+			border: 1px dashed #d9d9d9;
+			.structure-viewer-cover {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+                bottom: 0;
+                opacity: .2;
+			}
 			.cover-tip {
+				z-index: 99;
 				background: rgba($color: #000000, $alpha: 0.1);
 				padding: 20px;
 				border-radius: 5px;
 				@extend %unable-select;
+				transition: background-color 0.3s;
+			}
+			.cover-tip:hover {
+				background: rgba($color: #868686, $alpha: 0.5);
+				color: #fff;
 			}
 		}
 	}
