@@ -25,6 +25,10 @@ import vuetify from '@/plugin/vuetify'
 // 核心插件
 Vue.use(d2Admin)
 
+// verify plugin
+import SlideVerify from 'vue-monoplasty-slide-verify';
+Vue.use(SlideVerify);
+
 new Vue({
   router,
   store,

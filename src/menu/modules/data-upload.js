@@ -9,58 +9,5 @@ export default {
       title: 'Structure',
       icon: 'spinner'
     },
-    {
-      title: 'svg icon',
-      iconSvg: 'd2-admin',
-      children: [{
-          title: 'add',
-          iconSvg: 'add'
-        },
-        {
-          title: 'alarm',
-          iconSvg: 'alarm'
-        },
-        {
-          title: 'camera',
-          iconSvg: 'camera'
-        },
-        {
-          title: 'history',
-          iconSvg: 'history'
-        },
-        {
-          title: 'like',
-          iconSvg: 'like'
-        },
-        {
-          title: 'love',
-          iconSvg: 'love'
-        },
-        {
-          title: 'message',
-          iconSvg: 'message'
-        },
-        {
-          title: 'notice',
-          iconSvg: 'notice'
-        },
-        {
-          title: 'search',
-          iconSvg: 'search'
-        },
-        {
-          title: 'share',
-          iconSvg: 'share'
-        },
-        {
-          title: 'star',
-          iconSvg: 'star'
-        },
-        {
-          title: 'user',
-          iconSvg: 'user'
-        }
-      ]
-    },
   ])('/data-upload/')
 }

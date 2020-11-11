@@ -3,7 +3,7 @@ export default {
   title: 'Data Viewer',
   icon: 'flask',
   children: (pre => [{
-    path: `${pre}structure`,
+    path: `${pre}structures`,
     title: 'Structure',
     icon: 'spinner'
   }, ])('/data/')
