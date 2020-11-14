@@ -320,11 +320,14 @@
 				});
 			},
 			showStructureViewer(fileString, ext_name = "cif") {
+				if (viewer) {
+					viewer.clear();
+				}
+				$(viewer_id + " canvas").remove();
 				if ($3Dmol) {
 					this.$message.success("3Dmol loaded!");
 					viewer = $3Dmol.createViewer($(viewer_id), viewer_config);
 				}
-				viewer.clear();
 				let m = viewer.addModel(fileString, ext_name);
 				viewer.addUnitCell(m, {
 					box: { color: "purple" },
@@ -380,6 +383,7 @@
 			if (viewer) {
 				viewer.clear();
 			}
+			$(viewer_id + " canvas").remove();
 			this.viewerCoverTip = true;
 			next();
 		},
@@ -461,13 +465,16 @@
 			border: none;
 			padding: 10px;
 			border: 1px dashed #d9d9d9;
+			width: 100%;
+			height: 100%;
+			position: relative;
 			.structure-viewer-cover {
 				position: absolute;
 				left: 0;
 				right: 0;
 				top: 0;
-                bottom: 0;
-                opacity: .2;
+				bottom: 0;
+				opacity: 0.2;
 			}
 			.cover-tip {
 				z-index: 99;

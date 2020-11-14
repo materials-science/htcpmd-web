@@ -60,7 +60,7 @@ const proxyObj = {
     pathRewrite: {
       '^/static': '/static'
     }
-  }
+  },
 }
 
 module.exports = {
