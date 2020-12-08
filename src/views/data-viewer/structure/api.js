@@ -42,7 +42,11 @@ export function GetObj(id) {
     method: 'get'
   })
 }
-
+/**
+ * 
+ * @param {*} id 
+ * @todo change API in restful style
+ */
 export function GetFileStream(id) {
   return request({
     url: apiPrefix + `files/${id}/`,

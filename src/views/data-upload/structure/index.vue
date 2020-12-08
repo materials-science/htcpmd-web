@@ -41,7 +41,7 @@
 					<SplitPane split="horizontal" :default-percent="80">
 						<template slot="paneL">
 							<div class="upload-box">
-								<div id="structure-viewer"></div>
+								<div class="structure-viewer"></div>
 								<div class="tip"></div>
 							</div>
 						</template>
@@ -87,9 +87,10 @@
 	import util from "@/libs/util";
 	// import "@/libs/3Dmol-nojquery.js";
 	let viewer = null;
-	const viewer_id = "#structure-viewer";
+	let viewer_id = ".upload-box .structure-viewer";
 	const viewer_config = {
 		backgroundColor: "white",
+		id: "upload-viewer-canvas",
 	};
 	export default {
 		components: {
@@ -105,10 +106,11 @@
 			};
 		},
 		mounted() {
+			viewer_id = $(viewer_id);
 			// 加载完成后显示提示
 			if ($3Dmol) {
 				this.showInfo("Tip", "3Dmol loaded!");
-				viewer = $3Dmol.createViewer($(viewer_id), viewer_config);
+				viewer = $3Dmol.createViewer(viewer_id, viewer_config);
 			}
 		},
 		methods: {
@@ -243,11 +245,11 @@
 				background-color: rgba(33, 33, 33, 0.3);
 			}
 		}
-	}
-	#structure-viewer {
-		width: 100%;
-		height: 100%;
-		position: relative;
-		border: 1px dashed #d9d9d9;
+		.structure-viewer {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			border: 1px dashed #d9d9d9;
+		}
 	}
 </style>

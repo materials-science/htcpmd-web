@@ -255,13 +255,16 @@
 								<p class="viewer-title">Crystal Structure</p>
 							</el-col>
 						</el-row>
-						<div id="structure-viewer">
+						<div
+							class="structure-viewer"
+							:id="`detail-viewer-${id}`"
+						>
 							<div
 								class="structure-viewer-cover"
 								v-if="viewerCoverTip"
 								:style="{
 									'background-image': structure.cover_img
-										? `url('/static${structure.cover_img}')`
+										? `url('${structure.cover_img}')`
 										: '',
 									'background-position': 'center',
 									'background-blend-mode': 'darken',
@@ -291,7 +294,7 @@
 	import $3Dmol from "@/libs/3Dmol-nojquery.js";
 	import * as api from "./api";
 	let viewer = null;
-	const viewer_id = "#structure-viewer";
+	let viewer_id = null;
 	const viewer_config = {
 		// backgroundColor: "#73757C",
 		backgroundColor: "white",
@@ -323,11 +326,9 @@
 				if (viewer) {
 					viewer.clear();
 				}
-				$(viewer_id + " canvas").remove();
-				if ($3Dmol) {
-					this.$message.success("3Dmol loaded!");
-					viewer = $3Dmol.createViewer($(viewer_id), viewer_config);
-				}
+				viewer_id = $(`#detail-viewer-${this.id}`);
+				viewer_id.children("canvas").remove();
+				viewer = $3Dmol.createViewer(viewer_id, viewer_config);
 				let m = viewer.addModel(fileString, ext_name);
 				viewer.addUnitCell(m, {
 					box: { color: "purple" },
@@ -364,6 +365,14 @@
 			goBack() {
 				this.$router.back();
 			},
+			clearPageContent(to, from, next) {
+				if (viewer) {
+					viewer.clear();
+				}
+				if (viewer_id) viewer_id.children("canvas").remove();
+				this.viewerCoverTip = true;
+				next();
+			},
 		},
 		mounted() {
 			this.id = this.$route.params.id;
@@ -378,14 +387,13 @@
 				this.attributes = this.structure.attributes;
 				this.fullscreenLoading = false;
 			});
+			viewer_config.id = `detail-viewer-canvas-${this.id}`;
+		},
+		beforeRouteUpdate(to, from, next) {
+			this.clearPageContent(to, from, next);
 		},
 		beforeRouteLeave(to, from, next) {
-			if (viewer) {
-				viewer.clear();
-			}
-			$(viewer_id + " canvas").remove();
-			this.viewerCoverTip = true;
-			next();
+			this.clearPageContent(to, from, next);
 		},
 	};
 </script>
@@ -458,7 +466,7 @@
 		.viewer-title {
 			@include detail-title();
 		}
-		#structure-viewer {
+		.structure-viewer {
 			@extend %flex-center-col;
 			background-color: rgba($color: #fff, $alpha: 0.1);
 			color: #99a9bf;
