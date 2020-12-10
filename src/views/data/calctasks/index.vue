@@ -1,0 +1,180 @@
+<template>
+	<d2-container
+		class="data-calctasks-upload-index-container"
+		v-loading="load_calctask_categories || load_calctasks_types"
+	>
+		<el-collapse v-model="activeCards">
+			<el-collapse-item
+				class="box-card"
+				v-for="category in calctask_categories"
+				:key="category.id"
+				:name="category.id"
+			>
+				<template slot="title">
+					<el-row type="flex" justify="start" align="middle" style="flex: 1">
+						<el-col :span="6">
+							<h2>{{ category.category_name }}</h2>
+						</el-col>
+						<el-col :span="6">
+							<el-button
+								:icon="
+									category.disabled ? 'el-icon-close' : 'el-icon-plus'
+								"
+								:disabled="category.disabled"
+								:type="category.disabled ? 'danger' : 'primary'"
+								plain
+								@click.native.prevent.stop="
+									AddNewTasks(category.id, category.category_name)
+								"
+								>Add A Task</el-button
+							>
+							<el-button
+								icon="el-icon-reading"
+								:disabled="category.disabled"
+								:type="category.disabled ? 'danger' : 'primary'"
+								plain
+								@click.native.prevent.stop="goToDocsPage"
+								>Watch Docs</el-button
+							>
+						</el-col>
+					</el-row>
+				</template>
+				<template v-for="type in calctasks_types">
+					<template v-if="type.category.id == category.id">
+						<div :key="type.id" class="types-list">
+							<el-row>
+								<el-col :span="6">
+									<h3>
+										<el-link
+											type="primary"
+											:href="type.doc_link"
+											:disabled="!type.doc_link"
+											target="_blank"
+											>{{ type.type_name }}</el-link
+										><i
+											class="el-icon-warning-outline"
+											style="color: #f56c6c; padding: 8px"
+											v-if="type.disabled"
+										></i>
+									</h3>
+								</el-col>
+							</el-row>
+							<el-row>
+								<el-col :span="12">
+									<p>{{ type.description || "No description" }}</p>
+								</el-col>
+							</el-row>
+						</div>
+					</template>
+				</template>
+			</el-collapse-item>
+		</el-collapse>
+		<!-- <el-card
+			class="box-card"
+			v-for="category in calctask_categories"
+			:key="category.id"
+			shadow="hover"
+		>
+			<div slot="header">
+				<el-row type="flex" justify="start" align="middle">
+					<el-col :span="6">
+						<h2>{{ category.category_name }}</h2>
+					</el-col>
+					<el-col :span="6">
+						<el-button
+							:icon="category.disabled ? 'el-icon-close' : 'el-icon-plus'"
+							:disabled="category.disabled"
+							:type="category.disabled ? 'danger' : 'success'"
+							plain
+							>Add A Task</el-button
+						>
+					</el-col>
+				</el-row>
+			</div>
+			<template v-for="type in calctasks_types">
+				<template v-if="type.category.id == category.id">
+					<div :key="type.id" class="types-list">
+						<el-row>
+							<el-col :span="6">
+								<h3>{{ type.type_name }}</h3>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="12">
+								<p>some descs and links</p>
+							</el-col>
+						</el-row>
+					</div>
+				</template>
+			</template>
+		</el-card> -->
+	</d2-container>
+</template>
+
+<script>
+export default {
+	name: "data-calctasks-upload-index",
+	data() {
+		return {
+			calctask_categories: [],
+			calctasks_types: [],
+			load_calctask_categories: true,
+			load_calctasks_types: true,
+			activeCards: [],
+		};
+	},
+	methods: {
+		AddNewTasks(category_id, category_name) {
+			this.$router.replace(`/data/upload/calctasks/${category_name}`);
+		},
+		goToDocsPage() {
+			window.open("http://172.31.220.82:8005/index.html", "_blank");
+		},
+	},
+	mounted() {
+		// TODO: Store locally to reduce requests.
+		this.$api.GetList(`/calctask_categories/`).then((resp) => {
+			if (resp.code == 0) {
+				this.calctask_categories = resp.data;
+				this.calctask_categories.forEach((element) => {
+					this.activeCards.push(element.id);
+				});
+			}
+			this.load_calctask_categories = false;
+		});
+		this.$api.GetList(`/calctask_types/`).then((resp) => {
+			if (resp.code == 0) {
+				this.calctasks_types = resp.data;
+			} else {
+				this.$message.error("No CalcTasks Types Avaliable.");
+				setTimeout(() => {
+					this.$store.dispatch("d2admin/page/close", {
+						tagName: "/data/upload/calctasks",
+					});
+				}, 1500);
+				return;
+			}
+			this.load_calctasks_types = false;
+		});
+	},
+};
+</script>
+
+<style lang="scss">
+.data-calctasks-upload-index-container {
+	.box-card {
+		.el-collapse-item__header {
+			padding: 36px 0;
+		}
+		.el-collapse-item__wrap {
+			background-color: transparent;
+		}
+		.types-list {
+			margin: 0 8px 32px;
+			p {
+				padding: 8px 16px;
+			}
+		}
+	}
+}
+</style>

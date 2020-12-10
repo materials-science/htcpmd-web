@@ -1,8 +1,6 @@
-import {
-  uniqueId
-} from 'lodash'
-import dataUpload from './modules/data-upload'
-import dataViewer from './modules/data-viewer'
+import { uniqueId } from "lodash";
+import dashboard from "@/menu/modules/dashboard";
+import data from "@/menu/modules/data";
 
 /**
  * @description 给菜单数据补充上 path 字段
@@ -12,27 +10,41 @@ import dataViewer from './modules/data-viewer'
 function supplementPath(menu) {
   return menu.map(e => ({
     ...e,
-    path: e.path || uniqueId('d2-menu-empty-'),
-    ...e.children ? {
-      children: supplementPath(e.children)
-    } : {}
-  }))
+    path: e.path || uniqueId("d2-menu-empty-"),
+    ...(e.children
+      ? {
+          children: supplementPath(e.children)
+        }
+      : {})
+  }));
 }
 
 export const menuHeader = supplementPath([
-  //   { path: '/index', title: '首页', icon: 'home' },
-])
-
-export const menuAside = supplementPath([{
-    path: '/index',
-    title: 'Home',
-    icon: 'home'
-  },
-  dataUpload,
-  dataViewer,
   {
-    path: '/users',
-    title: 'Users',
-    icon: 'user'
+    path: "/index",
+    title: "Home",
+    icon: "home"
   },
-])
+  dashboard,
+  data,
+  {
+    path: "/users",
+    title: "Users",
+    icon: "user"
+  }
+]);
+
+export const menuAside = supplementPath([
+  {
+    path: "/index",
+    title: "Home",
+    icon: "home"
+  },
+  dashboard,
+  data,
+  {
+    path: "/users",
+    title: "Users",
+    icon: "user"
+  }
+]);
