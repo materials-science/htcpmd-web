@@ -9,78 +9,6 @@
 			</el-col>
 		</el-row>
 		<div class="form-box">
-			<!-- CalcJob Label -->
-			<el-row>
-				<el-row>
-					<el-col :span="8"
-						><el-tag><h3>CalcTask Label</h3></el-tag></el-col
-					>
-				</el-row>
-				<el-row>
-					<el-col :span="16">
-						<el-divider content-position="left"
-							>Set a label for your task</el-divider
-						>
-					</el-col>
-				</el-row>
-				<el-row>
-					<el-col :span="16">
-						<el-select
-							v-model="calctasks_label_selected"
-							placeholder="CalcTask Label"
-							allow-create
-							filterable
-							clearable
-						>
-							<el-option
-								v-for="item in calctasks_labels"
-								:key="item.value"
-								:label="item.label"
-								:value="item.value"
-							>
-							</el-option>
-						</el-select>
-					</el-col>
-				</el-row>
-			</el-row>
-			<!-- CalcJob Type -->
-			<el-row>
-				<el-col :span="24">
-					<el-row>
-						<el-col :span="8"
-							><el-tag><h3>CalcTask Type</h3></el-tag></el-col
-						>
-					</el-row>
-					<el-row>
-						<el-col :span="16">
-							<el-divider content-position="left"
-								>Select calculations or workchains model you
-								want</el-divider
-							>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="16">
-							<el-select
-								v-model="calctasks_type_selected"
-								placeholder="Choose A Type"
-								filterable
-								clearable
-								autocomplete
-								:loading="load_calctasks_types"
-							>
-								<el-option
-									v-for="item in calctasks_types"
-									:key="item.value"
-									:label="item.label"
-									:value="item.value"
-								>
-								</el-option>
-							</el-select>
-						</el-col>
-					</el-row>
-				</el-col>
-			</el-row>
 			<!-- Structures -->
 			<el-row>
 				<el-row>
@@ -172,19 +100,106 @@
 					</el-col>
 				</el-row>
 			</el-row>
+			<!-- CalcJob Label -->
+			<el-row>
+				<el-row>
+					<el-col :span="8"
+						><el-tag><h3>CalcTask Label</h3></el-tag></el-col
+					>
+				</el-row>
+				<el-row>
+					<el-col :span="16">
+						<el-divider content-position="left"
+							>Set a label for your task</el-divider
+						>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="16">
+						<el-select
+							v-model="calctasks_label_selected"
+							placeholder="CalcTask Label"
+							allow-create
+							filterable
+							clearable
+						>
+							<el-option
+								v-for="item in calctasks_labels"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value"
+							>
+							</el-option>
+						</el-select>
+					</el-col>
+				</el-row>
+			</el-row>
+			<!-- CalcJob Type -->
+			<el-row>
+				<el-col :span="24">
+					<el-row>
+						<el-col :span="8"
+							><el-tag><h3>CalcTask Type</h3></el-tag></el-col
+						>
+					</el-row>
+					<el-row>
+						<el-col :span="16">
+							<el-divider content-position="left"
+								>Select calculations or workchains model you
+								want</el-divider
+							>
+						</el-col>
+					</el-row>
+					<el-row>
+						<el-col :span="16">
+							<el-select
+								v-model="calctasks_type_selected_index"
+								placeholder="Choose A Type"
+								filterable
+								autocomplete
+								:loading="load_calctasks_types"
+								@change="calctasksTypeChange"
+							>
+								<el-option
+									v-for="item in calctasks_types"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value"
+								>
+								</el-option>
+							</el-select>
+						</el-col>
+					</el-row>
+				</el-col>
+			</el-row>
 		</div>
+		<transition name="el-fade-in">
+			<el-row v-show="calctasks_type_selected">
+				<el-col :span="16">
+					<el-divider content-position="center"
+						>{{ calctasks_type_selected }} Parameters</el-divider
+					>
+				</el-col>
+			</el-row>
+		</transition>
+		<component :is="calctasks_type_selected"></component>
 	</d2-container>
 </template>
 
 <script>
 const apiPrefix = "/calctasks/";
+import ShengBTECalculation from "./components/ShengBTECalculation";
 export default {
 	name: "data-calctasks-upload-shengbte",
+	components: {
+		ShengBTECalculation,
+	},
 	data() {
 		return {
 			calctasks_label_selected: "",
 			calctasks_labels: [],
-			calctasks_type_selected: "",
+			calctasks_type_selected_index: null,
+			calctasks_type_selected: null,
 			calctasks_types: [],
 			load_calctasks_types: true,
 			structures: [],
@@ -231,6 +246,9 @@ export default {
 					return this.$message.error("Whoops! Something was wrong.");
 				}
 			});
+		},
+		calctasksTypeChange(val) {
+			this.calctasks_type_selected = this.calctasks_types[val].label;
 		},
 	},
 	mounted() {

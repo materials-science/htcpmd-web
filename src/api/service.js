@@ -34,32 +34,12 @@ function createService() {
 				// 有 code 代表这是一个后端接口 可以进行进一步的判断
 				switch (code) {
 					case 0:
+					case 200:
+					case 201:
+					case 202:
 						console.log(dataAxios);
 						// return dataAxios.data
 						return dataAxios;
-					case 404:
-						console.warn(dataAxios.msg);
-						return dataAxios;
-					case 401:
-						if (
-							typeof dataAxios.msg == "string" &&
-							dataAxios.msg.includes("Invalid token")
-						) {
-							console.error(dataAxios.msg);
-							errorCreate(
-								`Error: User info expired. Please relogin.`
-							);
-							// 删除cookie
-							util.cookies.remove("token");
-							util.cookies.remove("uuid");
-							setTimeout(() => {
-								// 跳转路由
-								router.push({
-									name: "login"
-								});
-							}, 1500);
-							return;
-						}
 					default:
 						// 不是正确的 code
 						const msg = dataAxios.msg;
@@ -78,7 +58,6 @@ function createService() {
 						}
 						// errorCreate(`${msg_str}: ${response.config.url}`)
 						errorCreate(`Error ${code}: ${msg_str}`);
-
 						break;
 				}
 			}
@@ -90,13 +69,22 @@ function createService() {
 					error.message = "请求错误";
 					break;
 				case 401:
-					error.message = "未授权，请登录";
+					error.message = "登录失效";
+					// 删除cookie
+					util.cookies.remove("token");
+					util.cookies.remove("uuid");
+					setTimeout(() => {
+						// 跳转路由
+						router.push({
+							name: "login"
+						});
+					}, 1500);
 					break;
 				case 403:
 					error.message = "拒绝访问";
 					break;
 				case 404:
-					error.message = `请求地址出错: ${error.response.config.url}`;
+					error.message = `请求内容不存在: ${error.response.config.url}`;
 					break;
 				case 408:
 					error.message = "请求超时";

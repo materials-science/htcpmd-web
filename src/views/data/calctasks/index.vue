@@ -33,9 +33,20 @@
 								:disabled="category.disabled"
 								:type="category.disabled ? 'danger' : 'primary'"
 								plain
-								@click.native.prevent.stop="goToDocsPage"
+								@click.native.prevent.stop="
+									goToDocsPage('http://172.31.220.82:8005/index.html')
+								"
 								>Watch Docs</el-button
 							>
+							<el-button
+								:icon="
+									activeCards.includes(category.id)
+										? 'el-icon-arrow-up'
+										: 'el-icon-arrow-down'
+								"
+								:type="category.disabled ? 'danger' : 'primary'"
+								plain
+							></el-button>
 						</el-col>
 					</el-row>
 				</template>
@@ -127,8 +138,8 @@ export default {
 		AddNewTasks(category_id, category_name) {
 			this.$router.replace(`/data/upload/calctasks/${category_name}`);
 		},
-		goToDocsPage() {
-			window.open("http://172.31.220.82:8005/index.html", "_blank");
+		goToDocsPage(url) {
+			window.open(url, "_blank");
 		},
 	},
 	mounted() {

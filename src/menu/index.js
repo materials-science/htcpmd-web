@@ -1,6 +1,7 @@
 import { uniqueId } from "lodash";
 import dashboard from "@/menu/modules/dashboard";
 import data from "@/menu/modules/data";
+import cluster from "@/menu/modules/cluster";
 
 /**
  * @description 给菜单数据补充上 path 字段
@@ -8,43 +9,45 @@ import data from "@/menu/modules/data";
  * @param {Array} menu 原始的菜单数据
  */
 function supplementPath(menu) {
-  return menu.map(e => ({
-    ...e,
-    path: e.path || uniqueId("d2-menu-empty-"),
-    ...(e.children
-      ? {
-          children: supplementPath(e.children)
-        }
-      : {})
-  }));
+	return menu.map(e => ({
+		...e,
+		path: e.path || uniqueId("d2-menu-empty-"),
+		...(e.children
+			? {
+					children: supplementPath(e.children)
+			  }
+			: {})
+	}));
 }
 
 export const menuHeader = supplementPath([
-  {
-    path: "/index",
-    title: "Home",
-    icon: "home"
-  },
-  dashboard,
-  data,
-  {
-    path: "/users",
-    title: "Users",
-    icon: "user"
-  }
+	{
+		path: "/index",
+		title: "Home",
+		icon: "home"
+	},
+	dashboard,
+	cluster,
+	data,
+	{
+		path: "/users",
+		title: "Users",
+		icon: "user"
+	}
 ]);
 
 export const menuAside = supplementPath([
-  {
-    path: "/index",
-    title: "Home",
-    icon: "home"
-  },
-  dashboard,
-  data,
-  {
-    path: "/users",
-    title: "Users",
-    icon: "user"
-  }
+	{
+		path: "/index",
+		title: "Home",
+		icon: "home"
+	},
+	dashboard,
+	cluster,
+	data,
+	{
+		path: "/users",
+		title: "Users",
+		icon: "user"
+	}
 ]);

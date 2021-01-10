@@ -231,7 +231,7 @@ export default {
 		viewDetail(row, column, event) {
 			let id = row.id;
 			if (id == "") {
-				this.$message.error("ID is None!");
+				return this.$message.error("ID is None!");
 			}
 			this.$router.push({
 				path: `/data/structures/${id}`,
@@ -247,7 +247,9 @@ export default {
 					`Only support ${setting.calcjobs.max_structures_once} structures once currently.`
 				);
 			}
-			const db = await this.$store.dispatch("d2admin/db/database", { user: true });
+			const db = await this.$store.dispatch("d2admin/db/database", {
+				user: true,
+			});
 			db.set("selectedStructures", this.multipleSelection).write();
 
 			this.$router.push({

@@ -51,6 +51,7 @@ export default {
 			component: _import("data/calctasks/index.vue"),
 			meta: {
 				...meta,
+				cache: true,
 				title: "Upload CalcTasks Home"
 			}
 		},
@@ -60,6 +61,7 @@ export default {
 			component: _import("data/calctasks/components/shengbte"),
 			meta: {
 				...meta,
+				cache: true,
 				title: "Upload ShengBTE CalcTasks"
 			}
 		}
