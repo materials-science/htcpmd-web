@@ -12,7 +12,9 @@
 				<template slot-scope="props">
 					<el-tabs
 						type="border-card"
-						@tab-click="handleTabSwitch($event, props.$index, props.row)"
+						@tab-click="
+							handleTabSwitch($event, props.$index, props.row)
+						"
 					>
 						<el-tab-pane label="Attributes">
 							<el-form
@@ -53,8 +55,13 @@
 				sortable
 				align="center"
 			></el-table-column>
-			<el-table-column prop="label" label="label" align="center"> </el-table-column>
-			<el-table-column prop="attributes.hostname" label="hostname" align="center">
+			<el-table-column prop="label" label="label" align="center">
+			</el-table-column>
+			<el-table-column
+				prop="attributes.hostname"
+				label="hostname"
+				align="center"
+			>
 			</el-table-column>
 			<el-table-column prop="user.email" label="user" align="center">
 			</el-table-column>
@@ -116,8 +123,16 @@
 			:center="true"
 			:visible.sync="dialogFormVisible"
 		>
-			<el-form :model="form" :rules="formRules" ref="form" label-position="left">
-				<el-form-item label="ssh configure" :label-width="formLabelWidth">
+			<el-form
+				:model="form"
+				:rules="formRules"
+				ref="form"
+				label-position="left"
+			>
+				<el-form-item
+					label="ssh configure"
+					:label-width="formLabelWidth"
+				>
 					<el-popover
 						placement="bottom"
 						:title="$t(languagePath('rsa_pub_tip.desc'))"
@@ -135,19 +150,31 @@
 							@click="showRSAPub"
 							type="primary"
 							plain
-							>{{ $t(languagePath("rsa_pub_tip.title")) }}</el-button
+							>{{
+								$t(languagePath("rsa_pub_tip.title"))
+							}}</el-button
 						>
 					</el-popover>
 				</el-form-item>
-				<el-form-item label="label" prop="label" :label-width="formLabelWidth">
-					<el-input v-model="form.label" autocomplete="off"></el-input>
+				<el-form-item
+					label="label"
+					prop="label"
+					:label-width="formLabelWidth"
+				>
+					<el-input
+						v-model="form.label"
+						autocomplete="off"
+					></el-input>
 				</el-form-item>
 				<el-form-item
 					label="description"
 					prop="description"
 					:label-width="formLabelWidth"
 				>
-					<el-input v-model="form.description" autocomplete="off"></el-input>
+					<el-input
+						v-model="form.description"
+						autocomplete="off"
+					></el-input>
 				</el-form-item>
 				<el-form-item
 					label="hostname"
@@ -160,7 +187,11 @@
 						placeholder="127.0.0.1"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="port" prop="port" :label-width="formLabelWidth">
+				<el-form-item
+					label="port"
+					prop="port"
+					:label-width="formLabelWidth"
+				>
 					<el-input v-model="form.port" autocomplete="off"></el-input>
 				</el-form-item>
 				<el-form-item
@@ -168,7 +199,10 @@
 					prop="username"
 					:label-width="formLabelWidth"
 				>
-					<el-input v-model="form.username" autocomplete="off"></el-input>
+					<el-input
+						v-model="form.username"
+						autocomplete="off"
+					></el-input>
 				</el-form-item>
 				<el-form-item
 					label="transport type"
@@ -197,15 +231,27 @@
 						placeholder="select scheduler type"
 					>
 						<el-option label="Direct" value="direct"></el-option>
-						<el-option label="PBSPro" value="pbspro" disabled></el-option>
-						<el-option label="SLURM" value="slurm" disabled></el-option>
+						<el-option
+							label="PBSPro"
+							value="pbspro"
+							disabled
+						></el-option>
+						<el-option
+							label="SLURM"
+							value="slurm"
+							disabled
+						></el-option>
 						<el-option
 							label="Oracle Grid Engine"
 							value="sge"
 							disabled
 						></el-option>
 						<el-option label="LSF" value="lsf" disabled></el-option>
-						<el-option label="Torque" value="torque" disabled></el-option>
+						<el-option
+							label="Torque"
+							value="torque"
+							disabled
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item
@@ -224,14 +270,20 @@
 					prop="shebang"
 					:label-width="formLabelWidth"
 				>
-					<el-input v-model="form.shebang" autocomplete="off"></el-input>
+					<el-input
+						v-model="form.shebang"
+						autocomplete="off"
+					></el-input>
 				</el-form-item>
 				<el-form-item
 					label="mpirun command"
 					prop="mpirun_command"
 					:label-width="formLabelWidth"
 				>
-					<el-input v-model="form.mpirun_command" autocomplete="off"></el-input>
+					<el-input
+						v-model="form.mpirun_command"
+						autocomplete="off"
+					></el-input>
 				</el-form-item>
 				<el-form-item
 					label="prepend text"
@@ -280,8 +332,14 @@
 					prop="key_policy"
 					:label-width="formLabelWidth"
 				>
-					<el-select v-model="form.key_policy" placeholder="select key policy">
-						<el-option label="RejectPolicy" value="RejectPolicy"></el-option>
+					<el-select
+						v-model="form.key_policy"
+						placeholder="select key policy"
+					>
+						<el-option
+							label="RejectPolicy"
+							value="RejectPolicy"
+						></el-option>
 						<el-option
 							label="WarningPolicy"
 							value="WarningPolicy"
@@ -318,7 +376,11 @@
 
 <script>
 import * as clipboard from "clipboard-polyfill";
-import { openWebsocket, sendWebsocket, closeWebsocket } from "@/libs/websocket.js";
+import {
+	openWebsocket,
+	sendWebsocket,
+	closeWebsocket
+} from "@/libs/websocket.js";
 import util from "@/libs/util";
 import CodeAdd from "../codes/code-add";
 const apiPrefix = "/computers/";
@@ -326,7 +388,7 @@ const wsPrefix = "/computers/";
 export default {
 	name: "cluster-computers",
 	components: {
-		CodeAdd,
+		CodeAdd
 	},
 	data() {
 		return {
@@ -337,7 +399,7 @@ export default {
 					user: {
 						id: "1325121640423690200",
 						email: "user@eamil.com",
-						username: "user",
+						username: "user"
 					},
 					attributes: {
 						label: "computer.label",
@@ -351,9 +413,9 @@ export default {
 						shebang: "computer.get_shebang()",
 						mpirun_command: "computer.get_mpirun_command()",
 						prepend_text: "computer.get_prepend_text()",
-						append_text: "computer.get_append_text()",
-					},
-				},
+						append_text: "computer.get_append_text()"
+					}
+				}
 			],
 			tableLoading: true,
 			currentPage: 1,
@@ -375,7 +437,7 @@ export default {
 				minimum_job_poll_interval: 10,
 				default_mpiprocs_per_machine: 1,
 				port: 22,
-				key_policy: "AutoAddPolicy",
+				key_policy: "AutoAddPolicy"
 			},
 			formRules: {
 				label: [{ required: true, trigger: "blur" }],
@@ -385,14 +447,12 @@ export default {
 				shebang: [{ required: true, trigger: "blur" }],
 				mpirun_command: [{ required: true, trigger: "blur" }],
 				minimum_job_poll_interval: [
-					{ required: true, trigger: "blur" },
-					{ min: 0, trigger: "blur" },
+					{ required: true, type: "number", min: 0, trigger: "blur" }
 				],
 				default_mpiprocs_per_machine: [
-					{ required: true, trigger: "blur" },
-					{ min: 1, trigger: "blur" },
+					{ required: true, type: "integer", min: 1, trigger: "blur" }
 				],
-				port: [{ required: true, trigger: "blur" }],
+				port: [{ required: true, trigger: "blur" }]
 			},
 			dialogFormVisible: false,
 			rsa_pub: "",
@@ -401,7 +461,7 @@ export default {
 			socket: null,
 			testLogs: {},
 			selectedComputer: "",
-			newCodeDialogVisible: false,
+			newCodeDialogVisible: false
 		};
 	},
 	methods: {
@@ -414,7 +474,7 @@ export default {
 			return `page.${this.$route.name.split("-").join(".")}.${key}`;
 		},
 		getRSAPub() {
-			this.$api.GetObj("/security/", "rsa_pub").then((resp) => {
+			this.$api.GetObj("/security/", "rsa_pub").then(resp => {
 				this.rsa_pub = resp.data;
 			});
 		},
@@ -423,11 +483,14 @@ export default {
 			size = this.pageSize,
 			options = this.queryForm
 		) {
-			return this.$api.GetList(apiPrefix, Object.assign({ page, size }, options));
+			return this.$api.GetList(
+				apiPrefix,
+				Object.assign({ page, size }, options)
+			);
 		},
 		handleCurrentPageChange(page) {
 			this.tableLoading = true;
-			this.pageRequest(page).then((resp) => {
+			this.pageRequest(page).then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
@@ -438,7 +501,7 @@ export default {
 		handlePageSizeChange(size) {
 			this.tableLoading = true;
 			this.pageSize = size;
-			this.pageRequest().then((resp) => {
+			this.pageRequest().then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
@@ -450,12 +513,12 @@ export default {
 		},
 		newComputersSubmit(formName) {
 			this.fullscreenLoading = true;
-			this.$refs[formName].validate((valid) => {
+			this.$refs[formName].validate(valid => {
 				if (valid) {
 					let data = Object.assign({}, this.form);
 					data.mpirun_command = data.mpirun_command.split(" ");
 					data.user = util.cookies.get("uuid");
-					this.$api.AddObj(apiPrefix, data).then((resp) => {
+					this.$api.AddObj(apiPrefix, data).then(resp => {
 						if (resp.code == 0) {
 							this.$message.success("Upload Success!");
 						}
@@ -465,6 +528,7 @@ export default {
 					});
 				} else {
 					this.$notify.error("Invaid Input");
+					this.fullscreenLoading = false;
 					return false;
 				}
 			});
@@ -481,14 +545,16 @@ export default {
 			this.$confirm("This will delete permanently, sure?", "Warning", {
 				confirmButtonText: "confirm",
 				cancelButtonText: "cancel",
-				type: "warning",
+				type: "warning"
 			})
 				.then(() => {
 					this.tableLoading = true;
-					this.$api.DelObj(apiPrefix, row.id).then((resp) => {
+					this.$api.DelObj(apiPrefix, row.id).then(resp => {
 						if (resp.code == 0) {
 							this.$message.success("Delete Success");
-							return this.handleCurrentPageChange(this.currentPage);
+							return this.handleCurrentPageChange(
+								this.currentPage
+							);
 						}
 						this.tableLoading = false;
 					});
@@ -496,7 +562,7 @@ export default {
 				.catch(() => {
 					this.$message({
 						type: "info",
-						message: "canceled",
+						message: "canceled"
 					});
 				});
 		},
@@ -511,7 +577,7 @@ export default {
 					{
 						confirmButtonText: "confirm",
 						cancelButtonText: "cancel",
-						type: "info",
+						type: "info"
 					}
 				)
 					.then(() => {
@@ -524,15 +590,15 @@ export default {
 							this.onWSError
 						);
 					})
-					.catch((e) => {
+					.catch(e => {
 						this.$log.push({
 							message: e.toString(),
-							type: "danger",
+							type: "danger"
 						});
 						console.error(e);
 						this.$message({
 							type: "info",
-							message: "canceled",
+							message: "canceled"
 						});
 					});
 			}
@@ -556,10 +622,10 @@ export default {
 			}
 			this.newCodeDialogVisible = true;
 			this.selectedComputer = row.id;
-		},
+		}
 	},
 	mounted() {
-		this.pageRequest().then((resp) => {
+		this.pageRequest().then(resp => {
 			let data = resp.data;
 			this.tableData = data.results;
 			this.totalCount = data.count;
@@ -570,7 +636,7 @@ export default {
 	beforeDestroy() {
 		this.tableLoading = false;
 		closeWebsocket();
-	},
+	}
 };
 </script>
 

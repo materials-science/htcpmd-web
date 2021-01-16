@@ -1,40 +1,207 @@
 <template>
-	<d2-container better-scroll class="data-calctasks-upload-shengbte-container">
-		<el-row>
-			<el-col :span="6"><h2>ShengBTE</h2></el-col>
+	<d2-container class="data-calctasks-upload-shengbte-container">
+		<el-row type="flex" justify="center">
+			<el-col :xl="16"><h1>ShengBTE</h1></el-col>
 		</el-row>
-		<el-row>
-			<el-col :span="16">
-				<el-divider content-position="center">ShengBTE Task Settings</el-divider>
+		<el-row type="flex" justify="center">
+			<el-col :xl="16">
+				<el-divider content-position="center"
+					><el-tag effect="plain"
+						><h2>ShengBTE Task Settings</h2></el-tag
+					></el-divider
+				>
 			</el-col>
 		</el-row>
 		<div class="form-box">
+			<!-- CalcJob Label -->
+			<el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
+						><el-tag><h3>CalcTask Label</h3></el-tag></el-col
+					>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-divider content-position="left"
+							>Set a label for your task</el-divider
+						>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-input v-model="calctasks_label"></el-input>
+					</el-col>
+				</el-row>
+			</el-row>
+			<!-- CalcJob Type -->
+			<el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
+						><el-tag><h3>CalcTask Type</h3></el-tag></el-col
+					>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-divider content-position="left">
+							Select calculations or workchains model you
+							want</el-divider
+						>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-select
+							v-model="calctasks_type_selected_index"
+							placeholder="Choose A Type"
+							filterable
+							autocomplete
+							default-first-option
+							:loading="load_calctasks_types"
+							@change="calctasksTypeChange"
+						>
+							<el-option
+								v-for="item in calctasks_types"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value"
+							>
+							</el-option>
+						</el-select>
+					</el-col>
+				</el-row>
+			</el-row>
+			<!-- Computer -->
+			<el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
+						><el-tag><h3>Computer</h3></el-tag>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-divider content-position="left"
+							>Set a computer where your calculations submit
+							to</el-divider
+						>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-select
+							v-model="computers_selected"
+							placeholder="Choose A Computer"
+							filterable
+							default-first-option
+							remote
+							:remote-method="getComputersList"
+							:loading="loading_computers_list"
+						>
+							<el-option
+								v-for="item in computers_list"
+								:key="item.id"
+								:label="`${item.label} - (${item.id})`"
+								:value="item.id"
+							>
+							</el-option>
+						</el-select>
+					</el-col>
+				</el-row>
+			</el-row>
+			<!-- code -->
+			<el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
+						><el-tag><h3>Code</h3></el-tag></el-col
+					>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-divider content-position="left"
+							>Set a code for your calculations
+						</el-divider>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-select
+							v-model="codes_selected"
+							placeholder="Choose A Code"
+							filterable
+							default-first-option
+							remote
+							:remote-method="getCodesList"
+							:loading="loading_codes_list"
+						>
+							<el-option
+								v-for="item in codes_list"
+								:key="item.id"
+								:label="`${item.label} - (${item.id})`"
+								:value="item.id"
+							>
+							</el-option>
+						</el-select>
+					</el-col>
+				</el-row>
+			</el-row>
+			<!-- CalcJob Description -->
+			<el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
+						><el-tag><h3>CalcTask Description</h3></el-tag></el-col
+					>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-divider content-position="left"
+							>Description of your task</el-divider
+						>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-input
+							type="textarea"
+							:autosize="{ minRows: 2 }"
+							placeholder=""
+							v-model="calctasks_description"
+							show-word-limit
+						>
+						</el-input>
+					</el-col>
+				</el-row>
+			</el-row>
 			<!-- Structures -->
 			<el-row>
-				<el-row>
-					<el-col :span="8"
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
 						><el-tag><h3>Structures</h3></el-tag></el-col
 					>
 				</el-row>
-				<el-row>
-					<el-col :span="16">
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
 						<el-divider content-position="left"
 							>Set Structures for your calculations</el-divider
 						>
 					</el-col>
 				</el-row>
-				<el-row>
-					<el-col :span="16">
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
 						<el-table
 							:data="structures"
 							v-loading="loading_structures"
 							style="width: 100%"
 						>
-							<el-table-column prop="id" label="id" align="center">
+							<el-table-column
+								prop="id"
+								label="id"
+								align="center"
+							>
 							</el-table-column>
 							<el-table-column label="formula" align="center">
 								<template slot-scope="props">
-									<span v-html="props.row.attributes.formula"></span>
+									<span
+										v-html="props.row.attributes.formula"
+									></span>
 								</template>
 							</el-table-column>
 							<el-table-column align="right">
@@ -55,7 +222,9 @@
 											<el-button
 												icon="el-icon-plus"
 												circle
-												@click.native.prevent="addNewStructure"
+												@click.native.prevent="
+													addNewStructure
+												"
 												size="small"
 											>
 											</el-button
@@ -68,12 +237,14 @@
 										title="help"
 										width="200"
 										trigger="hover"
-										content="Go to see details of this structure"
+										content="Details of this structure"
 										style="margin-right: 8px"
 									>
 										<el-button
 											slot="reference"
-											@click.native.prevent="viewDetail(scope.row)"
+											@click.native.prevent="
+												viewDetail(scope.row)
+											"
 											icon="el-icon-view"
 											size="small"
 										></el-button>
@@ -88,7 +259,10 @@
 										<el-button
 											slot="reference"
 											@click.native.prevent="
-												deleteRow(scope.$index, structures)
+												deleteRow(
+													scope.$index,
+													structures
+												)
 											"
 											icon="el-icon-circle-close"
 											size="small"
@@ -100,112 +274,105 @@
 					</el-col>
 				</el-row>
 			</el-row>
-			<!-- CalcJob Label -->
+			<!-- process per machine -->
 			<el-row>
-				<el-row>
-					<el-col :span="8"
-						><el-tag><h3>CalcTask Label</h3></el-tag></el-col
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
+						><el-tag
+							><h3>num_mpiprocs_per_machine</h3></el-tag
+						></el-col
 					>
 				</el-row>
-				<el-row>
-					<el-col :span="16">
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
 						<el-divider content-position="left"
-							>Set a label for your task</el-divider
+							>Set number of mpi process per machine</el-divider
 						>
 					</el-col>
 				</el-row>
-				<el-row>
-					<el-col :span="16">
-						<el-select
-							v-model="calctasks_label_selected"
-							placeholder="CalcTask Label"
-							allow-create
-							filterable
-							clearable
-						>
-							<el-option
-								v-for="item in calctasks_labels"
-								:key="item.value"
-								:label="item.label"
-								:value="item.value"
-							>
-							</el-option>
-						</el-select>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-input-number
+							v-model="num_mpiprocs_per_machine"
+							:min="1"
+						></el-input-number>
 					</el-col>
 				</el-row>
-			</el-row>
-			<!-- CalcJob Type -->
-			<el-row>
-				<el-col :span="24">
-					<el-row>
-						<el-col :span="8"
-							><el-tag><h3>CalcTask Type</h3></el-tag></el-col
-						>
-					</el-row>
-					<el-row>
-						<el-col :span="16">
-							<el-divider content-position="left"
-								>Select calculations or workchains model you
-								want</el-divider
-							>
-						</el-col>
-					</el-row>
-					<el-row>
-						<el-col :span="16">
-							<el-select
-								v-model="calctasks_type_selected_index"
-								placeholder="Choose A Type"
-								filterable
-								autocomplete
-								:loading="load_calctasks_types"
-								@change="calctasksTypeChange"
-							>
-								<el-option
-									v-for="item in calctasks_types"
-									:key="item.value"
-									:label="item.label"
-									:value="item.value"
-								>
-								</el-option>
-							</el-select>
-						</el-col>
-					</el-row>
-				</el-col>
 			</el-row>
 		</div>
 		<transition name="el-fade-in">
-			<el-row v-show="calctasks_type_selected">
-				<el-col :span="16">
-					<el-divider content-position="center"
-						>{{ calctasks_type_selected }} Parameters</el-divider
-					>
+			<el-row
+				v-show="calctasks_type_selected"
+				type="flex"
+				justify="center"
+			>
+				<el-col :xl="16">
+					<el-divider content-position="center">
+						<el-divider content-position="center"
+							><el-tag effect="plain"
+								><h2>
+									{{ calctasks_type_selected }} Parameters
+								</h2></el-tag
+							></el-divider
+						>
+					</el-divider>
 				</el-col>
 			</el-row>
 		</transition>
-		<component :is="calctasks_type_selected"></component>
+		<!-- @todo[1] -->
+		<component
+			:is="calctasks_type_selected"
+			:calctasks_settings="calctasks_settings"
+		></component>
 	</d2-container>
 </template>
 
 <script>
-const apiPrefix = "/calctasks/";
+/*******************************************************************************
+ * TODO: [1]New approche to support mutiple calculations.
+ ******************************************************************************/
 import ShengBTECalculation from "./components/ShengBTECalculation";
+import ShengBTEWorkChain from "./components/ShengBTEWorkChain";
+import util from "@/libs/util";
+const apiPrefix = "/calctasks/";
 export default {
 	name: "data-calctasks-upload-shengbte",
-	components: {
-		ShengBTECalculation,
-	},
+	components: { ShengBTECalculation, ShengBTEWorkChain },
 	data() {
 		return {
-			calctasks_label_selected: "",
-			calctasks_labels: [],
+			calctasks_label: "",
 			calctasks_type_selected_index: null,
 			calctasks_type_selected: null,
 			calctasks_types: [],
 			load_calctasks_types: true,
+			calctasks_description: "",
 			structures: [],
 			loading_structures: true,
 			new_structure_id: "",
+			// computers
+			loading_computers_list: false,
+			computers_list: [],
+			computers_selected: "",
+			// codes
+			loading_codes_list: false,
+			codes_list: [],
+			codes_selected: "",
+			num_mpiprocs_per_machine: 1
 		};
+	},
+	computed: {
+		calctasks_settings() {
+			return {
+				calctasks_label: this.calctasks_label,
+				calctasks_type: this.calctasks_type_selected,
+				calctasks_description: this.calctasks_description,
+				computer: this.computers_selected,
+				code: this.codes_selected,
+				num_mpiprocs_per_machine: this.num_mpiprocs_per_machine,
+				structures: this.structures,
+				user: util.cookies.get("uuid")
+			};
+		}
 	},
 	methods: {
 		deleteRow(index, rows) {
@@ -217,51 +384,113 @@ export default {
 				this.$message.error("ID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${id}`,
+				path: `/data/structures/${id}`
 			});
 		},
 		async loadStructures() {
-			const db = await this.$store.dispatch("d2admin/db/database", { user: true });
+			const db = await this.$store.dispatch("d2admin/db/database", {
+				user: true
+			});
+			// TODO: Remove selected structures stored in local database
 			this.structures = db.get("selectedStructures").value() || [];
+			console.log(this.structures);
+			// @todo[1]
+			if (this.structures.length > 1) {
+				this.$message.info(
+					"Only support for single calculation of ShengBTE Now. It will use the first structure."
+				);
+				this.structures = this.structures[0];
+			}
 			this.loading_structures = false;
 		},
 		addNewStructure() {
 			if (this.new_structure_id == "") {
-				return this.$message.error("Please input a valid structure id.");
+				return this.$message.error(
+					"Please input a valid structure id."
+				);
+			}
+			// @todo[1]
+			if (this.structures.length > 0) {
+				return this.$message.info(
+					"Only support for single calculation of ShengBTE Now."
+				);
 			}
 			this.loading_structures = true;
-			this.$api.GetObj("/structures/", this.new_structure_id).then((resp) => {
-				this.loading_structures = false;
-				try {
-					if (resp.code == 0) {
-						this.structures.push({
-							id: this.new_structure_id,
-							formula: resp.data.attributes.formula,
-						});
-						this.new_structure_id = "";
-						return this.$message.success("Added a new structure.");
+			this.$api
+				.GetObj("/structures/", this.new_structure_id)
+				.then(resp => {
+					this.loading_structures = false;
+					try {
+						if (resp.code == 0) {
+							this.structures.push(resp.data);
+							console.log(this.structures);
+							this.new_structure_id = "";
+							return this.$message.success(
+								"Added a new structure."
+							);
+						}
+						return this.$message.error("Structure does not exist.");
+					} catch {
+						return this.$message.error(
+							"Whoops! Something was wrong."
+						);
 					}
-					return this.$message.error("Structure does not exist.");
-				} catch {
-					return this.$message.error("Whoops! Something was wrong.");
-				}
-			});
+				});
 		},
 		calctasksTypeChange(val) {
-			this.calctasks_type_selected = this.calctasks_types[val].label;
+			this.calctasks_type_selected = this.calctasks_types[val - 1].label;
 		},
+		getComputersList(query) {
+			if (query == "") {
+				return (this.computers_list = []);
+			}
+			this.loading_computers_list = true;
+			this.$api
+				.GetList("/computers/", { label: query, id: query })
+				.then(resp => {
+					if (resp.code == 0) {
+						this.computers_list = resp.data.results;
+					} else {
+						this.$message.error("Retrivied failed! Please retry.");
+					}
+					this.loading_computers_list = false;
+				});
+		},
+		getCodesList(query) {
+			if (query == "") {
+				return (this.codes_list = []);
+			}
+			if (this.computers_selected == "") {
+				return this.$message.info("Please select a computer first!");
+			}
+			this.loading_codes_list = true;
+			this.$api
+				.GetList("/codes/", {
+					label: query,
+					id: query,
+					computer: this.computers_selected
+				})
+				.then(resp => {
+					if (resp.code == 0) {
+						this.codes_list = resp.data.results;
+					} else {
+						this.$message.error("Retrivied failed! Please retry.");
+					}
+					this.loading_codes_list = false;
+				});
+		}
 	},
 	mounted() {
 		// load calctasks type
-		this.$api.GetList(`/calctask_types/`).then((resp) => {
+		this.$api.GetList(`/calctask_types/`).then(resp => {
 			if (resp.code == 0) {
 				let data = resp.data;
 				let calctasks_types = [];
-				data.forEach((item) => {
+				data.forEach(item => {
 					calctasks_types.push({
 						label: item.type_name,
 						value: item.id,
-						disabled: item.disabled,
+						disabled: item.disabled
 					});
 				});
 				this.calctasks_types = calctasks_types;
@@ -269,7 +498,7 @@ export default {
 				this.$message.error("No CalcTasks Types Avaliable.");
 				setTimeout(() => {
 					this.$store.dispatch("d2admin/page/close", {
-						tagName: "/data/upload/calctasks",
+						tagName: "/data/upload/calctasks"
 					});
 				}, 1500);
 				return;
@@ -277,7 +506,7 @@ export default {
 			this.load_calctasks_types = false;
 		});
 		this.loadStructures();
-	},
+	}
 };
 </script>
 

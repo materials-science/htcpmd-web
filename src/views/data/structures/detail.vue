@@ -15,7 +15,9 @@
 					<el-col :span="12" class="material-detail">
 						<el-row>
 							<el-col :span="DetailSpan">
-								<p class="material-detail-title">Material Detail</p>
+								<p class="material-detail-title">
+									Material Detail
+								</p>
 							</el-col>
 						</el-row>
 						<!-- cell -->
@@ -73,7 +75,9 @@
 						<el-row :gutter="20">
 							<el-col :span="DetailSpan / 3">
 								<div class="label">
-									<el-tag effect="plain"> reciprocal_cell cell </el-tag>
+									<el-tag effect="plain">
+										reciprocal_cell cell
+									</el-tag>
 								</div>
 							</el-col>
 							<el-col :span="(DetailSpan * 2) / 3">
@@ -150,7 +154,9 @@
 						<el-row :gutter="20" type="flex" align="middle">
 							<el-col :span="DetailSpan / 3">
 								<div class="label">
-									<el-tag effect="plain"> center_of_mass </el-tag>
+									<el-tag effect="plain">
+										center_of_mass
+									</el-tag>
 								</div>
 							</el-col>
 							<el-col :span="(DetailSpan * 2) / 3">
@@ -202,7 +208,9 @@
 						<el-row :gutter="20" type="flex" align="middle">
 							<el-col :span="DetailSpan / 3">
 								<div class="label">
-									<el-tag effect="plain"> created time </el-tag>
+									<el-tag effect="plain">
+										created time
+									</el-tag>
 								</div>
 							</el-col>
 							<el-col :span="(DetailSpan * 2) / 3">
@@ -221,7 +229,9 @@
 						<el-row :gutter="20" type="flex" align="middle">
 							<el-col :span="DetailSpan / 3">
 								<div class="label">
-									<el-tag effect="plain"> last modified </el-tag>
+									<el-tag effect="plain">
+										last modified
+									</el-tag>
 								</div>
 							</el-col>
 							<el-col :span="(DetailSpan * 2) / 3">
@@ -247,7 +257,10 @@
 								<p class="viewer-title">Crystal Structure</p>
 							</el-col>
 						</el-row>
-						<div class="structure-viewer" :id="`detail-viewer-${id}`">
+						<div
+							class="structure-viewer"
+							:id="`detail-viewer-${id}`"
+						>
 							<div
 								class="structure-viewer-cover"
 								v-if="viewerCoverTip"
@@ -256,7 +269,7 @@
 										? `url('${structure.cover_img}')`
 										: '',
 									'background-position': 'center',
-									'background-blend-mode': 'darken',
+									'background-blend-mode': 'darken'
 								}"
 							></div>
 							<p
@@ -286,7 +299,7 @@ let viewer = null;
 let viewer_id = null;
 const viewer_config = {
 	// backgroundColor: "#73757C",
-	backgroundColor: "white",
+	backgroundColor: "white"
 };
 export default {
 	name: "data-structure",
@@ -294,17 +307,18 @@ export default {
 		return {
 			id: "",
 			structure: {},
+			attributes: {},
 			fullscreenLoading: true,
 			numberPrecision: 6,
 			DetailSpan: 24,
 			viewerLoading: false,
-			viewerCoverTip: true,
+			viewerCoverTip: true
 		};
 	},
 	methods: {
 		displayViewer() {
 			this.viewerLoading = true;
-			api.GetFileStream(this.id).then((resp) => {
+			api.GetFileStream(this.id).then(resp => {
 				this.structureFileData = resp.data;
 				this.showStructureViewer(this.structureFileData);
 				this.viewerLoading = false;
@@ -320,23 +334,23 @@ export default {
 			viewer = $3Dmol.createViewer(viewer_id, viewer_config);
 			let m = viewer.addModel(fileString, ext_name);
 			viewer.addUnitCell(m, {
-				box: { color: "purple" },
+				box: { color: "purple" }
 			});
 			viewer.addUnitCell(m);
 			viewer.setHoverable(
 				{},
 				true,
-				function (atom, viewer, event, container) {
+				function(atom, viewer, event, container) {
 					if (!atom.label) {
 						atom.label = viewer.addLabel(atom.elem, {
 							position: atom,
 							backgroundColor: "darkgreen",
 							backgroundOpacity: 0.5,
-							fontColor: "white",
+							fontColor: "white"
 						});
 					}
 				},
-				function (atom) {
+				function(atom) {
 					if (atom.label) {
 						viewer.removeLabel(atom.label);
 						delete atom.label;
@@ -346,7 +360,7 @@ export default {
 
 			viewer.setStyle({
 				stick: { radius: 0.15, opacity: 0.7, singleBonds: true },
-				sphere: { scale: 0.4 },
+				sphere: { scale: 0.4 }
 			});
 			viewer.zoomTo();
 			viewer.render();
@@ -361,7 +375,7 @@ export default {
 			if (viewer_id) viewer_id.children("canvas").remove();
 			this.viewerCoverTip = true;
 			next();
-		},
+		}
 	},
 	mounted() {
 		this.id = this.$route.params.id;
@@ -371,10 +385,15 @@ export default {
 				this.$router.back();
 			}, 1500);
 		}
-		api.GetObj(this.id).then((resp) => {
+		api.GetObj(this.id).then(resp => {
 			this.structure = resp.data;
 			this.attributes = this.structure.attributes;
 			this.fullscreenLoading = false;
+
+			this.$store.dispatch("d2admin/page/update", {
+				tagName: this.$route.fullPath,
+				title: `structure-${this.attributes.formula}`
+			});
 		});
 		viewer_config.id = `detail-viewer-canvas-${this.id}`;
 	},
@@ -383,7 +402,7 @@ export default {
 	},
 	beforeRouteLeave(to, from, next) {
 		this.clearPageContent(to, from, next);
-	},
+	}
 };
 </script>
 

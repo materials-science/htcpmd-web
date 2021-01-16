@@ -30,12 +30,18 @@
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column type="expand">
 				<template slot-scope="props">
-					<el-form label-position="left" inline class="structure-table-expand">
+					<el-form
+						label-position="left"
+						inline
+						class="structure-table-expand"
+					>
 						<el-form-item label="ID">
 							<span>{{ props.row.id }}</span>
 						</el-form-item>
 						<el-form-item label="center of mass">
-							<span>{{ props.row.attributes.center_of_mass }}</span>
+							<span>{{
+								props.row.attributes.center_of_mass
+							}}</span>
 						</el-form-item>
 						<el-form-item label="cell"> </el-form-item>
 						<div class="inline-display-block">
@@ -167,8 +173,8 @@ export default {
 						formula: "C<sub>4</sub>Si<sub>4</sub>",
 						number_of_atoms: 8,
 						spacegroup: 216,
-						volume: 84.0024,
-					},
+						volume: 84.0024
+					}
 				},
 				{
 					id: "1325121640423690200",
@@ -176,8 +182,8 @@ export default {
 						formula: "C<sub>4</sub>Si<sub>4</sub>",
 						number_of_atoms: 8,
 						spacegroup: 216,
-						volume: 84.0024,
-					},
+						volume: 84.0024
+					}
 				},
 				{
 					id: "1325121640423690200",
@@ -185,16 +191,16 @@ export default {
 						formula: "C<sub>4</sub>Si<sub>4</sub>",
 						number_of_atoms: 8,
 						spacegroup: 216,
-						volume: 84.0024,
-					},
-				},
+						volume: 84.0024
+					}
+				}
 			],
 			tableLoading: true,
 			currentPage: 1,
 			totalCount: 0,
 			pageSize: 2,
 			queryForm: {},
-			multipleSelection: [],
+			multipleSelection: []
 		};
 	},
 	methods: {
@@ -207,7 +213,7 @@ export default {
 		},
 		handleCurrentPageChange(page) {
 			this.tableLoading = true;
-			this.pageRequest(page).then((resp) => {
+			this.pageRequest(page).then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
@@ -218,7 +224,7 @@ export default {
 		handlePageSizeChange(size) {
 			this.tableLoading = true;
 			this.pageSize = size;
-			this.pageRequest().then((resp) => {
+			this.pageRequest().then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
@@ -234,44 +240,49 @@ export default {
 				return this.$message.error("ID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${id}`,
+				path: `/data/structures/${id}`
 			});
 		},
 		async addNewTasks() {
 			if (this.multipleSelection.length == 0) {
 				return this.$message.error("You must choose one at least.");
 			} else if (
-				this.multipleSelection.length >= setting.calcjobs.max_structures_once
+				this.multipleSelection.length >=
+				setting.calcjobs.max_structures_once
 			) {
 				return this.$message.error(
 					`Only support ${setting.calcjobs.max_structures_once} structures once currently.`
 				);
 			}
 			const db = await this.$store.dispatch("d2admin/db/database", {
-				user: true,
+				user: true
 			});
 			db.set("selectedStructures", this.multipleSelection).write();
 
 			this.$router.push({
-				path: `/data/upload/calctasks`,
+				path: `/data/upload/calctasks`
 			});
 		},
 		addNewStructures() {
 			this.$router.push({
-				path: `/data/upload/structures`,
+				path: `/data/upload/structures`
 			});
-		},
+		}
 	},
 	mounted() {
 		if (!this.$route.query.elements || !this.$route.query.mode) {
 			return;
 		}
 		this.queryForm = this.$route.query;
-		this.pageRequest().then((resp) => {
+		this.pageRequest().then(resp => {
 			let data = resp.data;
 			this.tableData = data.results;
 			this.totalCount = data.count;
 			this.tableLoading = false;
+		});
+		this.$store.dispatch("d2admin/page/update", {
+			tagName: this.$route.fullPath,
+			title: `search-${this.$route.query.elements}`
 		});
 	},
 	beforeCreate() {
@@ -279,11 +290,11 @@ export default {
 			this.$message.warning("Please go to Home Page for searching!");
 			setTimeout(() => {
 				this.$store.dispatch("d2admin/page/close", {
-					tagName: "/data/structures",
+					tagName: "/data/structures"
 				});
 			}, 1500);
 		}
-	},
+	}
 };
 </script>
 

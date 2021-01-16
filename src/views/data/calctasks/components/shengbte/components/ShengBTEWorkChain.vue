@@ -1,5 +1,5 @@
 <template>
-	<div class="task-parameters">
+	<div class="task-parameters" v-loading="lockComponentFlag">
 		<!-- Control -->
 		<el-row class="data-control">
 			<el-row type="flex" justify="center">
@@ -29,23 +29,16 @@
 							<h5 style="text-transform: uppercase;">
 								allocations
 							</h5>
-							<el-form-item label="nelements" prop="nelements">
+							<el-form-item label="ngrid" prop="ngrid">
 								<p class="color-text-sub">
-									number of different elements in the compound
+									number of grid planes along each axis in
+									reciprocal space e.g. [3,3,3]
 								</p>
-								<el-input-number
-									v-model="allocationsForm.nelements"
-									:min="1"
-								></el-input-number>
-							</el-form-item>
-							<el-form-item label="natoms" prop="natoms">
-								<p class="color-text-sub">
-									number of atoms in the unit cell
-								</p>
-								<el-input-number
-									v-model="allocationsForm.natoms"
-									:min="1"
-								></el-input-number>
+								<number-table
+									:span="6"
+									:data="allocationsForm.ngrid"
+									:precision="0"
+								></number-table>
 							</el-form-item>
 							<el-form-item
 								label="norientations"
@@ -59,18 +52,6 @@
 									v-model="allocationsForm.norientations"
 									:min="0"
 								></el-input-number>
-							</el-form-item>
-							<el-form-item label="ngrid" prop="ngrid">
-								<p class="color-text-sub">
-									number of grid planes along each axis in
-									reciprocal space e.g. [3,3,3]
-								</p>
-								<number-table
-									:span="6"
-									:data="allocationsForm.ngrid"
-									:precision="0"
-									@update="ngridUpdate"
-								></number-table>
 							</el-form-item>
 						</el-form>
 					</el-col>
@@ -87,46 +68,6 @@
 							size="small"
 						>
 							<h5 style="text-transform: uppercase;">crystal</h5>
-							<el-form-item label="elements" prop="elements">
-								<p class="color-text-sub">
-									a vector of element names, split with blank
-									space
-								</p>
-								<el-row
-									type="flex"
-									style="flex-wrap:wrap;max-width:50%;"
-								>
-									<el-col
-										:span="2"
-										v-for="index in allocationsForm.nelements"
-										:key="index"
-										style="margin-right: 8px;min-width:64px;"
-									>
-										<el-select
-											v-model="
-												crystalForm.elements[index - 1]
-											"
-											filterable
-											default-first-option
-											placeholder="element"
-											@change="
-												selectAElement(
-													$event,
-													index - 1
-												)
-											"
-										>
-											<el-option
-												v-for="item in Elements"
-												:key="item.id"
-												:label="item.name_small"
-												:value="item.name_small"
-											>
-											</el-option>
-										</el-select>
-									</el-col>
-								</el-row>
-							</el-form-item>
 							<el-form-item label="scell" prop="scell">
 								<p class="color-text-sub">
 									supercell sizes along each crystal axis used
@@ -136,7 +77,6 @@
 									:span="6"
 									:data="crystalForm.scell"
 									:precision="0"
-									@update="scellUpdate"
 								></number-table>
 							</el-form-item>
 							<el-form-item label="lfactor" prop="lfactor">
@@ -148,40 +88,6 @@
 									:precision="6"
 									:step="0.1"
 								></el-input-number>
-							</el-form-item>
-							<el-form-item label="lattvec" prop="lattvec">
-								<p class="color-text-sub">
-									real-space lattice vectors, in units of
-									lfactor
-								</p>
-								<number-table
-									:span="6"
-									:data="crystalForm.lattvec"
-									@update="lattvecUpdate"
-								></number-table>
-							</el-form-item>
-							<el-form-item label="types" prop="types">
-								<p class="color-text-sub">
-									a vector of natom integers, ranging from 1
-									to nelements, assigning an element to each
-									atom in the system
-								</p>
-								<number-table
-									:span="6"
-									:data="crystalForm.types"
-									:precision="0"
-									@update="typesUpdate"
-								></number-table>
-							</el-form-item>
-							<el-form-item label="positions" prop="positions">
-								<p class="color-text-sub">
-									atomic positions in lattice coordinates
-								</p>
-								<number-table
-									:span="6"
-									:data="crystalForm.positions"
-									@update="positionsUpdate"
-								></number-table>
 							</el-form-item>
 							<el-form-item label="epsilon" prop="epsilon">
 								<p class="color-text-sub">
@@ -204,7 +110,6 @@
 									<number-table
 										:span="6"
 										:data="crystalForm.epsilon"
-										@update="epsilonUpdate"
 									></number-table>
 								</template>
 							</el-form-item>
@@ -235,9 +140,6 @@
 											<number-table
 												:span="6"
 												:data="item"
-												@update="
-													bornUpdate($event, num)
-												"
 											></number-table>
 										</el-col>
 									</el-row>
@@ -269,7 +171,6 @@
 										:span="6"
 										:data="crystalForm.masses"
 										:precision="6"
-										@update="massesUpdate"
 									></number-table>
 								</template>
 							</el-form-item>
@@ -298,7 +199,6 @@
 										:span="6"
 										:data="crystalForm.gfactors"
 										:precision="6"
-										@update="gfactorsUpdate"
 									></number-table>
 								</template>
 							</el-form-item>
@@ -316,7 +216,6 @@
 										:span="6"
 										:data="crystalForm.orientations"
 										:precision="0"
-										@update="orientationsUpdate"
 									></number-table>
 								</el-form-item>
 							</template>
@@ -812,13 +711,15 @@
 </template>
 
 <script>
+/*******************************************************************************
+ * TODO: [1]New approche to support mutiple calculations.
+ ******************************************************************************/
 import NumberTable from "@/components/number-table";
-import elementsData from "@/assets/data/periodic.json";
 import validate from "@/libs/util.validate";
 import util from "@/libs/util";
 import setting from "@/setting";
 export default {
-	name: "ShengBTECalculation",
+	name: "ShengBTEWorkChain",
 	components: {
 		NumberTable
 	},
@@ -828,27 +729,14 @@ export default {
 	data() {
 		let validateArray = validate.elements_of_array_are_not_null;
 		return {
+			lockComponentFlag: false,
 			structures: [],
 			allocationsForm: {
-				nelements: 0,
-				natoms: 0,
 				ngrid: [3, 3, 3],
 				norientations: 0
 			},
 			crystalForm: {
 				lfactor: 1.0,
-				lattvec: [
-					[1.0, 0.0, 0.0],
-					[0.0, 1.0, 0.0],
-					[0.0, 0.0, 1.0]
-				],
-				types: [0],
-				elements: [""],
-				positions: [
-					[1.0, 0.0, 0.0],
-					[0.0, 1.0, 0.0],
-					[0.0, 0.0, 1.0]
-				],
 				masses: [0],
 				gfactors: [0],
 				epsilon: [
@@ -890,25 +778,11 @@ export default {
 				espresso: false
 			},
 			allocationsFormRules: {
-				nelements: [
-					{ required: true, type: "integer", trigger: "blur" }
-				],
-				natoms: [{ required: true, type: "integer", trigger: "blur" }],
 				ngrid: [{ required: true, trigger: "blur" }],
 				norientations: [{ type: "number", trigger: "blur" }]
 			},
 			crystalFormRules: {
 				lfactor: [{ required: true, trigger: "blur" }],
-				lattvec: [{ required: true, trigger: "blur" }],
-				types: [{ required: true, trigger: "blur" }],
-				elements: [
-					{
-						required: true,
-						validator: validateArray,
-						trigger: "blur"
-					}
-				],
-				positions: [{ required: true, trigger: "blur" }],
 				scell: [{ required: true, trigger: "blur" }]
 			},
 			parametersFormRules: {
@@ -934,7 +808,7 @@ export default {
 			// file
 			fileList: [],
 			formData: {},
-			uploadApi: "/api/calctasks/shengbte/ShengBTECalculation/",
+			uploadApi: "/api/calctasks/shengbte/ShengBTEWorkChain/",
 			uploadHeaders: {
 				Authorization: `Token ${util.cookies.get("token")}`
 			},
@@ -945,11 +819,6 @@ export default {
 			formChecked: false,
 			fileData: []
 		};
-	},
-	computed: {
-		Elements() {
-			return elementsData;
-		}
 	},
 	methods: {
 		exceedFileInfo() {
@@ -983,39 +852,6 @@ export default {
 				index,
 				this.crystalForm.elements.length
 			);
-		},
-		// TODO: Remove update methods latter
-		ngridUpdate(val) {
-			// this.allocationsForm.ngrid = val;
-		},
-		scellUpdate(val) {
-			// this.crystalForm.scell = val;
-		},
-		lattvecUpdate(val) {
-			// this.crystalForm.lattvec = val;
-		},
-		typesUpdate(val) {
-			// this.crystalForm.types = val;
-		},
-		positionsUpdate(val) {
-			// this.crystalForm.positions = val;
-		},
-		massesUpdate(val) {
-			// this.crystalForm.masses = val;
-		},
-		gfactorsUpdate(val) {
-			// this.crystalForm.gfactors = val;
-		},
-		epsilonUpdate(val) {
-			// this.crystalForm.epsilon = val;
-		},
-		bornUpdate(event, num) {
-			// console.error(event);
-			// console.log(num);
-			// this.crystalForm.born = event;
-		},
-		orientationsUpdate(val) {
-			// this.crystalForm.orientations = val;
 		},
 		getValX3Array(val, defaultVal = 0) {
 			const arr1 = Array.isArray(defaultVal)
@@ -1154,7 +990,7 @@ export default {
 				return false;
 			}
 			try {
-				const settings = this.formData.calctasks_settings;
+				const settings = this.calctasks_settings;
 				let failed = false;
 				(settings.structures.length == 0 ||
 					settings.calctasks_type == "" ||
@@ -1169,6 +1005,7 @@ export default {
 					this.fullscreenLoading = false;
 					return false;
 				}
+				this.formData.calctasks_settings = settings;
 			} catch (err) {
 				this.$message.error("Invaid calctask settings. Please check.");
 				this.fullscreenLoading = false;
@@ -1180,7 +1017,7 @@ export default {
 				this.fileData.append("data", JSON.stringify(this.formData));
 				this.$api
 					.AddObj(
-						"/calctasks/shengbte/ShengBTECalculation/",
+						"/calctasks/shengbte/ShengBTEWorkChain/",
 						this.fileData
 					)
 					.then(resp => {
@@ -1193,7 +1030,10 @@ export default {
 		getControlFile() {
 			this.fullscreenLoading = true;
 			this.$api
-				.AddObj("/utils/shengbte/files/control/", this.formData.control)
+				.AddObj(
+					`/utils/shengbte/files/control/?structure=${this.calctasks_settings.structures[0].id}`,
+					this.formData.control
+				)
 				.then(resp => {
 					if (resp.code == 0) {
 						this.ControlFile = resp.data;
@@ -1223,26 +1063,36 @@ export default {
 		},
 		uploadSuccess() {
 			// this.fullscreenLoading = false;
+		},
+		validateSettings() {
+			try {
+				let newVal = this.calctasks_settings.structures[0].attributes
+					.elements.length;
+				this.massesToggleFlag &&
+					(this.crystalForm.masses = new Array(newVal).fill(""));
+				this.gfactorsToggleFlag &&
+					(this.crystalForm.gfactors = new Array(newVal).fill(""));
+
+				this.nelements = newVal;
+
+				newVal = this.calctasks_settings.structures[0].attributes
+					.number_of_atoms;
+				const arr = this.getValX3Array(3);
+				this.crystalForm.born = this.getValX3Array(newVal, arr);
+
+				this.natoms = newVal;
+			} catch (e) {
+				this.$notify.info("Please add a structure firstly.");
+				this.lockComponentFlag = true;
+				return;
+			}
+			this.lockComponentFlag = false;
 		}
 	},
 	watch: {
 		calctasks_settings(newVal) {
-			this.formData.calctasks_settings = this.settings;
-		},
-		"allocationsForm.natoms"(newVal, oldVal) {
-			this.crystalForm.types = new Array(newVal).fill(0);
-
-			this.crystalForm.positions = this.getValX3Array(newVal);
-
-			const arr = this.getValX3Array(3);
-			this.crystalForm.born = this.getValX3Array(newVal, arr);
-		},
-		"allocationsForm.nelements"(newVal) {
-			this.crystalForm.elements = new Array(newVal).fill("");
-			this.massesToggleFlag &&
-				(this.crystalForm.masses = new Array(newVal).fill(""));
-			this.gfactorsToggleFlag &&
-				(this.crystalForm.gfactors = new Array(newVal).fill(""));
+			this.validateSettings();
+			this.formData.calctasks_settings = newVal;
 		},
 		"allocationsForm.norientations"(newVal) {
 			if (newVal != 0) {
@@ -1257,16 +1107,17 @@ export default {
 		},
 		massesToggleFlag(newVal) {
 			newVal &&
-				(this.crystalForm.masses = new Array(
-					this.allocationsForm.nelements
-				).fill(""));
+				(this.crystalForm.masses = new Array(this.nelements).fill(""));
 		},
 		gfactorsToggleFlag(newVal) {
 			newVal &&
-				(this.crystalForm.gfactors = new Array(
-					this.allocationsForm.nelements
-				).fill(""));
+				(this.crystalForm.gfactors = new Array(this.nelements).fill(
+					""
+				));
 		}
+	},
+	created() {
+		this.validateSettings();
 	}
 };
 </script>

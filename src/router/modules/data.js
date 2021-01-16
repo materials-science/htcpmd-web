@@ -22,6 +22,7 @@ export default {
 			component: _import("data/structures"),
 			meta: {
 				...meta,
+				single: true,
 				title: "Structures List"
 			}
 		},

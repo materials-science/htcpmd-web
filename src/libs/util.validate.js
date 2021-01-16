@@ -26,4 +26,16 @@ validate.is_clean_string = function(rule, value, callback) {
 	}
 };
 
+validate.elements_of_array_are_not_null = function(rule, arr, callback) {
+	if (Array.isArray(arr)) {
+		for (let val of arr) {
+			if (val == "") {
+				callback(new Error("Null elements of array"));
+			}
+		}
+		callback();
+	}
+	callback(new Error("Validated object must be an array"));
+};
+
 export default validate;

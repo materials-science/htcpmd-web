@@ -11,20 +11,30 @@
 				:name="category.id"
 			>
 				<template slot="title">
-					<el-row type="flex" justify="start" align="middle" style="flex: 1">
-						<el-col :span="6">
+					<el-row
+						type="flex"
+						justify="start"
+						align="middle"
+						style="flex: 1"
+					>
+						<el-col :xl="6">
 							<h2>{{ category.category_name }}</h2>
 						</el-col>
-						<el-col :span="6">
+						<el-col :xl="6">
 							<el-button
 								:icon="
-									category.disabled ? 'el-icon-close' : 'el-icon-plus'
+									category.disabled
+										? 'el-icon-close'
+										: 'el-icon-plus'
 								"
 								:disabled="category.disabled"
 								:type="category.disabled ? 'danger' : 'primary'"
 								plain
 								@click.native.prevent.stop="
-									AddNewTasks(category.id, category.category_name)
+									AddNewTasks(
+										category.id,
+										category.category_name
+									)
 								"
 								>Add A Task</el-button
 							>
@@ -34,11 +44,13 @@
 								:type="category.disabled ? 'danger' : 'primary'"
 								plain
 								@click.native.prevent.stop="
-									goToDocsPage('http://172.31.220.82:8005/index.html')
+									goToDocsPage(
+										'http://172.31.220.82:8005/index.html'
+									)
 								"
 								>Watch Docs</el-button
 							>
-							<el-button
+							<!-- <el-button
 								:icon="
 									activeCards.includes(category.id)
 										? 'el-icon-arrow-up'
@@ -46,7 +58,7 @@
 								"
 								:type="category.disabled ? 'danger' : 'primary'"
 								plain
-							></el-button>
+							></el-button> -->
 						</el-col>
 					</el-row>
 				</template>
@@ -72,7 +84,11 @@
 							</el-row>
 							<el-row>
 								<el-col :span="12">
-									<p>{{ type.description || "No description" }}</p>
+									<p>
+										{{
+											type.description || "No description"
+										}}
+									</p>
 								</el-col>
 							</el-row>
 						</div>
@@ -131,7 +147,7 @@ export default {
 			calctasks_types: [],
 			load_calctask_categories: true,
 			load_calctasks_types: true,
-			activeCards: [],
+			activeCards: []
 		};
 	},
 	methods: {
@@ -140,34 +156,34 @@ export default {
 		},
 		goToDocsPage(url) {
 			window.open(url, "_blank");
-		},
+		}
 	},
 	mounted() {
 		// TODO: Store locally to reduce requests.
-		this.$api.GetList(`/calctask_categories/`).then((resp) => {
+		this.$api.GetList(`/calctask_categories/`).then(resp => {
 			if (resp.code == 0) {
 				this.calctask_categories = resp.data;
-				this.calctask_categories.forEach((element) => {
+				this.calctask_categories.forEach(element => {
 					this.activeCards.push(element.id);
 				});
 			}
 			this.load_calctask_categories = false;
 		});
-		this.$api.GetList(`/calctask_types/`).then((resp) => {
+		this.$api.GetList(`/calctask_types/`).then(resp => {
 			if (resp.code == 0) {
 				this.calctasks_types = resp.data;
 			} else {
 				this.$message.error("No CalcTasks Types Avaliable.");
 				setTimeout(() => {
 					this.$store.dispatch("d2admin/page/close", {
-						tagName: "/data/upload/calctasks",
+						tagName: "/data/upload/calctasks"
 					});
 				}, 1500);
 				return;
 			}
 			this.load_calctasks_types = false;
 		});
-	},
+	}
 };
 </script>
 

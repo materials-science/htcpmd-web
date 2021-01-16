@@ -39,9 +39,9 @@
 }
 
 // 边距相关
-$sizes: (0, 5, 10, 15, 20);
+$sizes: (0, 4, 5, 8, 10, 15, 16, 20, 24, 32);
 
-@for $index from 1 to 6 {
+@for $index from 1 to 10 {
 	.#{$prefix}-m-#{nth($sizes, $index)} {
 		margin: #{nth($sizes, $index)}px !important;
 	}
@@ -107,4 +107,18 @@ $sizes: (0, 5, 10, 15, 20);
 }
 .#{$prefix}-pl {
 	padding-left: 20px !important;
+}
+
+// Color
+.color-text-placeholder {
+	color: $color-text-placeholder;
+}
+.color-text-sub {
+	color: $color-text-sub;
+}
+.color-text-normal {
+	color: $color-text-normal;
+}
+.color-text-main {
+	color: $color-text-main;
 }

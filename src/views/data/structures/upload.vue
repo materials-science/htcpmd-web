@@ -8,7 +8,7 @@
 					<SplitPane split="horizontal" :default-percent="100">
 						<template slot="paneL">
 							<el-upload
-								class="upload-box"
+								class="upload-structure-box"
 								drag
 								multiple
 								ref="structureUpload"
@@ -40,7 +40,7 @@
 				<template slot="paneR">
 					<SplitPane split="horizontal" :default-percent="80">
 						<template slot="paneL">
-							<div class="upload-box">
+							<div class="upload-structure-box">
 								<div class="structure-viewer"></div>
 								<div class="tip"></div>
 							</div>
@@ -86,23 +86,23 @@ import $3Dmol from "@/libs/3Dmol-nojquery.js";
 import util from "@/libs/util";
 // import "@/libs/3Dmol-nojquery.js";
 let viewer = null;
-let viewer_id = ".upload-box .structure-viewer";
+let viewer_id = ".upload-structure-box .structure-viewer";
 const viewer_config = {
 	backgroundColor: "white",
-	id: "upload-viewer-canvas",
+	id: "upload-viewer-canvas"
 };
 export default {
 	name: "data-structures-upload",
 	components: {
-		SplitPane,
+		SplitPane
 	},
 	data() {
 		return {
 			fileList: null,
 			uploadUrl: "/api/structures/files/",
 			uploadHeaders: {
-				Authorization: `Token ${util.cookies.get("token")}`,
-			},
+				Authorization: `Token ${util.cookies.get("token")}`
+			}
 		};
 	},
 	mounted() {
@@ -118,7 +118,7 @@ export default {
 		showInfo(title, message) {
 			this.$notify({
 				title: title,
-				message: message,
+				message: message
 			});
 		},
 		replaceCurrentFile(files, fileList) {},
@@ -130,7 +130,7 @@ export default {
 			const reader = new FileReader();
 			// const viewer = this.viewer;
 			reader.readAsText(file.raw, "UTF-8");
-			reader.onload = (event) => {
+			reader.onload = event => {
 				// There is a plugin to guess type of file
 				let name = file.name.toLowerCase();
 				let ext_name = "";
@@ -147,23 +147,23 @@ export default {
 				let fileString = event.target.result;
 				let m = viewer.addModel(fileString, ext_name);
 				viewer.addUnitCell(m, {
-					box: { color: "purple" },
+					box: { color: "purple" }
 				});
 				// viewer.addUnitCell(m);
 				viewer.setHoverable(
 					{},
 					true,
-					function (atom, viewer, event, container) {
+					function(atom, viewer, event, container) {
 						if (!atom.label) {
 							atom.label = viewer.addLabel(atom.elem, {
 								position: atom,
 								backgroundColor: "darkgreen",
 								backgroundOpacity: 0.5,
-								fontColor: "white",
+								fontColor: "white"
 							});
 						}
 					},
-					function (atom) {
+					function(atom) {
 						if (atom.label) {
 							viewer.removeLabel(atom.label);
 							delete atom.label;
@@ -173,7 +173,7 @@ export default {
 
 				viewer.setStyle({
 					stick: { scale: 0.1 },
-					sphere: { scale: 0.5 },
+					sphere: { scale: 0.5 }
 				});
 				viewer.zoomTo();
 				viewer.render();
@@ -199,26 +199,38 @@ export default {
 		},
 		uploadError(err) {
 			this.$message.error(`Uploading failed! ${err}`);
-		},
-	},
+		}
+	}
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.upload-structure-box {
+	height: 100%;
+	padding: 20px;
+	text-align: center;
+	.structure-viewer {
+		width: 100%;
+		height: 100%;
+		position: relative;
+		border: 1px dashed #d9d9d9;
+	}
+}
 .split-wrap {
 	position: absolute;
 	left: 0;
 	top: 0;
 	right: 0;
 	bottom: 0;
+}
+</style>
+<style lang="scss">
+.split-wrap {
 	.splitter-pane-resizer {
 		display: none;
 	}
 }
-.upload-box {
-	height: 100%;
-	padding: 20px;
-	text-align: center;
+.upload-structure-box {
 	.el-upload.el-upload--text {
 		width: 100%;
 		flex: 1;
@@ -244,12 +256,6 @@ export default {
 		li:hover {
 			background-color: rgba(33, 33, 33, 0.3);
 		}
-	}
-	.structure-viewer {
-		width: 100%;
-		height: 100%;
-		position: relative;
-		border: 1px dashed #d9d9d9;
 	}
 }
 </style>

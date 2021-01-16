@@ -4,7 +4,7 @@ export default {
 	icon: "bar-chart",
 	children: (pre => [
 		{
-			path: `${pre}structures`,
+			path: `${pre}upload/structures`,
 			title: "Structures",
 			icon: "cubes"
 		},

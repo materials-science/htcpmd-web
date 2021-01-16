@@ -7,7 +7,7 @@
 		<template slot="footer">
 			<div class="query-container">
 				<el-form
-					inline="true"
+					:inline="true"
 					:model="queryForm"
 					class="query-form-inline"
 				>
@@ -103,121 +103,121 @@
 </template>
 
 <script>
-	import PeriodicTable from "./components/PeriodicTable";
-	export default {
-		name: "PeriodicTablePage",
-		components: {
-			PeriodicTable,
+import PeriodicTable from "./components/PeriodicTable";
+export default {
+	name: "PeriodicTablePage",
+	components: {
+		PeriodicTable
+	},
+	data() {
+		return {
+			queryForm: {
+				elements: "",
+				mode: "ALL",
+				number_of_atoms: "",
+				volume_max: "",
+				volume_min: ""
+			},
+			elements: []
+		};
+	},
+	methods: {
+		selectedElements(elements) {
+			this.elements = elements;
+			this.queryForm.elements = elements.join("-");
 		},
-		data() {
-			return {
-				queryForm: {
-					elements: "",
-					mode: "ALL",
-					number_of_atoms: "",
-					volume_max: "",
-					volume_min: "",
+		querySubmit() {
+			let queryForm = this.queryForm;
+			if (queryForm.elements == "") {
+				return this.$message.error("Elements cannot be null!");
+			}
+			let query = {};
+			query.elements = queryForm.elements;
+			query.mode = queryForm.mode;
+			queryForm.number_of_atoms != "" &&
+				(query.number_of_atoms = queryForm.number_of_atoms);
+			queryForm.volume_max != "" &&
+				(query.volume_max = queryForm.volume_max);
+			queryForm.volume_min != "" &&
+				(query.volume_min = queryForm.volume_min);
+			this.$router.push({
+				name: "data-structures",
+				params: {
+					queryForm: query
 				},
-				elements: [],
-			};
-		},
-		methods: {
-			selectedElements(elements) {
-				this.elements = elements;
-				this.queryForm.elements = elements.join("-");
-			},
-			querySubmit() {
-				let queryForm = this.queryForm;
-				if (queryForm.elements == "") {
-					return this.$message.error("Elements cannot be null!");
+				query: {
+					...query
 				}
-				let query = {};
-				query.elements = queryForm.elements;
-				query.mode = queryForm.mode;
-				if (queryForm.number_of_atoms != "")
-					query.number_of_atoms = queryForm.number_of_atoms;
-				if (queryForm.volume_max != "")
-					query.volume_max = queryForm.volume_max;
-				if (queryForm.volume_min != "")
-					query.volume_min = queryForm.volume_min;
-				this.$router.push({
-					name: "data-structures",
-					params: {
-						queryForm: query,
-					},
-					query: {
-						...query,
-					},
-				});
-			},
-		},
-	};
+			});
+		}
+	}
+};
 </script>
 
 <style lang="scss">
-	@import "@/assets/style/variable.scss";
-	.periodic-table-wrap {
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		padding: 3vh 1vw;
-		// transform: scale(0.8);
-		// overflow: hidden;
-		.periodictable {
-			margin: 0 auto;
+@import "@/assets/style/variable.scss";
+.periodic-table-wrap {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	padding: 3vh 1vw;
+	// transform: scale(0.8);
+	// overflow: hidden;
+	.periodictable {
+		margin: 0 auto;
+	}
+}
+.d2-container-ghost__footer {
+	background: rgba(255, 255, 255, 0.8) !important;
+	.el-collapse {
+		border: none;
+	}
+	.el-collapse-item__header {
+		background: none;
+		justify-content: center;
+		border: none;
+		.el-form-item {
+			margin: 0 20px;
+			height: 40px;
+			line-height: 40px;
+		}
+		.footer-collapse {
+			background: none;
+		}
+		.el-collapse-item__arrow.el-icon-arrow-right {
+			display: none;
 		}
 	}
-	.d2-container-ghost__footer {
-		background: rgba(255, 255, 255, 0.8) !important;
-		.el-collapse {
-			border: none;
-		}
-		.el-collapse-item__header {
-			background: none;
-			justify-content: center;
-			border: none;
-			.el-form-item {
-				margin: 0 20px;
-				height: 40px;
-				line-height: 40px;
-			}
-			.footer-collapse {
-				background: none;
-			}
-			.el-collapse-item__arrow.el-icon-arrow-right {
-				display: none;
-			}
-		}
-		.el-collapse-item__wrap {
-			background: none;
-			border: none;
-			.el-collapse-item__content {
-				padding: 20px 0 0 0;
-				.collapse-content {
-					@extend %flex-center-row;
-					text-align: center;
-					.el-form-item {
-						margin: 0 20px;
-						height: 40px;
-						line-height: 40px;
-					}
+	.el-collapse-item__wrap {
+		background: none;
+		border: none;
+		.el-collapse-item__content {
+			padding: 20px 0 0 0;
+			.collapse-content {
+				@extend %flex-center-row;
+				text-align: center;
+				.el-form-item {
+					margin: 0 20px;
+					height: 40px;
+					line-height: 40px;
 				}
 			}
 		}
-
-		// .query-form-inline {
-		// 	// text-align: center;
-		// 	.el-form-item {
-		// 		margin: 20px;
-		// 	}
-		// }
-		// .query-container {
-		// 	padding: 0 10%;
-		// 	.el-form-item {
-		// 		// width: 40%;
-		// 	}
-		// }
 	}
+
+	// .query-form-inline {
+	// 	// text-align: center;
+	// 	.el-form-item {
+	// 		margin: 20px;
+	// 	}
+	// }
+	// .query-container {
+	// 	padding: 0 10%;
+	// 	.el-form-item {
+	// 		// width: 40%;
+	// 	}
+	// }
+}
 </style>
