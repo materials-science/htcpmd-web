@@ -163,7 +163,7 @@ export default {
 	top: 0;
 	bottom: 0;
 	padding: 3vh 1vw;
-	// transform: scale(0.8);
+	transform: scale(0.95);
 	// overflow: hidden;
 	.periodictable {
 		margin: 0 auto;

@@ -1164,7 +1164,7 @@ export default {
 					(failed = true);
 				if (failed) {
 					this.$message.error(
-						"Invaid input, please check your calctask settings."
+						"Invaid inputs, please check your calctask settings."
 					);
 					this.fullscreenLoading = false;
 					return false;
@@ -1177,7 +1177,7 @@ export default {
 			this.preUploadCheck(() => {
 				this.fileData = new FormData();
 				this.$refs.forceConstantsUpload.submit();
-				this.fileData.append("data", JSON.stringify(this.formData));
+				this.fileData.append("form", JSON.stringify(this.formData));
 				this.$api
 					.AddObj(
 						"/calctasks/shengbte/ShengBTECalculation/",
@@ -1227,7 +1227,7 @@ export default {
 	},
 	watch: {
 		calctasks_settings(newVal) {
-			this.formData.calctasks_settings = this.settings;
+			this.formData.calctasks_settings = this.calctasks_settings;
 		},
 		"allocationsForm.natoms"(newVal, oldVal) {
 			this.crystalForm.types = new Array(newVal).fill(0);

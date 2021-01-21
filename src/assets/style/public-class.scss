@@ -29,6 +29,9 @@
 .#{$prefix}-text-center {
 	text-align: center;
 }
+.#{$prefix}-text-end {
+	text-align: end;
+}
 
 // 浮动相关
 .#{$prefix}-fl {
@@ -121,4 +124,42 @@ $sizes: (0, 4, 5, 8, 10, 15, 16, 20, 24, 32);
 }
 .color-text-main {
 	color: $color-text-main;
+}
+
+// flex
+.flex-center-row {
+	@extend %flex-center-row;
+}
+
+.flex-end-row {
+	@extend %flex-end-row;
+}
+
+.flex-center-col {
+	@extend %flex-center-col;
+}
+
+.flex-wrap-row {
+	@extend %flex-wrap-row;
+}
+
+// form-group
+.form-group {
+	.el-form {
+		padding: 24px;
+	}
+	.el-form-item {
+		padding: 8px;
+		.el-form-item__content > [class*="el-input"] {
+			width: 200px;
+		}
+		.el-form-item__label {
+			font-weight: bold;
+		}
+	}
+}
+.form-box {
+	> .el-row {
+		margin: 0 8px 64px;
+	}
 }

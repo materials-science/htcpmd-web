@@ -45,6 +45,16 @@ export default {
 				title: "Upload Structure"
 			}
 		},
+		// potentials
+		{
+			path: "potentials",
+			name: `${pre}potentials`,
+			component: _import("data/potentials"),
+			meta: {
+				...meta,
+				title: "Potentials List"
+			}
+		},
 		// calctask
 		{
 			path: "upload/calctasks",
@@ -64,6 +74,16 @@ export default {
 				...meta,
 				cache: true,
 				title: "Upload ShengBTE CalcTasks"
+			}
+		},
+		{
+			path: "upload/calctasks/qe/pw",
+			name: `${pre}calctasks-upload-qe-pw`,
+			component: _import("data/calctasks/components/qe/pw.vue"),
+			meta: {
+				...meta,
+				cache: true,
+				title: "Upload QE-PW CalcTasks"
 			}
 		}
 	])("data-")

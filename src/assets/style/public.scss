@@ -20,17 +20,32 @@ $prefix: d2;
 }
 
 // flex 垂直水平居中
-%flex-center-row {
+%flex-row {
 	display: flex;
-	justify-content: center;
-	align-items: center;
 	flex-direction: row;
 }
-%flex-center-col {
+%flex-col {
 	display: flex;
+	flex-direction: column;
+}
+%flex-center-row {
+	@extend %flex-row;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
+}
+%flex-end-row {
+	@extend %flex-row;
+	justify-content: flex-end;
+	align-items: center;
+}
+%flex-center-col {
+	@extend %flex-col;
+	justify-content: center;
+	align-items: center;
+}
+%flex-wrap-row {
+	@extend %flex-row;
+	flex-wrap: wrap;
 }
 
 // 将元素模拟成卡片外观

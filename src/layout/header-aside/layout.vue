@@ -17,20 +17,36 @@
 			>
 				<router-link
 					to="/index"
-					:class="{ 'logo-group': true, 'logo-transition': asideTransition }"
-					:style="{ width: asideCollapse ? asideWidthCollapse : asideWidth }"
+					:class="{
+						'logo-group': true,
+						'logo-transition': asideTransition
+					}"
+					:style="{
+						width: asideCollapse ? asideWidthCollapse : asideWidth
+					}"
 					flex-box="0"
 				>
-					<img
+					<!-- <img
 						v-if="asideCollapse"
-						:src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/icon-only.png`"
-					/>
-					<img
+						:src="
+							`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/icon-only.png`
+						"
+					/> -->
+					<!-- <img
 						v-else
 						:src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/all.png`"
+					/> -->
+					<img
+						v-if="asideCollapse"
+						src="@/assets/images/logo@small.png"
 					/>
+					<img v-else src="@/assets/images/logo@small.png" />
 				</router-link>
-				<div class="toggle-aside-btn" @click="handleToggleAside" flex-box="0">
+				<div
+					class="toggle-aside-btn"
+					@click="handleToggleAside"
+					flex-box="0"
+				>
 					<d2-icon name="bars" />
 				</div>
 				<d2-menu-header flex-box="1" />
@@ -55,11 +71,11 @@
 					ref="aside"
 					:class="{
 						'd2-theme-container-aside': true,
-						'd2-theme-container-transition': asideTransition,
+						'd2-theme-container-transition': asideTransition
 					}"
 					:style="{
 						width: asideCollapse ? asideWidthCollapse : asideWidth,
-						opacity: this.searchActive ? 0.5 : 1,
+						opacity: this.searchActive ? 0.5 : 1
 					}"
 				>
 					<d2-menu-side />
@@ -87,13 +103,23 @@
 							flex="dir:top"
 						>
 							<!-- tab -->
-							<div class="d2-theme-container-main-header" flex-box="0">
+							<div
+								class="d2-theme-container-main-header"
+								flex-box="0"
+							>
 								<d2-tabs />
 							</div>
 							<!-- 页面 -->
-							<div class="d2-theme-container-main-body" flex-box="1">
+							<div
+								class="d2-theme-container-main-body"
+								flex-box="1"
+							>
 								<transition
-									:name="transitionActive ? 'fade-transverse' : ''"
+									:name="
+										transitionActive
+											? 'fade-transverse'
+											: ''
+									"
 								>
 									<keep-alive :include="keepAlive">
 										<router-view :key="routerViewKey" />
@@ -136,26 +162,26 @@ export default {
 		d2HeaderTheme,
 		d2HeaderUser,
 		d2HeaderLog,
-		d2HeaderColor,
+		d2HeaderColor
 	},
 	data() {
 		return {
 			// [侧边栏宽度] 正常状态
 			asideWidth: "200px",
 			// [侧边栏宽度] 折叠状态
-			asideWidthCollapse: "65px",
+			asideWidthCollapse: "65px"
 		};
 	},
 	computed: {
 		...mapState("d2admin", {
-			keepAlive: (state) => state.page.keepAlive,
-			grayActive: (state) => state.gray.active,
-			transitionActive: (state) => state.transition.active,
-			asideCollapse: (state) => state.menu.asideCollapse,
-			asideTransition: (state) => state.menu.asideTransition,
+			keepAlive: state => state.page.keepAlive,
+			grayActive: state => state.gray.active,
+			transitionActive: state => state.transition.active,
+			asideCollapse: state => state.menu.asideCollapse,
+			asideTransition: state => state.menu.asideTransition
 		}),
 		...mapGetters("d2admin", {
-			themeActiveSetting: "theme/activeSetting",
+			themeActiveSetting: "theme/activeSetting"
 		}),
 		/**
 		 * @description 用来实现带参路由的缓存
@@ -172,10 +198,10 @@ export default {
 		styleLayoutMainGroup() {
 			return this.themeActiveSetting.backgroundImage
 				? {
-						backgroundImage: `url('${this.$baseUrl}${this.themeActiveSetting.backgroundImage}')`,
+						backgroundImage: `url('${this.$baseUrl}${this.themeActiveSetting.backgroundImage}')`
 				  }
 				: {};
-		},
+		}
 	},
 	methods: {
 		...mapActions("d2admin/menu", ["asideCollapseToggle"]),
@@ -184,8 +210,8 @@ export default {
 		 */
 		handleToggleAside() {
 			this.asideCollapseToggle();
-		},
-	},
+		}
+	}
 };
 </script>
 

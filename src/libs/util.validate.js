@@ -26,6 +26,19 @@ validate.is_clean_string = function(rule, value, callback) {
 	}
 };
 
+validate.is_clean_string_2 = function(rule, value, callback) {
+	const reg = /^[\.\-_a-zA-Z0-9]+$/;
+	if (value == "" || value == undefined || value == null) {
+		callback();
+	} else {
+		if (!reg.test(value)) {
+			callback(new Error("仅由英文字母，数字以及_-.组成"));
+		} else {
+			callback();
+		}
+	}
+};
+
 validate.elements_of_array_are_not_null = function(rule, arr, callback) {
 	if (Array.isArray(arr)) {
 		for (let val of arr) {

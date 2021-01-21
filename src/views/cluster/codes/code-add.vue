@@ -1,10 +1,23 @@
 <template>
 	<div v-loading="loading">
-		<el-form :model="form" :rules="formRules" ref="form" label-position="left">
-			<el-form-item label="computer" prop="computer" :label-width="formLabelWidth">
+		<el-form
+			:model="form"
+			:rules="formRules"
+			ref="form"
+			label-position="left"
+		>
+			<el-form-item
+				label="computer"
+				prop="computer"
+				:label-width="formLabelWidth"
+			>
 				<el-input v-model="form.computer" autocomplete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="label" prop="label" :label-width="formLabelWidth">
+			<el-form-item
+				label="label"
+				prop="label"
+				:label-width="formLabelWidth"
+			>
 				<el-input v-model="form.label" autocomplete="off"></el-input>
 			</el-form-item>
 			<el-form-item
@@ -12,9 +25,16 @@
 				prop="description"
 				:label-width="formLabelWidth"
 			>
-				<el-input v-model="form.description" autocomplete="off"></el-input>
+				<el-input
+					v-model="form.description"
+					autocomplete="off"
+				></el-input>
 			</el-form-item>
-			<el-form-item label="version" prop="version" :label-width="formLabelWidth">
+			<el-form-item
+				label="version"
+				prop="version"
+				:label-width="formLabelWidth"
+			>
 				<el-input v-model="form.version" autocomplete="off"></el-input>
 			</el-form-item>
 			<el-form-item
@@ -71,6 +91,7 @@
 				type="primary"
 				@click="newCodesSubmit('form')"
 				v-loading.fullscreen.lock="fullscreenLoading"
+				plain
 				>Submit</el-button
 			>
 		</span>
@@ -90,8 +111,8 @@ export default {
 			type: String,
 			default() {
 				return "";
-			},
-		},
+			}
+		}
 	},
 	data() {
 		let validateLabel = validate.is_clean_string;
@@ -105,17 +126,23 @@ export default {
 				input_plugin: "",
 				prepend_text: "",
 				append_text: "",
-				version: "1.0",
+				version: "1.0"
 			},
 			formRules: {
 				computer: [{ required: true, trigger: "blur" }],
-				label: [{ required: true, validator: validateLabel, trigger: "blur" }],
+				label: [
+					{
+						required: true,
+						validator: validateLabel,
+						trigger: "blur"
+					}
+				],
 				remote_exec_path: [{ required: true, trigger: "blur" }],
-				input_plugin: [{ required: true, trigger: "blur" }],
+				input_plugin: [{ required: true, trigger: "blur" }]
 			},
 			plugins_list: [],
 			loading: true,
-			fullscreenLoading: false,
+			fullscreenLoading: false
 		};
 	},
 	methods: {
@@ -130,45 +157,47 @@ export default {
 					this.form = Object.assign(this.form, {
 						remote_exec_path: "/usr/local/bin/phonopy",
 						prepend_text: "",
-						append_text: "",
+						append_text: ""
 					});
 					break;
 				case "shengbte.shengbte":
 					this.form = Object.assign(this.form, {
 						remote_exec_path: "/workdir/shengbte/ShengBTE",
 						prepend_text: "",
-						append_text: "",
+						append_text: ""
 					});
 					break;
 				case "shengbte.thirdorder_reap":
 					this.form = Object.assign(this.form, {
-						remote_exec_path: "/workdir/thirdorder/thirdorder_vasp.py",
+						remote_exec_path:
+							"/workdir/thirdorder/thirdorder_vasp.py",
 						prepend_text: "",
-						append_text: "",
+						append_text: ""
 					});
 					break;
 				case "shengbte.thirdorder_sow":
 					this.form = Object.assign(this.form, {
-						remote_exec_path: "/workdir/thirdorder/thirdorder_vasp.py",
-						prepend_text: "find job.* -name vasprun.xml|sort -n|",
+						remote_exec_path:
+							"/workdir/thirdorder/thirdorder_vasp.py",
+						prepend_text: "find job.* -name vasprun.xml|sort -n|"
 					});
 					break;
 				default:
 					this.form = Object.assign(this.form, {
 						remote_exec_path: "",
 						prepend_text: "",
-						append_text: "",
+						append_text: ""
 					});
 			}
 		},
 		newCodesSubmit(formName) {
 			this.fullscreenLoading = true;
-			this.$refs[formName].validate((valid) => {
+			this.$refs[formName].validate(valid => {
 				if (valid) {
 					let data = Object.assign({}, this.form);
 					data.input_plugin = data.input_plugin.join(".");
 					data.user = util.cookies.get("uuid");
-					this.$api.AddObj(apiPrefix, data).then((resp) => {
+					this.$api.AddObj(apiPrefix, data).then(resp => {
 						if (resp.code == 0) {
 							this.$message.success("Upload Success!");
 						}
@@ -181,13 +210,13 @@ export default {
 					return false;
 				}
 			});
-		},
+		}
 	},
 	mounted() {
-		this.$api.GetObj("/entrypoints/", "calculations").then((resp) => {
+		this.$api.GetObj("/entrypoints/", "calculations").then(resp => {
 			let data = resp.data;
 			let root = {};
-			data.forEach((element) => {
+			data.forEach(element => {
 				let sp = element.split(".");
 				let parent = root;
 				sp.forEach((item, index) => {
@@ -202,7 +231,7 @@ export default {
 				for (let key in dict) {
 					let current = {
 						value: key,
-						label: key,
+						label: key
 					};
 					iterator(dict[key], current);
 					children.push(current);
@@ -219,7 +248,7 @@ export default {
 	},
 	created() {
 		this.form.computer = this.computer;
-	},
+	}
 };
 </script>
 

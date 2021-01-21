@@ -51,7 +51,7 @@
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
 						<el-select
-							v-model="calctasks_type_selected_index"
+							v-model="calctasks_type_selected_id"
 							placeholder="Choose A Type"
 							filterable
 							autocomplete
@@ -341,7 +341,7 @@ export default {
 	data() {
 		return {
 			calctasks_label: "",
-			calctasks_type_selected_index: null,
+			calctasks_type_selected_id: null,
 			calctasks_type_selected: null,
 			calctasks_types: [],
 			load_calctasks_types: true,
@@ -364,7 +364,7 @@ export default {
 		calctasks_settings() {
 			return {
 				calctasks_label: this.calctasks_label,
-				calctasks_type: this.calctasks_type_selected,
+				calctasks_type: this.calctasks_type_selected_id,
 				calctasks_description: this.calctasks_description,
 				computer: this.computers_selected,
 				code: this.codes_selected,
@@ -438,7 +438,10 @@ export default {
 				});
 		},
 		calctasksTypeChange(val) {
-			this.calctasks_type_selected = this.calctasks_types[val - 1].label;
+			const type = this.calctasks_types.find(item => {
+				return item.value == val;
+			});
+			this.calctasks_type_selected = type.label;
 		},
 		getComputersList(query) {
 			if (query == "") {

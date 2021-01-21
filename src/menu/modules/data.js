@@ -9,6 +9,11 @@ export default {
 			icon: "cubes"
 		},
 		{
+			path: `${pre}potentials`,
+			title: "Potentials",
+			icon: "cubes"
+		},
+		{
 			path: `${pre}calctasks`,
 			title: "CalcTasks",
 			icon: "tasks"

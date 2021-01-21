@@ -1014,7 +1014,7 @@ export default {
 			this.preUploadCheck(() => {
 				this.fileData = new FormData();
 				this.$refs.forceConstantsUpload.submit();
-				this.fileData.append("data", JSON.stringify(this.formData));
+				this.fileData.append("form", JSON.stringify(this.formData));
 				this.$api
 					.AddObj(
 						"/calctasks/shengbte/ShengBTEWorkChain/",

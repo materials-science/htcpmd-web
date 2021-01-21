@@ -3,54 +3,58 @@
 		class="data-calctasks-upload-index-container"
 		v-loading="load_calctask_categories || load_calctasks_types"
 	>
-		<el-collapse v-model="activeCards">
+		<!-- <el-collapse v-model="activeCards">
 			<el-collapse-item
 				class="box-card"
 				v-for="category in calctask_categories"
 				:key="category.id"
 				:name="category.id"
-			>
-				<template slot="title">
-					<el-row
-						type="flex"
-						justify="start"
-						align="middle"
-						style="flex: 1"
-					>
-						<el-col :xl="6">
-							<h2>{{ category.category_name }}</h2>
-						</el-col>
-						<el-col :xl="6">
-							<el-button
-								:icon="
-									category.disabled
-										? 'el-icon-close'
-										: 'el-icon-plus'
-								"
-								:disabled="category.disabled"
-								:type="category.disabled ? 'danger' : 'primary'"
-								plain
-								@click.native.prevent.stop="
-									AddNewTasks(
-										category.id,
-										category.category_name
-									)
-								"
-								>Add A Task</el-button
-							>
-							<el-button
-								icon="el-icon-reading"
-								:disabled="category.disabled"
-								:type="category.disabled ? 'danger' : 'primary'"
-								plain
-								@click.native.prevent.stop="
-									goToDocsPage(
-										'http://172.31.220.82:8005/index.html'
-									)
-								"
-								>Watch Docs</el-button
-							>
-							<!-- <el-button
+			> -->
+		<el-card
+			class="box-card d2-card"
+			shadow="hover"
+			v-for="category in calctask_categories"
+			:key="category.id"
+			:name="category.id"
+		>
+			<template slot="header">
+				<el-row
+					type="flex"
+					justify="start"
+					align="middle"
+					style="flex: 1"
+				>
+					<el-col :xl="6">
+						<h2>{{ category.category_name }}</h2>
+					</el-col>
+					<el-col :xl="6">
+						<el-button
+							:icon="
+								category.disabled
+									? 'el-icon-close'
+									: 'el-icon-plus'
+							"
+							:disabled="category.disabled"
+							:type="category.disabled ? 'danger' : 'primary'"
+							plain
+							@click.native.prevent.stop="
+								AddNewTasks(category.id, category.category_name)
+							"
+							>Add A Task</el-button
+						>
+						<el-button
+							icon="el-icon-reading"
+							:disabled="category.disabled"
+							:type="category.disabled ? 'danger' : 'primary'"
+							plain
+							@click.native.prevent.stop="
+								goToDocsPage(
+									'http://172.31.220.82:8005/index.html'
+								)
+							"
+							>Watch Docs</el-button
+						>
+						<!-- <el-button
 								:icon="
 									activeCards.includes(category.id)
 										? 'el-icon-arrow-up'
@@ -59,82 +63,100 @@
 								:type="category.disabled ? 'danger' : 'primary'"
 								plain
 							></el-button> -->
-						</el-col>
-					</el-row>
-				</template>
-				<template v-for="type in calctasks_types">
-					<template v-if="type.category.id == category.id">
-						<div :key="type.id" class="types-list">
-							<el-row>
-								<el-col :span="6">
-									<h3>
-										<el-link
-											type="primary"
-											:href="type.doc_link"
-											:disabled="!type.doc_link"
-											target="_blank"
-											>{{ type.type_name }}</el-link
-										><i
-											class="el-icon-warning-outline"
-											style="color: #f56c6c; padding: 8px"
-											v-if="type.disabled"
-										></i>
-									</h3>
-								</el-col>
-							</el-row>
-							<el-row>
-								<el-col :span="12">
-									<p>
-										{{
-											type.description || "No description"
-										}}
-									</p>
-								</el-col>
-							</el-row>
-						</div>
-					</template>
-				</template>
-			</el-collapse-item>
-		</el-collapse>
-		<!-- <el-card
-			class="box-card"
-			v-for="category in calctask_categories"
-			:key="category.id"
-			shadow="hover"
-		>
-			<div slot="header">
-				<el-row type="flex" justify="start" align="middle">
-					<el-col :span="6">
-						<h2>{{ category.category_name }}</h2>
-					</el-col>
-					<el-col :span="6">
-						<el-button
-							:icon="category.disabled ? 'el-icon-close' : 'el-icon-plus'"
-							:disabled="category.disabled"
-							:type="category.disabled ? 'danger' : 'success'"
-							plain
-							>Add A Task</el-button
-						>
 					</el-col>
 				</el-row>
-			</div>
+			</template>
 			<template v-for="type in calctasks_types">
 				<template v-if="type.category.id == category.id">
 					<div :key="type.id" class="types-list">
 						<el-row>
 							<el-col :span="6">
-								<h3>{{ type.type_name }}</h3>
+								<h3>
+									<el-link
+										type="primary"
+										:href="type.doc_link"
+										:disabled="!type.doc_link"
+										target="_blank"
+										>{{ type.type_name }}</el-link
+									><i
+										class="el-icon-warning-outline"
+										style="color: #f56c6c; padding: 8px"
+										v-if="type.disabled"
+									></i>
+								</h3>
 							</el-col>
 						</el-row>
 						<el-row>
 							<el-col :span="12">
-								<p>some descs and links</p>
+								<p>
+									{{ type.description || "No description" }}
+								</p>
 							</el-col>
 						</el-row>
 					</div>
 				</template>
 			</template>
-		</el-card> -->
+		</el-card>
+		<!-- </el-collapse-item>
+		</el-collapse> -->
+		<!-- TODO: remove unused codes and beutify this page -->
+		<v-divider></v-divider>
+		<el-card class="box-card d2-card" shadow="hover">
+			<div slot="header">
+				<el-row type="flex" justify="start" align="middle">
+					<el-col :span="6">
+						<h2>QuantumEspresso</h2>
+					</el-col>
+				</el-row>
+			</div>
+			<div class="types-list">
+				<!-- PW -->
+				<el-row>
+					<!-- title -->
+					<el-row type="flex" align="center" justify="space-between">
+						<el-col :span="6">
+							<h3>PW WorkChain</h3>
+						</el-col>
+						<el-col :span="6">
+							<router-link to="/data/upload/calctasks/qe/pw">
+								<el-button
+									icon="el-icon-plus"
+									type="success"
+									plain
+									>Add A Task</el-button
+								>
+							</router-link>
+						</el-col>
+					</el-row>
+					<!-- desc -->
+					<el-row>
+						<el-col :span="12">
+							<p>some descs and links</p>
+						</el-col>
+					</el-row>
+				</el-row>
+				<!-- PH -->
+				<el-row>
+					<!-- title -->
+					<el-row type="flex" align="center" justify="space-between">
+						<el-col :span="6">
+							<h3>PH WorkChain</h3>
+						</el-col>
+						<el-col :span="6">
+							<el-button icon="el-icon-plus" type="success" plain
+								>Add A Task</el-button
+							>
+						</el-col>
+					</el-row>
+					<!-- desc -->
+					<el-row>
+						<el-col :span="12">
+							<p>some descs and links</p>
+						</el-col>
+					</el-row>
+				</el-row>
+			</div>
+		</el-card>
 	</d2-container>
 </template>
 
