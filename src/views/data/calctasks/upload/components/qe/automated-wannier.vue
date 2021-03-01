@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-01-23 11:59:13
+ * @LastEditTime: 2021-01-24 12:30:40
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /web-admin-kit/src/views/data/calctasks/components/qe/automated-wannier.vue
+-->
 <template>
 	<d2-container class="data-calctasks-upload-qe-pw">
 		<el-row type="flex" justify="center">
@@ -76,7 +84,9 @@
 				</el-row>
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
-						<el-input v-model="calctasks_label"></el-input>
+						<el-input
+							v-model="calctasks_settings.calctasks_label"
+						></el-input>
 					</el-col>
 				</el-row>
 			</el-row>
@@ -98,7 +108,7 @@
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
 						<el-select
-							v-model="calctasks_type_selected_id"
+							v-model="calctasks_settings.calctasks_type"
 							placeholder="Choose A Type"
 							default-first-option
 							:loading="load_calctasks_types"
@@ -133,7 +143,7 @@
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
 						<el-select
-							v-model="computers_selected"
+							v-model="calctasks_settings.computer"
 							placeholder="Choose A Computer"
 							filterable
 							default-first-option
@@ -156,7 +166,7 @@
 			<el-row>
 				<el-row type="flex" justify="center">
 					<el-col :xl="16"
-						><el-tag><h3>Code</h3></el-tag></el-col
+						><el-tag><h3>PW Code</h3></el-tag></el-col
 					>
 				</el-row>
 				<el-row type="flex" justify="center">
@@ -167,10 +177,73 @@
 					</el-col>
 				</el-row>
 				<el-row type="flex" justify="center">
-					<el-col :xl="16">
+					<!-- pw code -->
+					<el-col :xl="6" :sm="12">
 						<el-select
-							v-model="codes_selected"
-							placeholder="Choose A Code"
+							v-model="calctasks_settings.pw_code"
+							placeholder="PW Code"
+							filterable
+							default-first-option
+							remote
+							:remote-method="getCodesList"
+							:loading="loading_codes_list"
+						>
+							<el-option
+								v-for="item in codes_list"
+								:key="item.id"
+								:label="`${item.label} - (${item.id})`"
+								:value="item.id"
+							>
+							</el-option>
+						</el-select>
+					</el-col>
+					<!-- pw2wannier90 code -->
+					<el-col :xl="6" :sm="12">
+						<el-select
+							v-model="calctasks_settings.pw2wannier90_code"
+							placeholder="pw2wannier90"
+							filterable
+							default-first-option
+							remote
+							:remote-method="getCodesList"
+							:loading="loading_codes_list"
+						>
+							<el-option
+								v-for="item in codes_list"
+								:key="item.id"
+								:label="`${item.label} - (${item.id})`"
+								:value="item.id"
+							>
+							</el-option>
+						</el-select>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center" class="d2-mt">
+					<!-- projwfc code -->
+					<el-col :xl="6" :sm="12">
+						<el-select
+							v-model="calctasks_settings.projwfc_code"
+							placeholder="projwfc"
+							filterable
+							default-first-option
+							remote
+							:remote-method="getCodesList"
+							:loading="loading_codes_list"
+						>
+							<el-option
+								v-for="item in codes_list"
+								:key="item.id"
+								:label="`${item.label} - (${item.id})`"
+								:value="item.id"
+							>
+							</el-option>
+						</el-select>
+					</el-col>
+					<!-- wannier90 code -->
+					<el-col :xl="6" :sm="12">
+						<el-select
+							v-model="calctasks_settings.wannier90_code"
+							placeholder="wannier90"
 							filterable
 							default-first-option
 							remote
@@ -188,36 +261,38 @@
 					</el-col>
 				</el-row>
 			</el-row>
-			<!-- pseudo family -->
+			<!-- protocol -->
 			<el-row>
 				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>Pseudo Family</h3></el-tag></el-col
-					>
+					<el-col :xl="16">
+						<el-tag><h3>Protocol</h3></el-tag>
+						<router-link
+							to="/data/potentials"
+							class="d2-ml color-text-placeholder"
+							>Setup (sssp) pseudo_family first</router-link
+						>
+					</el-col>
 				</el-row>
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
 						<el-divider content-position="left"
-							>Set the pseudo_family for your calculations
-						</el-divider>
+							>Currently available protocols are 'theos-ht-1.0'
+							and 'testing'</el-divider
+						>
 					</el-col>
 				</el-row>
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
 						<el-select
-							v-model="pseudo_family_selected"
-							placeholder="Choose the pseudo_family"
-							filterable
+							v-model="calctasks_settings.protocol"
+							placeholder="Choose the protocol"
 							default-first-option
-							remote
-							:remote-method="getPseudoFamilyList"
-							:loading="loading_pseudo_family_list"
 						>
 							<el-option
-								v-for="item in pseudo_family_list"
-								:key="item.id"
-								:label="`${item.label} - (${item.id})`"
-								:value="item.id"
+								v-for="item in ['theos-ht-1.0', 'testing']"
+								:key="item"
+								:label="item"
+								:value="item"
 							>
 							</el-option>
 						</el-select>
@@ -244,7 +319,7 @@
 							type="textarea"
 							:autosize="{ minRows: 2 }"
 							placeholder=""
-							v-model="calctasks_description"
+							v-model="calctasks_settings.calctasks_description"
 							show-word-limit
 						>
 						</el-input>
@@ -372,7 +447,7 @@
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
 						<el-input-number
-							v-model="num_machines"
+							v-model="calctasks_settings.num_machines"
 							:min="1"
 						></el-input-number>
 					</el-col>
@@ -397,9 +472,50 @@
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
 						<el-input-number
-							v-model="num_mpiprocs_per_machine"
+							v-model="
+								calctasks_settings.num_mpiprocs_per_machine
+							"
 							:min="1"
 						></el-input-number>
+					</el-col>
+				</el-row>
+			</el-row>
+			<el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16"
+						><el-tag><h3>should_run_dft_bands</h3></el-tag></el-col
+					>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-divider content-position="left"
+							>Whether or not to run dft bands</el-divider
+						>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-switch
+							v-model="calctasks_settings.should_run_dft_bands"
+							active-text="True"
+							inactive-text="False"
+						></el-switch>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-divider content-position="left"
+							>Whether or not to plot bands</el-divider
+						>
+					</el-col>
+				</el-row>
+				<el-row type="flex" justify="center">
+					<el-col :xl="16">
+						<el-switch
+							v-model="calctasks_settings.should_plot_bands"
+							active-text="True"
+							inactive-text="False"
+						></el-switch>
 					</el-col>
 				</el-row>
 			</el-row>
@@ -421,35 +537,8 @@
 		<div class="task-parameters form-group">
 			<el-row type="flex" justify="center">
 				<el-col :xl="16">
-					<el-form
-						:label-width="formLabelWidth"
-						label-position="top"
-						size="middle"
-					>
-						<h5 style="text-transform: uppercase;">
-							CalcType
-						</h5>
-						<el-form-item
-							label="SSSP Cutoff"
-							prop="sssp_cutoff_flag"
-						>
-							<p class="color-text-sub">
-								Set True to use cutoff suggested by sssp.
-							</p>
-							<el-switch
-								v-model="suggested_cutoff_flag"
-								active-text="True"
-								inactive-text="False"
-							>
-							</el-switch>
-						</el-form-item>
-					</el-form>
-				</el-col>
-			</el-row>
-			<el-row type="flex" justify="center">
-				<el-col :xl="16">
 					<h5 style="text-transform: uppercase;">
-						workflows params
+						automated wannier90 workflows params
 					</h5>
 					<el-form
 						:model="inputsForm"
@@ -458,245 +547,46 @@
 						ref="inputsForm"
 						label-position="top"
 						size="small"
-					>
-						<el-form-item
-							label="kpoints_distance"
-							prop="kpoints_distance"
-						>
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="inputsForm.kpoints_distance"
-							></el-input-number>
-						</el-form-item>
-						<template
-							v-if="
-								['pw_relax', 'pw_bands'].includes(
-									calctasks_type_selected
-								)
-							"
-						>
-							<el-form-item
-								label="relaxation_scheme"
-								prop="relaxation_scheme"
-							>
-								<p class="color-text-sub">
-									The relaxation scheme to use: choose either
-									`relax` or `vc-relax` for variable cell
-									relax.
-								</p>
-								<el-select
-									v-model="inputsForm.relaxation_scheme"
-									default-first-option
-								>
-									<el-option
-										v-for="item in ['relax', 'vc-relax']"
-										:key="item"
-										:label="item"
-										:value="item"
-									>
-									</el-option>
-								</el-select>
-							</el-form-item>
-							<el-form-item
-								label="meta_convergence"
-								prop="meta_convergence"
-							>
-								<p class="color-text-sub">
-									If `True` the workchain will perform a
-									meta-convergence on the cell volume.
-								</p>
-								<el-switch
-									v-model="inputsForm.meta_convergence"
-									active-text="True"
-									inactive-text="False"
-								>
-								</el-switch>
-							</el-form-item>
-							<el-form-item
-								label="max_meta_convergence_iterations"
-								prop="max_meta_convergence_iterations"
-							>
-								<p class="color-text-sub">
-									The maximum number of variable cell relax
-									iterations in the meta convergence cycle.
-								</p>
-								<el-input-number
-									v-model="
-										inputsForm.max_meta_convergence_iterations
-									"
-								></el-input-number>
-							</el-form-item>
-							<el-form-item
-								label="volume_convergence"
-								prop="volume_convergence"
-							>
-								<p class="color-text-sub">
-									The volume difference threshold between two
-									consecutive meta convergence iterations.
-								</p>
-								<el-input-number
-									v-model="inputsForm.volume_convergence"
-								></el-input-number>
-							</el-form-item>
-						</template>
-						<template v-if="calctasks_type_selected == 'pw_bands'">
-							<el-form-item
-								label="nbands_factor"
-								prop="nbands_factor"
-							>
-								<p class="color-text-sub">
-									The number of bands for the BANDS
-									calculation is that used for the SCF
-									multiplied by this factor.
-								</p>
-								<el-input-number
-									v-model="inputsForm.nbands_factor"
-								></el-input-number>
-							</el-form-item>
-							<el-form-item
-								label="bands_kpoints_distance"
-								prop="bands_kpoints_distance"
-							>
-								<p class="color-text-sub">
-									Minimum kpoints distance for the BANDS
-									calculation. Specify either this or
-									`bands_kpoints`.
-								</p>
-								<el-input-number
-									v-model="inputsForm.bands_kpoints_distance"
-								></el-input-number>
-							</el-form-item>
-						</template>
-					</el-form>
-				</el-col>
-			</el-row>
-			<el-row type="flex" justify="center">
-				<el-col :xl="16">
-					<h5 style="text-transform: uppercase;">
-						QE inputs params
-					</h5>
-					<el-form
-						:model="parametersForm"
-						:rules="parametersFormRules"
-						:label-width="formLabelWidth"
-						ref="parametersForm"
-						label-position="top"
-						size="small"
 						class="flex-wrap-row"
 					>
-						<el-form-item label="restart_mode" prop="restart_mode">
-							<p class="color-text-sub"></p>
-							<el-input
-								v-model="parametersForm.restart_mode"
-							></el-input>
-						</el-form-item>
-						<el-form-item label="ecutwfc" prop="ecutwfc">
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.ecutwfc"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item label="ecutrho" prop="ecutrho">
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.ecutrho"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item label="conv_thr" prop="conv_thr">
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.conv_thr"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item label="smearing" prop="smearing">
-							<p class="color-text-sub"></p>
-							<el-input
-								v-model="parametersForm.smearing"
-							></el-input>
-						</el-form-item>
-						<el-form-item label="degauss" prop="degauss">
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.degauss"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item label="occupations" prop="occupations">
-							<p class="color-text-sub"></p>
-							<el-input
-								v-model="parametersForm.occupations"
-							></el-input>
-						</el-form-item>
-						<el-form-item label="mixing_beta" prop="mixing_beta">
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.mixing_beta"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item label="mixing_ndim" prop="mixing_ndim">
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.mixing_ndim"
-							></el-input-number>
-						</el-form-item>
 						<el-form-item
-							label="etot_conv_thr"
-							prop="etot_conv_thr"
+							label="retrieve_hamiltonian"
+							prop="retrieve_hamiltonian"
 						>
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.etot_conv_thr"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item
-							label="forc_conv_thr"
-							prop="forc_conv_thr"
-						>
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.forc_conv_thr"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item
-							label="press_conv_thr"
-							prop="press_conv_thr"
-						>
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.press_conv_thr"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item label="nstep" prop="nstep">
-							<p class="color-text-sub"></p>
-							<el-input-number
-								v-model="parametersForm.nstep"
-							></el-input-number>
-						</el-form-item>
-						<el-form-item label="wf_collect" prop="wf_collect">
 							<p class="color-text-sub"></p>
 							<el-switch
-								v-model="parametersForm.wf_collect"
+								v-model="inputsForm.retrieve_hamiltonian"
 								active-text="True"
 								inactive-text="False"
 							>
 							</el-switch>
 						</el-form-item>
-						<el-form-item label="tstress" prop="tstress">
+						<el-form-item label="only_valence" prop="only_valence">
 							<p class="color-text-sub"></p>
 							<el-switch
-								v-model="parametersForm.tstress"
+								v-model="inputsForm.only_valence"
 								active-text="True"
 								inactive-text="False"
-							>
-							</el-switch>
+							></el-switch>
 						</el-form-item>
-						<el-form-item label="tprnfor" prop="tprnfor">
+						<el-form-item
+							label="do_disentanglement"
+							prop="do_disentanglement"
+						>
 							<p class="color-text-sub"></p>
 							<el-switch
-								v-model="parametersForm.tprnfor"
+								v-model="inputsForm.do_disentanglement"
 								active-text="True"
 								inactive-text="False"
-							>
-							</el-switch>
+							></el-switch>
+						</el-form-item>
+						<el-form-item label="do_mlwf" prop="do_mlwf">
+							<p class="color-text-sub"></p>
+							<el-switch
+								v-model="inputsForm.do_mlwf"
+								active-text="True"
+								inactive-text="False"
+							></el-switch>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -756,27 +646,21 @@ export default {
 			formLabelWidth: "200px",
 			fullscreenLoading: false,
 			TaskInfo: {
-				title: "PW"
+				title: "Automated Wannier"
 			},
 			calctasks_label: "",
 			calctasks_type_selected_id: null,
-			calctasks_type_selected: "pw",
+			calctasks_type_selected: "automated_wannier",
 			calctasks_types: [
 				{
-					label: "PW",
-					value: "pw"
-				},
-				{
-					label: "PW_Relax",
-					value: "pw_relax"
-				},
-				{
-					label: "PW_Bands",
-					value: "pw_bands"
+					label: "automated_wannier",
+					value: "automated_wannier"
 				}
 			],
 			load_calctasks_types: true,
 			calctasks_description: "",
+			should_run_dft_bands: true,
+			should_plot_bands: true,
 			structures: [],
 			loading_structures: true,
 			new_structure_id: "",
@@ -787,101 +671,61 @@ export default {
 			// codes
 			loading_codes_list: false,
 			codes_list: [],
-			codes_selected: "",
-			// pseudo family
-			loading_pseudo_family_list: false,
-			pseudo_family_list: [],
-			pseudo_family_selected: "",
+			pw_code_selected: "",
+			pw2wannier90_code_selected: "",
+			projwfc_code_selected: "",
+			wannier90_code_selected: "",
 			num_machines: 1,
 			num_mpiprocs_per_machine: 1,
+			// protocol
+			protocol_selected: "testing",
 			// parameters
 			inputsForm: {
-				relaxation_scheme: "vc-relax",
-				meta_convergence: true,
-				max_meta_convergence_iterations: 10,
-				volume_convergence: 0.01,
-				kpoints_distance: 0.1,
-				nbands_factor: 1,
-				bands_kpoints_distance: 0.1
+				retrieve_hamiltonian: false,
+				do_disentanglement: false,
+				only_valence: false,
+				do_mlwf: false
 			},
-			parametersForm: {
-				ecutwfc: 80,
-				ecutrho: 240,
-				restart_mode: "from_scratch",
-				wf_collect: true,
-				conv_thr: 1e-9,
-				smearing: "marzari-vanderbilt",
-				degauss: 0.02,
-				occupations: "smearing",
-				tstress: true,
-				tprnfor: true,
-				mixing_beta: 0.3,
-				mixing_ndim: 8,
-				etot_conv_thr: 1e-5,
-				forc_conv_thr: 1e-4,
-				press_conv_thr: 0.1,
-				nstep: 60
-			},
-			parametersFormRules: {},
-			relax_structure_flag: false,
-			suggested_cutoff_flag: true,
+			inputsFormRules: {},
 			// parameters template
-			params_templates_selected: "default",
+			params_templates_selected: "",
 			params_templates_list: [{ label: "default", id: "default" }],
 			default_parameters_template: {
-				parameters: {
-					// 'calculation': 'vc-relax',
-					ecutwfc: 80,
-					ecutrho: 240,
-					restart_mode: "from_scratch",
-					wf_collect: true,
-					conv_thr: 1e-9,
-					smearing: "marzari-vanderbilt",
-					degauss: 0.02,
-					occupations: "smearing",
-					tstress: true,
-					tprnfor: true,
-					mixing_beta: 0.3,
-					mixing_ndim: 8,
-					etot_conv_thr: 1e-5,
-					forc_conv_thr: 1e-4,
-					press_conv_thr: 0.1,
-					nstep: 60
-				},
 				inputs: {
-					relaxation_scheme: "vc-relax",
-					meta_convergence: true,
-					max_meta_convergence_iterations: 10,
-					volume_convergence: 0.01,
-					kpoints_distance: 0.1
+					retrieve_hamiltonian: false,
+					do_disentanglement: false,
+					only_valence: false,
+					do_mlwf: false
 				},
 				calctasks_settings: {
 					withmpi: true,
 					num_mpiprocs_per_machine: 1,
-					num_machines: 1
+					num_machines: 1,
+					should_run_dft_bands: true,
+					should_plot_bands: true
 				}
 			},
-			formData: {}
-		};
-	},
-	computed: {
-		calctasks_settings() {
-			return {
-				calcTask_category: "QuantumEspresso",
-				calctasks_label: this.calctasks_label,
-				calctasks_type: this.calctasks_type_selected_id,
-				calctasks_description: this.calctasks_description,
-				computer: this.computers_selected,
-				code: this.codes_selected,
-				pseudo_family: this.pseudo_family_selected,
-				structures: this.structures,
+			formData: {},
+			calctasks_settings: {
+				calcTask_category: "automated_wannier",
+				calctasks_label: "",
+				calctasks_type: null,
+				calctasks_description: "Automated Wannier",
+				computer: null,
+				pw_code: null,
+				pw2wannier90_code: null,
+				projwfc_code: null,
+				wannier90_code: null,
+				protocol: null,
+				structures: [],
 				withmpi: true,
-				num_machines: this.num_machines,
-				num_mpiprocs_per_machine: this.num_mpiprocs_per_machine,
-				user: util.cookies.get("uuid"),
-				suggested_cutoff_flag: this.suggested_cutoff_flag
-			};
-		}
+				num_machines: 1,
+				num_mpiprocs_per_machine: 1,
+				should_run_dft_bands: true,
+				should_plot_bands: true,
+				user: util.cookies.get("uuid")
+			}
+		};
 	},
 	methods: {
 		deleteRow(index, rows) {
@@ -985,38 +829,23 @@ export default {
 					this.loading_codes_list = false;
 				});
 		},
-		getPseudoFamilyList(query) {
-			if (query == "") {
-				return (this.pseudo_family_list = []);
-			}
-			this.loading_pseudo_family_list = true;
-			this.$api
-				.GetList("/potentials/", {
-					label: query,
-					id: query
-				})
-				.then(resp => {
-					if (resp.code == 0) {
-						this.pseudo_family_list = resp.data.results;
-					} else {
-						this.$message.error("Retrivied failed! Please retry.");
-					}
-					this.loading_pseudo_family_list = false;
-				});
-		},
 		// template
 		params_templates_changed(val) {
 			if (val == "default") {
-				this.parametersForm = util.deepcopy(
-					this.default_parameters_template.parameters
-				);
 				this.inputsForm = util.deepcopy(
 					this.default_parameters_template.inputs
+				);
+				this.calctasks_settings = Object.assign(
+					this.calctasks_settings,
+					util.deepcopy(
+						this.default_parameters_template.calctasks_settings
+					)
 				);
 			}
 		},
 		preUploadCheck(callback) {
 			this.fullscreenLoading = true;
+			this.calctasks_settings.structures = this.structures;
 			try {
 				const settings = this.calctasks_settings;
 				let failed = false;
@@ -1024,8 +853,11 @@ export default {
 					settings.calctasks_type == "" ||
 					settings.computer == "" ||
 					settings.calctasks_label == "" ||
-					settings.code == "" ||
-					settings.pseudo_family == "") &&
+					settings.pw_code == "" ||
+					settings.pw2wannier90_code == "" ||
+					settings.projwfc_code == "" ||
+					settings.wannier90_code == "" ||
+					settings.protocol == "") &&
 					(failed = true);
 				if (failed) {
 					this.$message.error(
@@ -1041,13 +873,12 @@ export default {
 			}
 			this.formData.calctasks_settings = this.calctasks_settings;
 			this.formData.inputs = this.inputsForm;
-			this.formData.parameters = this.parametersForm;
 			typeof callback === "function" && callback();
 		},
 		uploadSubmit() {
 			this.preUploadCheck(() => {
 				this.$api
-					.AddObj("/calctasks/qe/PWWorkChain/", this.formData)
+					.AddObj("/calctasks/qe/AutomatedWannier/", this.formData)
 					.then(resp => {
 						console.log(resp);
 						this.fullscreenLoading = false;
@@ -1064,7 +895,7 @@ export default {
 	},
 	mounted() {
 		this.$api
-			.GetList(`/calctask_types/`, { category_name: "QuantumEspresso" })
+			.GetList(`/calctask_types/`, { category_name: "automated_wannier" })
 			.then(resp => {
 				if (resp.code == 0) {
 					let data = resp.data;

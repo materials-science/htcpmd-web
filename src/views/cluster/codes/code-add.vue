@@ -115,7 +115,7 @@ export default {
 		}
 	},
 	data() {
-		let validateLabel = validate.is_clean_string;
+		let validateLabel = validate.is_clean_string_2;
 		return {
 			formLabelWidth: "200px",
 			form: {

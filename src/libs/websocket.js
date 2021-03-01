@@ -6,7 +6,7 @@ import util from "@/libs/util.js";
 let websock = null;
 let messageCallback = null;
 let errorCallback = null;
-let wsUrlPrefix = `ws://localhost:8000/ws`;
+let wsUrlPrefix = `ws://172.17.203.126:8000/ws`;
 let wsUrl = "";
 
 // 接收ws后端返回的数据

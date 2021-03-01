@@ -11,7 +11,7 @@ export default {
 		{
 			path: `${pre}potentials`,
 			title: "Potentials",
-			icon: "cubes"
+			icon: "fire"
 		},
 		{
 			path: `${pre}calctasks`,

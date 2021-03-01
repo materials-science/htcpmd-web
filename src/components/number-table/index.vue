@@ -106,6 +106,9 @@ export default {
 			width: 100%;
 		}
 	}
+	.el-input-number--small {
+		width: 100%;
+	}
 	max-width: 320px;
 	min-width: 280px;
 }

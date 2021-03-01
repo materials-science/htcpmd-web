@@ -3,7 +3,11 @@
 		<page-background>
 			<account-form>
 				<!-- logo -->
-				<img class="page-login--logo" src="@/assets/images/logo@small.png" />
+				<img
+					class="page-login--logo"
+					style="margin-bottom:initial;"
+					src="@/assets/images/all@light.png"
+				/>
 				<!-- form -->
 				<div class="page-login--form">
 					<el-card shadow="never">
@@ -20,7 +24,10 @@
 									v-model="formSignup.username"
 									placeholder="Username"
 								>
-									<i slot="prepend" class="fa fa-user-circle-o"></i>
+									<i
+										slot="prepend"
+										class="fa fa-user-circle-o"
+									></i>
 								</el-input>
 							</el-form-item>
 							<el-form-item prop="email">
@@ -29,7 +36,10 @@
 									v-model="formSignup.email"
 									placeholder="Email"
 								>
-									<i slot="prepend" class="fa fa-envelope-o"></i>
+									<i
+										slot="prepend"
+										class="fa fa-envelope-o"
+									></i>
 								</el-input>
 							</el-form-item>
 							<el-form-item prop="password1">
@@ -38,7 +48,10 @@
 									v-model="formSignup.password1"
 									placeholder="Password"
 								>
-									<i slot="prepend" class="fa fa-keyboard-o"></i>
+									<i
+										slot="prepend"
+										class="fa fa-keyboard-o"
+									></i>
 								</el-input>
 							</el-form-item>
 							<el-form-item prop="password2">
@@ -47,10 +60,17 @@
 									v-model="formSignup.password2"
 									placeholder="Confirmation"
 								>
-									<i slot="prepend" class="fa fa-keyboard-o"></i>
+									<i
+										slot="prepend"
+										class="fa fa-keyboard-o"
+									></i>
 								</el-input>
 							</el-form-item>
-							<el-popover placement="top" width="400" trigger="click">
+							<el-popover
+								placement="top"
+								width="400"
+								trigger="click"
+							>
 								<slide-verify
 									:l="42"
 									:r="10"
@@ -74,10 +94,14 @@
 							</el-popover>
 						</el-form>
 					</el-card>
-					<p class="page-login--options" flex="main:justify cross:center">
+					<p
+						class="page-login--options"
+						flex="main:justify cross:center"
+					>
 						<span @click="redirect_to_login()">Sign in</span>
 						<span @click="verfication_email_resent()"
-							><d2-icon name="question-circle" /> Resent email</span
+							><d2-icon name="question-circle" /> Resent
+							email</span
 						>
 					</p>
 				</div>
@@ -100,25 +124,25 @@ export default {
 				{
 					name: "Admin",
 					email: "admin",
-					password: "admin",
+					password: "admin"
 				},
 				{
 					name: "Editor",
 					email: "editor",
-					password: "editor",
+					password: "editor"
 				},
 				{
 					name: "User1",
 					email: "user1",
-					password: "user1",
-				},
+					password: "user1"
+				}
 			],
 			// 表单
 			formSignup: {
 				username: "ias",
 				email: "ias@szu.edu.cn",
 				password1: "",
-				password2: "",
+				password2: ""
 				// code: "v9am",
 			},
 			// 表单校验
@@ -127,30 +151,30 @@ export default {
 					{
 						required: true,
 						message: "请输入用户名",
-						trigger: "blur",
-					},
+						trigger: "blur"
+					}
 				],
 				email: [
 					{
 						required: true,
 						message: "请输入Email",
-						trigger: "blur",
-					},
+						trigger: "blur"
+					}
 				],
 				password1: [
 					{
 						required: true,
 						message: "请输入密码",
-						trigger: "blur",
-					},
+						trigger: "blur"
+					}
 				],
 				password2: [
 					{
 						required: true,
 						message: "请输入密码",
-						trigger: "blur",
-					},
-				],
+						trigger: "blur"
+					}
+				]
 				// code: [
 				// 	{
 				// 		required: true,
@@ -159,7 +183,7 @@ export default {
 				// 	},
 				// ],
 			},
-			verifyOk: false,
+			verifyOk: false
 		};
 	},
 	methods: {
@@ -186,8 +210,11 @@ export default {
 		 */
 		// 提交注册信息
 		submit() {
-			this.$refs.regitrationForm.validate((valid) => {
-				if (valid && this.formSignup.password1 == this.formSignup.password2) {
+			this.$refs.regitrationForm.validate(valid => {
+				if (
+					valid &&
+					this.formSignup.password1 == this.formSignup.password2
+				) {
 					// 注册
 					// 注意 这里的演示没有传验证码
 					// 具体需要传递的数据请自行修改代码
@@ -195,7 +222,7 @@ export default {
 						username: this.formSignup.username,
 						email: this.formSignup.email,
 						password1: this.formSignup.password1,
-						password2: this.formSignup.password2,
+						password2: this.formSignup.password2
 					}).then(() => {
 						// 重定向对象不存在则返回顶层路径
 						this.$router.replace(this.$route.query.redirect || "/");
@@ -207,28 +234,35 @@ export default {
 			});
 		},
 		verfication_email_resent() {
-			this.$refs.regitrationForm.validate((valid) => {
-				if (valid && this.formSignup.password1 == this.formSignup.password2) {
+			this.$refs.regitrationForm.validate(valid => {
+				if (
+					valid &&
+					this.formSignup.password1 == this.formSignup.password2
+				) {
 					this.$api
 						.SYS_USER_RESENT_EMAIL({
 							username: this.formSignup.username,
 							email: this.formSignup.email,
 							password1: this.formSignup.password1,
-							password2: this.formSignup.password2,
+							password2: this.formSignup.password2
 						})
-						.then((resp) => {
+						.then(resp => {
 							if (resp.code == 0) {
-								this.$message.success("Verification Email sent.");
+								this.$message.success(
+									"Verification Email sent."
+								);
 							}
-							this.$router.replace(this.$route.query.redirect || "/");
+							this.$router.replace(
+								this.$route.query.redirect || "/"
+							);
 						});
 				} else {
 					// 注册表单校验失败
 					this.$message.error("表单校验失败，请检查");
 				}
 			});
-		},
-	},
+		}
+	}
 };
 </script>
 

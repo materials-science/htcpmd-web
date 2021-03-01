@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-12-22 09:01:16
+ * @LastEditTime: 2021-01-23 15:19:08
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /web-admin-kit/src/router/modules/data.js
+ */
 import layoutHeaderAside from "@/layout/header-aside";
 
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
@@ -57,9 +65,19 @@ export default {
 		},
 		// calctask
 		{
+			path: "calctasks",
+			name: `${pre}calctasks`,
+			component: _import("data/calctasks/index.vue"),
+			meta: {
+				...meta,
+				cache: true,
+				title: "CalcTasks Home"
+			}
+		},
+		{
 			path: "upload/calctasks",
 			name: `${pre}calctasks-upload-index`,
-			component: _import("data/calctasks/index.vue"),
+			component: _import("data/calctasks/upload/index.vue"),
 			meta: {
 				...meta,
 				cache: true,
@@ -69,7 +87,7 @@ export default {
 		{
 			path: "upload/calctasks/ShengBTE",
 			name: `${pre}calctasks-upload-shengbte`,
-			component: _import("data/calctasks/components/shengbte"),
+			component: _import("data/calctasks/upload/components/shengbte"),
 			meta: {
 				...meta,
 				cache: true,
@@ -77,13 +95,25 @@ export default {
 			}
 		},
 		{
-			path: "upload/calctasks/qe/pw",
+			path: "upload/calctasks/pw",
 			name: `${pre}calctasks-upload-qe-pw`,
-			component: _import("data/calctasks/components/qe/pw.vue"),
+			component: _import("data/calctasks/upload/components/qe/pw.vue"),
 			meta: {
 				...meta,
 				cache: true,
 				title: "Upload QE-PW CalcTasks"
+			}
+		},
+		{
+			path: "upload/calctasks/automated_wannier",
+			name: `${pre}calctasks-upload-qe-automated_wannier`,
+			component: _import(
+				"data/calctasks/upload/components/qe/automated-wannier.vue"
+			),
+			meta: {
+				...meta,
+				cache: true,
+				title: "Upload Automated Wannier CalcTasks"
 			}
 		}
 	])("data-")

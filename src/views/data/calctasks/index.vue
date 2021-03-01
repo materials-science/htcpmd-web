@@ -1,229 +1,263 @@
 <template>
-	<d2-container
-		class="data-calctasks-upload-index-container"
-		v-loading="load_calctask_categories || load_calctasks_types"
-	>
-		<!-- <el-collapse v-model="activeCards">
-			<el-collapse-item
-				class="box-card"
-				v-for="category in calctask_categories"
-				:key="category.id"
-				:name="category.id"
-			> -->
-		<el-card
-			class="box-card d2-card"
-			shadow="hover"
-			v-for="category in calctask_categories"
-			:key="category.id"
-			:name="category.id"
+	<d2-container>
+		<el-table
+			v-loading="tableLoading"
+			:data="tableData"
+			style="width: 100%"
+			:default-sort="{ prop: 'id', order: 'descending' }"
+			@sort-change="sortChange"
+			@row-click="viewDetail"
+			class="structure-table"
 		>
-			<template slot="header">
-				<el-row
-					type="flex"
-					justify="start"
-					align="middle"
-					style="flex: 1"
-				>
-					<el-col :xl="6">
-						<h2>{{ category.category_name }}</h2>
-					</el-col>
-					<el-col :xl="6">
-						<el-button
-							:icon="
-								category.disabled
-									? 'el-icon-close'
-									: 'el-icon-plus'
-							"
-							:disabled="category.disabled"
-							:type="category.disabled ? 'danger' : 'primary'"
-							plain
-							@click.native.prevent.stop="
-								AddNewTasks(category.id, category.category_name)
-							"
-							>Add A Task</el-button
-						>
-						<el-button
-							icon="el-icon-reading"
-							:disabled="category.disabled"
-							:type="category.disabled ? 'danger' : 'primary'"
-							plain
-							@click.native.prevent.stop="
-								goToDocsPage(
-									'http://172.31.220.82:8005/index.html'
-								)
-							"
-							>Watch Docs</el-button
-						>
-						<!-- <el-button
-								:icon="
-									activeCards.includes(category.id)
-										? 'el-icon-arrow-up'
-										: 'el-icon-arrow-down'
-								"
-								:type="category.disabled ? 'danger' : 'primary'"
-								plain
-							></el-button> -->
-					</el-col>
-				</el-row>
-			</template>
-			<template v-for="type in calctasks_types">
-				<template v-if="type.category.id == category.id">
-					<div :key="type.id" class="types-list">
-						<el-row>
-							<el-col :span="6">
-								<h3>
-									<el-link
-										type="primary"
-										:href="type.doc_link"
-										:disabled="!type.doc_link"
-										target="_blank"
-										>{{ type.type_name }}</el-link
-									><i
-										class="el-icon-warning-outline"
-										style="color: #f56c6c; padding: 8px"
-										v-if="type.disabled"
-									></i>
-								</h3>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :span="12">
-								<p>
-									{{ type.description || "No description" }}
-								</p>
-							</el-col>
-						</el-row>
-					</div>
-				</template>
-			</template>
-		</el-card>
-		<!-- </el-collapse-item>
-		</el-collapse> -->
-		<!-- TODO: remove unused codes and beutify this page -->
-		<v-divider></v-divider>
-		<el-card class="box-card d2-card" shadow="hover">
-			<div slot="header">
-				<el-row type="flex" justify="start" align="middle">
-					<el-col :span="6">
-						<h2>QuantumEspresso</h2>
-					</el-col>
-				</el-row>
-			</div>
-			<div class="types-list">
-				<!-- PW -->
-				<el-row>
-					<!-- title -->
-					<el-row type="flex" align="center" justify="space-between">
-						<el-col :span="6">
-							<h3>PW WorkChain</h3>
-						</el-col>
-						<el-col :span="6">
-							<router-link to="/data/upload/calctasks/qe/pw">
-								<el-button
-									icon="el-icon-plus"
-									type="success"
-									plain
-									>Add A Task</el-button
-								>
-							</router-link>
-						</el-col>
-					</el-row>
-					<!-- desc -->
-					<el-row>
-						<el-col :span="12">
-							<p>some descs and links</p>
-						</el-col>
-					</el-row>
-				</el-row>
-				<!-- PH -->
-				<el-row>
-					<!-- title -->
-					<el-row type="flex" align="center" justify="space-between">
-						<el-col :span="6">
-							<h3>PH WorkChain</h3>
-						</el-col>
-						<el-col :span="6">
-							<el-button icon="el-icon-plus" type="success" plain
-								>Add A Task</el-button
+			<el-table-column type="expand">
+				<template slot-scope="props">
+					<el-form
+						label-position="left"
+						inline
+						class="structure-table-expand"
+					>
+						<el-form-item label="ID">
+							<span>{{ props.row.id }}</span>
+						</el-form-item>
+						<el-form-item label="calc task label">
+							<span>{{ props.row.calctask_label }}</span>
+						</el-form-item>
+						<el-form-item label="created time">
+							<el-date-picker
+								v-model="props.row.created_time"
+								type="datetime"
+								placeholder="created time"
+								readonly
+								class="structure-date-picker"
 							>
-						</el-col>
-					</el-row>
-					<!-- desc -->
-					<el-row>
-						<el-col :span="12">
-							<p>some descs and links</p>
-						</el-col>
-					</el-row>
-				</el-row>
-			</div>
-		</el-card>
+							</el-date-picker>
+						</el-form-item>
+					</el-form>
+				</template>
+			</el-table-column>
+			<el-table-column prop="id" label="id" sortable align="center">
+			</el-table-column>
+			<!-- TODO: Filter -->
+			<el-table-column
+				prop="calctask_type"
+				label="calc task type"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column label="structure" align="center">
+				<template slot-scope="props">
+					<el-button
+						@click.native.prevent="
+							goToStructurePage(props.row.structure.id)
+						"
+						type="text"
+						size="small"
+						v-html="props.row.structure.formula"
+					>
+					</el-button>
+				</template>
+			</el-table-column>
+			<el-table-column
+				sortable="custom"
+				label="created time"
+				prop="created_time"
+				align="center"
+			>
+				<template slot-scope="props">
+					<el-date-picker
+						v-model="props.row.created_time"
+						type="datetime"
+						placeholder="created time"
+						readonly
+						class="structure-date-picker"
+					>
+					</el-date-picker>
+				</template>
+			</el-table-column>
+			<el-table-column
+				prop="supports"
+				sortable
+				label="supports"
+				align="center"
+			>
+			</el-table-column>
+			<el-table-column prop="status" label="status" align="center">
+				<template slot-scope="props">
+					<i
+						class="el-icon-warning-outline"
+						v-if="props.row.status == 'failed'"
+					></i>
+					<i
+						class="el-icon-loading"
+						v-else-if="
+							[
+								'running',
+								'submitted',
+								'created',
+								'creating'
+							].includes(props.row.status)
+						"
+					></i>
+					<i
+						class="el-icon-circle-close"
+						v-else-if="props.row.status == 'deleted'"
+					></i>
+					<i
+						class="el-icon-check"
+						v-else-if="props.row.status == 'completed'"
+					></i>
+					<i class="el-icon-question" v-else></i>
+					<span>{{ props.row.status }}</span>
+				</template>
+			</el-table-column>
+		</el-table>
+		<template slot="footer">
+			<el-pagination
+				background
+				@size-change="handlePageSizeChange"
+				@current-change="handleCurrentPageChange"
+				:current-page="currentPage"
+				:page-sizes="[2, 10, 20, 30, 40]"
+				:page-size="pageSize"
+				layout="total, sizes, prev, pager, next"
+				:total="totalCount"
+			></el-pagination>
+			<el-button
+				class="add-tasks-button"
+				plain
+				type="primary"
+				@click="addNewTasks"
+				>Add New Tasks</el-button
+			>
+		</template>
 	</d2-container>
 </template>
 
 <script>
+const apiPrefix = "/calctasks/";
 export default {
-	name: "data-calctasks-upload-index",
+	name: "data-calctasks",
 	data() {
 		return {
-			calctask_categories: [],
-			calctasks_types: [],
-			load_calctask_categories: true,
-			load_calctasks_types: true,
-			activeCards: []
+			tableData: [
+				{
+					id: "1325121640423690200",
+					celery_id: "e96741e4-f36a-448c-affa-4d7a1bcb70ef",
+					structure: { id: "1325121640423690200", formula: "Si" },
+					user: { id: "1325121640423690200", name: "ias" },
+					code: {},
+					calc_jobs_type: "ShengBTE",
+					calc_jobs_label: "ShengBTEWorkChain",
+					supports: 1,
+					status: "failed"
+				},
+				{
+					id: "1325121640423690200",
+					structure: { id: "1325121640423690200", formula: "Si" },
+					calc_jobs_type: "ShengBTE",
+					calc_jobs_label: "ShengBTEWorkChain",
+					user: "IAS",
+					supports: 2,
+					status: "created"
+				},
+				{
+					id: "1325121640423690200",
+					structure: { id: "1325121640423690200", formula: "Si" },
+					calc_jobs_type: "ShengBTE",
+					calc_jobs_label: "ShengBTEWorkChain",
+					user: "IAS",
+					supports: 0,
+					status: "running"
+				}
+			],
+			tableLoading: true,
+			currentPage: 1,
+			totalCount: 0,
+			pageSize: 10,
+			queryForm: {}
 		};
 	},
 	methods: {
-		AddNewTasks(category_id, category_name) {
-			this.$router.replace(`/data/upload/calctasks/${category_name}`);
+		pageRequest(
+			page = this.currentPage,
+			size = this.pageSize,
+			options = this.queryForm
+		) {
+			return this.$api.GetList(
+				apiPrefix,
+				Object.assign({ page, size }, options)
+			);
 		},
-		goToDocsPage(url) {
-			window.open(url, "_blank");
+		handleCurrentPageChange(page) {
+			this.tableLoading = true;
+			this.pageRequest(page).then(resp => {
+				let data = resp.data;
+				this.tableData = data.results;
+				this.totalCount = data.count;
+				this.currentPage = page;
+				this.tableLoading = false;
+			});
+		},
+		handlePageSizeChange(size) {
+			this.tableLoading = true;
+			this.pageSize = size;
+			this.pageRequest().then(resp => {
+				let data = resp.data;
+				this.tableData = data.results;
+				this.totalCount = data.count;
+				this.tableLoading = false;
+			});
+		},
+		viewDetail(row, column, event) {
+			let id = row.id;
+			if (id == "") {
+				this.$message.error("ID is None!");
+			}
+			this.$router.push({
+				path: `/data/calctasks/${id}`
+			});
+		},
+		goToStructurePage(id) {
+			if (id == "") {
+				this.$message.error("Structure ID is None!");
+			}
+			this.$router.push({
+				path: `/data/structures/${id}`
+			});
+		},
+		addNewTasks() {
+			this.$router.replace({
+				path: `/data/upload/calctasks`
+			});
+		},
+		sortChange(column) {
+			console.log(column);
+			if (column.order == null) return;
+			if (column.prop == "created_time") {
+				this.queryForm = {
+					ordering: `${
+						column.order == "descending" ? "-" : ""
+					}created_time`
+				};
+				this.handleCurrentPageChange(this.currentPage);
+			}
 		}
 	},
 	mounted() {
-		// TODO: Store locally to reduce requests.
-		this.$api.GetList(`/calctask_categories/`).then(resp => {
-			if (resp.code == 0) {
-				this.calctask_categories = resp.data;
-				this.calctask_categories.forEach(element => {
-					this.activeCards.push(element.id);
-				});
-			}
-			this.load_calctask_categories = false;
-		});
-		this.$api.GetList(`/calctask_types/`).then(resp => {
-			if (resp.code == 0) {
-				this.calctasks_types = resp.data;
-			} else {
-				this.$message.error("No CalcTasks Types Avaliable.");
-				setTimeout(() => {
-					this.$store.dispatch("d2admin/page/close", {
-						tagName: "/data/upload/calctasks"
-					});
-				}, 1500);
-				return;
-			}
-			this.load_calctasks_types = false;
+		this.pageRequest().then(resp => {
+			let data = resp.data;
+			this.tableData = data.results;
+			this.totalCount = data.count;
+			this.tableLoading = false;
 		});
 	}
 };
 </script>
 
 <style lang="scss">
-.data-calctasks-upload-index-container {
-	.box-card {
-		.el-collapse-item__header {
-			padding: 36px 0;
-		}
-		.el-collapse-item__wrap {
-			background-color: transparent;
-		}
-		.types-list {
-			margin: 0 8px 32px;
-			p {
-				padding: 8px 16px;
-			}
-		}
-	}
+.add-tasks-button {
+	position: absolute;
+	right: 16px;
+	bottom: 16px;
 }
 </style>

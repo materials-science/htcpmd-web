@@ -37,10 +37,10 @@ const pages = undefined;
 
 // proxy
 const proxyObj = {
-	// "/ws": {
-	//   ws: true,
-	//   target: "ws://localhost:8000"
-	// },
+	"/ws": {
+		ws: true,
+		target: "ws://172.17.203.126:8000"
+	},
 	"/api": {
 		ws: false,
 		target: "http://localhost:8000",
@@ -64,7 +64,7 @@ module.exports = {
 	publicPath,
 	lintOnSave: true,
 	devServer: {
-		host: "localhost",
+		host: "0.0.0.0",
 		port: 8080,
 		proxy: proxyObj,
 		publicPath, // 和 publicPath 保持一致

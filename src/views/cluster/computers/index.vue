@@ -313,7 +313,8 @@
 					:label-width="formLabelWidth"
 				>
 					<el-input
-						v-model="form.default_mpiprocs_per_machine"
+						type="number"
+						v-model.number="form.default_mpiprocs_per_machine"
 						autocomplete="off"
 					></el-input>
 				</el-form-item>
@@ -323,7 +324,7 @@
 					:label-width="formLabelWidth"
 				>
 					<el-input
-						v-model="form.minimum_job_poll_interval"
+						v-model.number="form.minimum_job_poll_interval"
 						autocomplete="off"
 					></el-input>
 				</el-form-item>
@@ -435,7 +436,7 @@ export default {
 				prepend_text: "",
 				append_text: "",
 				minimum_job_poll_interval: 10,
-				default_mpiprocs_per_machine: 1,
+				default_mpiprocs_per_machine: 4,
 				port: 22,
 				key_policy: "AutoAddPolicy"
 			},
@@ -447,7 +448,7 @@ export default {
 				shebang: [{ required: true, trigger: "blur" }],
 				mpirun_command: [{ required: true, trigger: "blur" }],
 				minimum_job_poll_interval: [
-					{ required: true, type: "number", min: 0, trigger: "blur" }
+					{ required: true, type: "integer", min: 0, trigger: "blur" }
 				],
 				default_mpiprocs_per_machine: [
 					{ required: true, type: "integer", min: 1, trigger: "blur" }

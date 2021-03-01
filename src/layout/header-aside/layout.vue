@@ -26,21 +26,23 @@
 					}"
 					flex-box="0"
 				>
-					<!-- <img
+					<img
 						v-if="asideCollapse"
 						:src="
 							`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/icon-only.png`
 						"
-					/> -->
-					<!-- <img
-						v-else
-						:src="`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/all.png`"
-					/> -->
+					/>
 					<img
+						v-else
+						:src="
+							`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/all.png`
+						"
+					/>
+					<!-- <img
 						v-if="asideCollapse"
 						src="@/assets/images/logo@small.png"
 					/>
-					<img v-else src="@/assets/images/logo@small.png" />
+					<img v-else src="@/assets/images/logo@small.png" /> -->
 				</router-link>
 				<div
 					class="toggle-aside-btn"
