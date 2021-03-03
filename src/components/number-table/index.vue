@@ -17,6 +17,7 @@
 							v-model="data[scope.$index]"
 							:precision="precision"
 							:controls="controls"
+							:disabled="disabled"
 							class="detail-number"
 						></el-input-number>
 					</template>
@@ -33,6 +34,7 @@
 							v-model="scope.row[index - 1]"
 							:precision="precision"
 							:controls="controls"
+							:disabled="disabled"
 							class="detail-number"
 						></el-input-number>
 					</template>
@@ -79,6 +81,12 @@ export default {
 			default() {
 				return false;
 			}
+		},
+		disabled: {
+			type: Boolean,
+			default() {
+				return false;
+			}
 		}
 	},
 	computed: {
@@ -111,5 +119,15 @@ export default {
 	}
 	max-width: 320px;
 	min-width: 280px;
+	.detail-number {
+		width: 100%;
+		input {
+			border: none !important;
+			background: none !important;
+			padding: initial !important;
+			cursor: default !important;
+			color: black !important;
+		}
+	}
 }
 </style>

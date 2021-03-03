@@ -1,23 +1,46 @@
 <template>
-	<d2-container v-loading.fullscreen.lock="fullscreenLoading">
-		<template slot="header">
-			<el-page-header @back="goBack">
-				<template slot="content"
-					><span v-html="attributes.formula"></span> -
-					{{ structure.id }}</template
-				>
-			</el-page-header>
-		</template>
-		<!-- <template slot="footer"> -->
-		<el-tabs tab-position="bottom" class="tab-container">
-			<el-tab-pane label="Material Detail" class="meterial-panel">
-				<el-row :gutter="20">
-					<el-col :span="12" class="material-detail">
+	<d2-container type="full" v-loading.fullscreen.lock="fullscreenLoading">
+		<el-tabs
+			tab-position="top"
+			class="tab-container"
+			type="border-card"
+			@tab-click="handleTabSwitch($event)"
+		>
+			<el-tab-pane label="Material Detail" class="panel material-panel">
+				<el-row type="flex" :gutter="20">
+					<el-col :xl="12" class="material-detail">
 						<el-row>
 							<el-col :span="DetailSpan">
 								<p class="material-detail-title">
 									Material Detail
 								</p>
+							</el-col>
+						</el-row>
+						<!-- ID -->
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain"> ID </el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									{{ structure.id }}
+								</div>
+							</el-col>
+						</el-row>
+						<!-- formula -->
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain"> Formula </el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div
+									class="content"
+									v-html="attributes.formula"
+								></div>
 							</el-col>
 						</el-row>
 						<!-- cell -->
@@ -27,102 +50,31 @@
 									<el-tag effect="plain"> cell </el-tag>
 								</div>
 							</el-col>
-							<el-col :span="(DetailSpan * 2) / 3">
-								<div class="content">
-									<el-table
-										:data="attributes.cell"
-										:show-header="false"
-										border
-									>
-										<el-table-column align="center">
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[0]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-										<el-table-column align="center">
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[1]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-										<el-table-column align="center">
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[2]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-									</el-table>
-								</div>
-							</el-col>
+							<!-- <el-col :span="(DetailSpan * 2) / 3"> -->
+							<div class="content">
+								<number-table
+									:span="(DetailSpan * 2) / 3"
+									:data="attributes.cell"
+									:precision="6"
+									disabled
+								></number-table>
+							</div>
 						</el-row>
 						<!-- reciprocal_cell -->
 						<el-row :gutter="20">
 							<el-col :span="DetailSpan / 3">
 								<div class="label">
 									<el-tag effect="plain">
-										reciprocal_cell cell
+										reciprocal cell
 									</el-tag>
 								</div>
 							</el-col>
-							<el-col :span="(DetailSpan * 2) / 3">
-								<div class="content">
-									<el-table
-										:data="attributes.reciprocal_cell"
-										:show-header="false"
-										border
-									>
-										<el-table-column align="center">
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[0]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-										<el-table-column align="center">
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[1]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-										<el-table-column align="center">
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[2]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-									</el-table>
-								</div>
-							</el-col>
+							<number-table
+								:span="(DetailSpan * 2) / 3"
+								:data="attributes.reciprocal_cell"
+								:precision="6"
+								disabled
+							></number-table>
 						</el-row>
 						<!-- volume -->
 						<el-row :gutter="20" type="flex" align="middle">
@@ -159,50 +111,12 @@
 									</el-tag>
 								</div>
 							</el-col>
-							<el-col :span="(DetailSpan * 2) / 3">
-								<div class="content">
-									<el-table
-										:data="[attributes.center_of_mass]"
-										:show-header="false"
-										border
-										size="mini"
-									>
-										<el-table-column>
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[0]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-										<el-table-column>
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[1]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-										<el-table-column>
-											<template slot-scope="scope">
-												<el-input-number
-													v-model="scope.row[2]"
-													:precision="numberPrecision"
-													:controls="false"
-													disabled
-													class="detail-number"
-												></el-input-number>
-											</template>
-										</el-table-column>
-									</el-table>
-								</div>
-							</el-col>
+							<number-table
+								:span="(DetailSpan * 2) / 3"
+								:data="attributes.center_of_mass"
+								:precision="6"
+								disabled
+							></number-table>
 						</el-row>
 						<!-- created_time -->
 						<el-row :gutter="20" type="flex" align="middle">
@@ -248,8 +162,8 @@
 						</el-row>
 					</el-col>
 					<el-col
-						:span="12"
-						class="material-viewer-container"
+						:xl="12"
+						class="material-viewer-container hidden-sm-and-down"
 						v-loading="viewerLoading"
 					>
 						<el-row>
@@ -283,39 +197,304 @@
 					</el-col>
 				</el-row>
 			</el-tab-pane>
-			<el-tab-pane label="Band Structure"></el-tab-pane>
-			<el-tab-pane label="Phonon Dispersion"></el-tab-pane>
+			<el-tab-pane label="Band Structure" class="panel band-panel">
+				<el-row :gutter="20" justify="space-around">
+					<el-col class="chart-box" :xl="16" :md="16">
+						<v-chart
+							v-if="bandChartOption"
+							class="chart"
+							:option="bandChartOption"
+						/>
+						<el-row
+							v-if="!bandChartOption"
+							class="cover flex-center-col"
+						>
+							<img src="@/assets/images/phonon_bg.png" />
+							<p class="cover-tip">
+								No Data
+							</p>
+						</el-row>
+					</el-col>
+					<el-col class="button-box" :xl="8" :md="8">
+						<el-row class="data-info" v-if="bandChartOption">
+							<el-row></el-row>
+							<!-- Update Date -->
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											Update Date
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										{{ attributes.band.date }}
+									</div>
+								</el-col>
+							</el-row>
+							<!-- Update By -->
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											Update By
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										<router-link to="/users">
+											<el-link type="primary"
+												>ID
+												{{
+													attributes.band.user
+												}}</el-link
+											>
+										</router-link>
+									</div>
+								</el-col>
+							</el-row>
+						</el-row>
+						<el-row>
+							<el-button type="primary" plain
+								>Export Image</el-button
+							>
+							<el-button type="primary" plain
+								>Download Data</el-button
+							>
+						</el-row>
+						<el-row class="cover">
+							<el-upload
+								class="upload-box"
+								drag
+								ref="uploadBand"
+								:auto-upload="false"
+								:file-list="bandFileList"
+								:on-preview="bandPreview"
+								:on-change="bandFileChange"
+								:multiple="false"
+							>
+								<i class="el-icon-upload"></i>
+								<div class="el-upload__text">
+									Drag here, or <em>click to upload</em>
+								</div>
+								<div class="el-upload__tip" slot="tip">
+									Mind the format of your file, tap file name
+									to preview.
+								</div>
+							</el-upload>
+						</el-row>
+						<el-row>
+							<el-button
+								type="success"
+								plain
+								@click="submitBandUpload"
+								>Upload</el-button
+							>
+						</el-row>
+					</el-col>
+				</el-row>
+			</el-tab-pane>
+			<el-tab-pane label="Phonon Dispersion" class="panel phonon-panel">
+				<el-row :gutter="20" justify="space-around">
+					<el-col class="chart-box" :xl="16" :md="16">
+						<v-chart
+							v-if="phononChartOption"
+							class="chart"
+							:option="phononChartOption"
+						/>
+						<el-row
+							v-if="!phononChartOption"
+							class="cover flex-center-col"
+						>
+							<img src="@/assets/images/phonon_bg.png" />
+							<p class="cover-tip">
+								No Data
+							</p>
+						</el-row>
+					</el-col>
+					<el-col class="button-box" :xl="8" :md="8">
+						<el-row class="data-info" v-if="phononChartOption">
+							<!-- Update Date -->
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											Update Date
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										<router-link to="/users">
+											{{ attributes.phonon.date }}
+										</router-link>
+									</div>
+								</el-col>
+							</el-row>
+							<!-- Update By -->
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											Update By
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										<el-link type="primary"
+											>ID
+											{{
+												attributes.phonon.user
+											}}</el-link
+										>
+									</div>
+								</el-col>
+							</el-row>
+						</el-row>
+						<el-row>
+							<el-button type="primary" plain
+								>Export Image</el-button
+							>
+							<el-button type="primary" plain
+								>Download Data</el-button
+							>
+						</el-row>
+						<el-row class="cover">
+							<el-upload
+								class="upload-box"
+								drag
+								ref="uploadPhonon"
+								:auto-upload="false"
+								:file-list="phononFileList"
+								:on-preview="phononPreview"
+								:on-change="phononFileChange"
+								:multiple="false"
+							>
+								<i class="el-icon-upload"></i>
+								<div class="el-upload__text">
+									Drag here, or <em>click to upload</em>
+								</div>
+								<div class="el-upload__tip" slot="tip">
+									Mind the format of your file, tap file name
+									to preview.
+								</div>
+							</el-upload>
+						</el-row>
+						<el-row>
+							<el-button
+								type="success"
+								plain
+								@click="submitPhononUpload"
+								>Upload</el-button
+							>
+						</el-row>
+					</el-col>
+				</el-row>
+			</el-tab-pane>
 			<el-tab-pane label="Conductivity"></el-tab-pane>
 		</el-tabs>
-		<!-- </template> -->
 	</d2-container>
 </template>
 
 <script>
 import $ from "jquery";
 import $3Dmol from "@/libs/3Dmol-nojquery.js";
+// echart
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { LineChart } from "echarts/charts";
+import {
+	TitleComponent,
+	TooltipComponent,
+	LegendComponent,
+	GridComponent,
+	DataZoomComponent
+} from "echarts/components";
+import { default as VChart, THEME_KEY } from "vue-echarts";
 import * as api from "./api";
+import NumberTable from "@/components/number-table";
+import util from "@/libs/util";
 let viewer = null;
 let viewer_id = null;
 const viewer_config = {
 	// backgroundColor: "#73757C",
 	backgroundColor: "white"
 };
+use([
+	CanvasRenderer,
+	LineChart,
+	TitleComponent,
+	TooltipComponent,
+	LegendComponent,
+	GridComponent,
+	DataZoomComponent
+]);
 export default {
 	name: "data-structure",
+	components: {
+		VChart,
+		NumberTable
+	},
+	provide: {
+		// [THEME_KEY]: "dark"
+	},
 	data() {
 		return {
 			id: "",
 			structure: {},
-			attributes: {},
+			attributes: {
+				cell: [],
+				reciprocal_cell: [],
+				center_of_mass: [],
+				phonon: {},
+				band: {}
+			},
 			fullscreenLoading: true,
+			currentTab: "Material Detail",
 			numberPrecision: 6,
 			DetailSpan: 24,
 			viewerLoading: false,
-			viewerCoverTip: true
+			viewerCoverTip: true,
+			phononFileList: [],
+			bandFileList: [],
+			phononChartOption: null,
+			bandChartOption: null
 		};
 	},
 	methods: {
+		handleTabSwitch(event) {
+			if (this.currentTab == event.label) {
+				return;
+			} else {
+				this.currentTab = event.label;
+			}
+			this.loadTabData();
+		},
+		loadTabData() {
+			if (this.currentTab == "Phonon Dispersion") {
+				if (this.attributes.phonon && this.attributes.phonon.data) {
+					let [
+						phononFileString,
+						phononFileOption
+					] = this.loadPhononData(this.attributes.phonon.data);
+					this.phononFileString = phononFileString;
+					this.phononFileOption = phononFileOption;
+					this.phononChartOption = phononFileOption;
+				}
+			} else if (this.currentTab == "Band Structure") {
+				if (this.attributes.band && this.attributes.band.data) {
+					let [fileString, fileOption] = this.loadBandData(
+						this.attributes.band.data
+					);
+					this.bandFileString = fileString;
+					this.bandFileOption = fileOption;
+					this.bandChartOption = fileOption;
+				}
+			}
+		},
 		displayViewer() {
 			this.viewerLoading = true;
 			api.GetFileStream(this.id).then(resp => {
@@ -365,9 +544,6 @@ export default {
 			viewer.zoomTo();
 			viewer.render();
 		},
-		goBack() {
-			this.$router.back();
-		},
 		clearPageContent(to, from, next) {
 			if (viewer) {
 				viewer.clear();
@@ -375,6 +551,278 @@ export default {
 			if (viewer_id) viewer_id.children("canvas").remove();
 			this.viewerCoverTip = true;
 			next();
+		},
+		uploadPhononPlotData() {},
+		phononFileChange(file, fileList) {
+			this.fullscreenLoading = true;
+			const reader = new FileReader();
+			reader.readAsText(file.raw, "UTF-8");
+			reader.onload = event => {
+				try {
+					let [
+						phononFileString,
+						phononFileOption
+					] = this.loadPhononData(event.target.result.trim());
+					this.phononFileString = phononFileString;
+					this.phononFileOption = phononFileOption;
+				} catch (err) {
+					return (this.fullscreenLoading =
+						false &&
+						this.$message.error(`Unsupport file format. ${err}`));
+				}
+				this.fullscreenLoading = false;
+			};
+		},
+		bandFileChange(file, fileList) {
+			this.fullscreenLoading = true;
+			const reader = new FileReader();
+			reader.readAsText(file.raw, "UTF-8");
+			reader.onload = event => {
+				try {
+					let [bandFileString, bandFileOption] = this.loadBandData(
+						event.target.result.trim()
+					);
+					this.bandFileString = bandFileString;
+					this.bandFileOption = bandFileOption;
+				} catch (err) {
+					return (this.fullscreenLoading =
+						false &&
+						this.$message.error(`Unsupport file format. ${err}`));
+				}
+				this.fullscreenLoading = false;
+			};
+		},
+		loadPhononData(fileString) {
+			let option = {
+				grid: {
+					left: 50
+				},
+				title: {
+					text: `Phonon Dispersion`,
+					left: "center"
+				},
+				tooltip: {
+					trigger: "axis"
+				},
+				xAxis: {
+					name: "Wave Vector",
+					splitLine: {
+						show: true
+					},
+					minorTick: {
+						show: true
+					},
+					minorSplitLine: {
+						show: true
+					}
+				},
+				yAxis: {
+					name: "Frequency",
+					type: "value",
+					splitLine: {
+						show: true
+					},
+					minorTick: {
+						show: true
+					},
+					minorSplitLine: {
+						show: true
+					}
+				},
+				series: []
+			};
+
+			let phononFileString = "";
+			let bands = fileString.split(/\n\s*\n/g);
+			bands.forEach(bandstr => {
+				let band_y = {
+					type: "line",
+					smooth: true,
+					showSymbol: false
+				};
+				let band = bandstr.split(/\n/g);
+				let xdata = [];
+				let ydata = [];
+				band.forEach(pos => {
+					let [x, y] = pos.trim().split(/\s+/g);
+					xdata.push(parseFloat(x));
+					ydata.push(parseFloat(y));
+					phononFileString += pos.trim() + "\n";
+				});
+				if (!option.xAxis.hasOwnProperty("data"))
+					option.xAxis.data = xdata;
+				band_y.data = ydata;
+				option.series.push(band_y);
+				phononFileString += "\n";
+			});
+			return [phononFileString, option];
+		},
+		loadBandData(fileString) {
+			let option = {
+				grid: {
+					// left: 50
+				},
+				title: {
+					text: `Band Structure`,
+					left: "center"
+				},
+				tooltip: {},
+				dataZoom: [
+					{
+						id: "dataZoomX",
+						show: true,
+						type: "slider",
+						filterMode: "none",
+						xAxisIndex: [0]
+					},
+					{
+						id: "dataZoomY",
+						show: true,
+						type: "inside",
+						filterMode: "none",
+						yAxisIndex: [0],
+						startValue: -10,
+						endValue: 10
+					}
+				],
+				xAxis: {
+					splitLine: {
+						show: true
+					},
+					minorTick: {
+						show: true
+					},
+					minorSplitLine: {
+						show: true
+					},
+					min: "dataMin",
+					max: "dataMax"
+				},
+				yAxis: {
+					splitLine: {
+						show: true
+					},
+					type: "value",
+					minorTick: {
+						show: true
+					},
+					minorSplitLine: {
+						show: true
+					},
+					min: "dataMin",
+					max: "dataMax"
+				},
+				series: []
+			};
+
+			let bandFileString = "";
+			let bands = fileString.split(/\n\s*\n/g);
+			bands.forEach(bandstr => {
+				let band_y = {
+					type: "line",
+					smooth: true,
+					showSymbol: false
+				};
+				let band = bandstr.split(/\n/g);
+				let xdata = [];
+				let ydata = [];
+				band.forEach(pos => {
+					let [x, y] = pos.trim().split(/\s+/g);
+					xdata.push(parseFloat(x));
+					ydata.push(parseFloat(y));
+					bandFileString += pos.trim() + "\n";
+				});
+				if (!option.xAxis.hasOwnProperty("data"))
+					option.xAxis.data = xdata;
+				band_y.data = ydata;
+				option.series.push(band_y);
+				bandFileString += "\n";
+			});
+			return [bandFileString, option];
+		},
+		phononPreview(file) {
+			this.phononChartOption = this.phononFileOption;
+		},
+		bandPreview(file) {
+			this.bandChartOption = this.bandFileOption;
+		},
+		submitPhononUpload() {
+			if (!this.phononFileString) {
+				return this.$notify.info("You have to choose a file.");
+			}
+			this.fullscreenLoading = true;
+			let callback = () => {
+				this.$api
+					.AddObj("/structures/phonon/", {
+						id: this.structure.id,
+						user: util.cookies.get("uuid"),
+						data: this.phononFileString
+					})
+					.then(resp => {
+						if (resp.code == 0) {
+							this.structure = resp.data;
+							this.loadTabData();
+							this.fullscreenLoading = false;
+							this.$message.success("Submit successfully!");
+						} else {
+							this.$message.error(resp.code);
+						}
+					});
+			};
+			if (this.attributes.phonon && this.attributes.phonon.data) {
+				this.$confirm(
+					"This operation will overide current phonon dispersion data, continue?",
+					"Attention",
+					{
+						confirmButtonText: "sure",
+						cancelButtonText: "cancel",
+						type: "warning"
+					}
+				).then(() => {
+					callback();
+				});
+			} else {
+				callback();
+			}
+		},
+		submitBandUpload() {
+			if (!this.bandFileString) {
+				return this.$notify.info("You have to choose a file.");
+			}
+			this.fullscreenLoading = true;
+			let callback = () => {
+				this.$api
+					.AddObj("/structures/band/", {
+						id: this.structure.id,
+						user: util.cookies.get("uuid"),
+						data: this.bandFileString
+					})
+					.then(resp => {
+						if (resp.code == 0) {
+							this.structure = resp.data;
+							this.loadTabData();
+							this.fullscreenLoading = false;
+							this.$message.success("Submit successfully!");
+						} else {
+							this.$message.error(resp.code);
+						}
+					});
+			};
+			if (this.attributes.band && this.attributes.band.data) {
+				this.$confirm(
+					"This operation will overide current band structure data, continue?",
+					"Attention",
+					{
+						confirmButtonText: "sure",
+						cancelButtonText: "cancel",
+						type: "warning"
+					}
+				).then(() => {
+					callback();
+				});
+			} else {
+				callback();
+			}
 		}
 	},
 	mounted() {
@@ -392,7 +840,7 @@ export default {
 
 			this.$store.dispatch("d2admin/page/update", {
 				tagName: this.$route.fullPath,
-				title: `structure-${this.attributes.formula}`
+				title: `${this.attributes.formula.replace(/<[^<>]+>/g, "")}`
 			});
 		});
 		viewer_config.id = `detail-viewer-canvas-${this.id}`;
@@ -406,37 +854,66 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/assets/style/public.scss";
-.tab-container {
-	.el-tabs__content {
-		margin-bottom: 100px;
+.panel {
+	padding: 24px 40px;
+	width: 100%;
+	// height: 100%;
+	.cover {
+		width: 100%;
+		height: 100%;
+		@extend %flex-col;
 	}
-	.el-tabs__header {
-		display: flex;
-		justify-content: center;
-		position: fixed;
-		width: 50%;
-		left: 25%;
-		bottom: 20px;
-		padding: 10px;
-		height: 80px;
-		background: rgba($color: #fff, $alpha: 0.8);
-		transform: scale(1.2);
-		border-radius: 5px;
+	> .el-row {
+		width: 100%;
+		height: 100%;
 	}
-	.el-tabs__active-bar.is-bottom {
-		transform: translateX(5px);
+	.phonon-panel {
+		text-align: center;
 	}
 }
-.meterial-panel {
-	padding: 20px 40px;
+.chart-box {
+	padding: 16px;
+	// height: 100%;
+	height: 60vh;
+	border: 1px dashed #d9d9d9;
+	border-radius: 6px;
+	max-width: 720px;
+	max-height: 600px;
+	position: relative;
+	.cover {
+		@extend %unable-select;
+		img {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			opacity: 0.1;
+			filter: blur(1px);
+		}
+		&::after {
+			content: "";
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			opacity: 0;
+			top: 0;
+			left: 0;
+		}
+	}
 }
+.button-box {
+	.el-row + .el-row {
+		margin-top: 16px;
+	}
+}
+
 @mixin detail-title() {
 	text-align: center;
 	font-size: 24px;
 	font-weight: bold;
 	border-bottom: 1px solid #99a9bf;
+	padding-bottom: 16px;
 }
 .material-detail {
 	text-transform: uppercase;
@@ -452,22 +929,8 @@ export default {
 		padding: 8px 0;
 	}
 }
-.detail-date-picker input {
-	border: none !important;
-}
-.detail-number {
-	width: 100%;
-	input {
-		border: none !important;
-		background: none !important;
-		padding: initial !important;
-		cursor: default !important;
-		color: black !important;
-	}
-}
-
 .material-viewer-container {
-	height: 50vh;
+	// height: 100%;
 	> .el-row {
 		padding: 8px 0;
 	}
@@ -478,11 +941,11 @@ export default {
 		@extend %flex-center-col;
 		background-color: rgba($color: #fff, $alpha: 0.1);
 		color: #99a9bf;
-		border: none;
-		padding: 10px;
+		padding: 12px;
 		border: 1px dashed #d9d9d9;
 		width: 100%;
 		height: 100%;
+		max-height: 720px;
 		position: relative;
 		.structure-viewer-cover {
 			position: absolute;
@@ -495,7 +958,7 @@ export default {
 		.cover-tip {
 			z-index: 99;
 			background: rgba($color: #000000, $alpha: 0.1);
-			padding: 20px;
+			padding: 24px;
 			border-radius: 5px;
 			@extend %unable-select;
 			transition: background-color 0.3s;
@@ -504,6 +967,40 @@ export default {
 			background: rgba($color: #868686, $alpha: 0.5);
 			color: #fff;
 		}
+	}
+}
+</style>
+<style lang="scss">
+.tab-container {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	&.el-tabs--border-card {
+		background-color: transparent;
+	}
+	.el-tabs__content {
+		overflow-y: auto;
+		@include scrollBar(6px);
+	}
+	.el-tabs__header {
+		background: rgba($color: #fff, $alpha: 0.8);
+		border-radius: 5px;
+	}
+	.el-tabs__active-bar.is-bottom {
+		transform: translateX(5px);
+	}
+	.el-tabs__content {
+		height: 100%;
+		width: 100%;
+		overflow-y: auto;
+	}
+}
+.detail-date-picker input {
+	border: none !important;
+}
+.material-viewer-container {
+	canvas {
+		padding: 8px !important;
 	}
 }
 </style>
