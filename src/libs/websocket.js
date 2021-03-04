@@ -2,11 +2,12 @@ import { Message } from "element-ui";
 import util from "@/libs/util.js";
 /* -------------------------------------------------------------------------- */
 // TODO: Package this as a class to allow mutilple connections
+// TODO: fix bugs: automatic host and protocol(ws, wss)
 /* -------------------------------------------------------------------------- */
 let websock = null;
 let messageCallback = null;
 let errorCallback = null;
-let wsUrlPrefix = `ws://172.17.203.126:8000/ws`;
+let wsUrlPrefix = `ws://${window.location.host}/ws`;
 let wsUrl = "";
 
 // 接收ws后端返回的数据

@@ -39,7 +39,8 @@ const pages = undefined;
 const proxyObj = {
 	"/ws": {
 		ws: true,
-		target: "ws://172.17.203.126:8000"
+		target: "ws://localhost:8000",
+		changeOrigin: true
 	},
 	"/api": {
 		ws: false,

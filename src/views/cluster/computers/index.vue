@@ -231,27 +231,14 @@
 						placeholder="select scheduler type"
 					>
 						<el-option label="Direct" value="direct"></el-option>
-						<el-option
-							label="PBSPro"
-							value="pbspro"
-							disabled
-						></el-option>
-						<el-option
-							label="SLURM"
-							value="slurm"
-							disabled
-						></el-option>
+						<el-option label="PBSPro" value="pbspro"></el-option>
+						<el-option label="SLURM" value="slurm"></el-option>
 						<el-option
 							label="Oracle Grid Engine"
 							value="sge"
-							disabled
 						></el-option>
 						<el-option label="LSF" value="lsf" disabled></el-option>
-						<el-option
-							label="Torque"
-							value="torque"
-							disabled
-						></el-option>
+						<el-option label="Torque" value="torque"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item
@@ -262,7 +249,7 @@
 					<el-input
 						v-model="form.workdir"
 						autocomplete="off"
-						placeholder="/workdir/aiida/"
+						placeholder="make sure you have permission to access. (/home/user/workdir)"
 					></el-input>
 				</el-form-item>
 				<el-form-item
@@ -377,11 +364,11 @@
 
 <script>
 import * as clipboard from "clipboard-polyfill";
-import {
-	openWebsocket,
-	sendWebsocket,
-	closeWebsocket
-} from "@/libs/websocket.js";
+// import {
+// 	openWebsocket,
+// 	sendWebsocket,
+// 	closeWebsocket
+// } from "@/libs/websocket.js";
 import util from "@/libs/util";
 import CodeAdd from "../codes/code-add";
 const apiPrefix = "/computers/";
@@ -585,11 +572,16 @@ export default {
 						this.tableLoading = true;
 						this.$set(this.testLogs, row.id, []);
 						this.currentTestComputer = row.id;
-						this.socket = openWebsocket(
-							`${wsPrefix}${row.id}/test/`,
-							this.onWSMessage,
-							this.onWSError
+						// this.socket = openWebsocket(
+						// 	`${wsPrefix}${row.id}/test/`,
+						// 	this.onWSMessage,
+						// 	this.onWSError
+						// );
+						this.$connect(
+							util.getWebsocketUrl(`${wsPrefix}${row.id}/test/`)
 						);
+						this.socket = this.$socket;
+						this.socket.onmessage = data => this.onWSMessage(data);
 					})
 					.catch(e => {
 						this.$log.push({
@@ -605,10 +597,12 @@ export default {
 			}
 		},
 		closeComputerTest() {
-			closeWebsocket();
+			// closeWebsocket();
+			this.socket && this.socket.close();
 			this.tableLoading = false;
 		},
 		onWSMessage(data) {
+			data = JSON.parse(data.data);
 			this.tableLoading = false;
 			console.log(data);
 			data.id = new Date().getTime();
@@ -636,7 +630,8 @@ export default {
 	},
 	beforeDestroy() {
 		this.tableLoading = false;
-		closeWebsocket();
+		// closeWebsocket();
+		this.socket && this.socket.close();
 	}
 };
 </script>

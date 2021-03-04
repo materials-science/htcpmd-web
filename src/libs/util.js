@@ -46,4 +46,22 @@ util.deepcopy = function(obj) {
 	}
 };
 
+util.getWebsocketUrl = url => {
+	let _url;
+	// Use wss:// if running on https://
+	const scheme = window.location.protocol === "https:" ? "wss" : "ws";
+	const base_url = `${scheme}://${window.location.host}/ws`;
+	if (url === undefined) {
+		_url = base_url;
+	} else {
+		// Support relative URLs
+		if (url[0] == "/") {
+			_url = `${base_url}${url}`;
+		} else {
+			_url = url;
+		}
+	}
+	return _url;
+};
+
 export default util;

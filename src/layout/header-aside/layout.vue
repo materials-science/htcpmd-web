@@ -38,11 +38,6 @@
 							`${$baseUrl}image/theme/${themeActiveSetting.name}/logo/all.png`
 						"
 					/>
-					<!-- <img
-						v-if="asideCollapse"
-						src="@/assets/images/logo@small.png"
-					/>
-					<img v-else src="@/assets/images/logo@small.png" /> -->
 				</router-link>
 				<div
 					class="toggle-aside-btn"
@@ -58,10 +53,10 @@
 					<d2-header-search @click="handleSearchClick" />
 					<d2-header-log v-if="$env === 'development'" />
 					<d2-header-fullscreen />
-					<d2-header-theme v-if="$env === 'development'" />
-					<!-- <d2-header-size v-if="$env === 'development'" /> -->
+					<d2-header-theme />
+					<d2-header-size v-if="$env === 'development'" />
 					<d2-header-locales v-if="$env === 'development'" />
-					<!-- <d2-header-color v-if="$env === 'development'" /> -->
+					<d2-header-color v-if="$env === 'development'" />
 					<d2-header-user />
 				</div>
 			</div>
