@@ -46,7 +46,7 @@
 								plain
 								@click.native.prevent.stop="
 									goToDocsPage(
-										'http://172.31.220.82:8005/index.html'
+										'http://aiida-shengbte.ias.poryoung.cn/index.html'
 									)
 								"
 								>Watch Docs</el-button

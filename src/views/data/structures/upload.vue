@@ -111,6 +111,7 @@ export default {
 		if ($3Dmol) {
 			this.showInfo("Tip", "3Dmol loaded!");
 			viewer = $3Dmol.createViewer(viewer_id, viewer_config);
+			viewer.setBackgroundColor(0xffffffff, 0);
 		}
 	},
 	methods: {
@@ -145,11 +146,10 @@ export default {
 					}
 				}
 				let fileString = event.target.result;
-				let m = viewer.addModel(fileString, ext_name);
-				viewer.addUnitCell(m, {
-					box: { color: "purple" }
+				let m = viewer.addModel(fileString, ext_name, {
+					duplicateAssemblyAtoms: true,
+					doAssembly: true
 				});
-				// viewer.addUnitCell(m);
 				viewer.setHoverable(
 					{},
 					true,
@@ -170,14 +170,21 @@ export default {
 						}
 					}
 				);
-
 				viewer.setStyle({
-					stick: { scale: 0.1 },
-					sphere: { scale: 0.5 }
+					stick: {
+						radius: 0.1,
+						colorscheme: "Jmol",
+						opacity: 0.9,
+						singleBonds: true
+					},
+					sphere: { radius: 0.6, colorscheme: "Jmol", opacity: 1 }
 				});
+				viewer.addUnitCell(m, {
+					box: { color: "purple" }
+				});
+				viewer.replicateUnitCell(2, 2, 2);
 				viewer.zoomTo();
 				viewer.render();
-				// viewer.zoom(1.2, 500);
 			};
 		},
 		handleFileRemove(file, fileList) {
@@ -256,6 +263,11 @@ export default {
 		li:hover {
 			background-color: rgba(33, 33, 33, 0.3);
 		}
+	}
+}
+.material-viewer-container {
+	canvas {
+		padding: 8px !important;
 	}
 }
 </style>

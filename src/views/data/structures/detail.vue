@@ -201,9 +201,13 @@
 				<el-row :gutter="20" justify="space-around">
 					<el-col class="chart-box" :xl="16" :md="16">
 						<v-chart
-							v-if="bandChartOption"
+							v-if="
+								bandChartOption &&
+									currentTab == 'Band Structure'
+							"
 							class="chart"
 							:option="bandChartOption"
+							ref="bandChart"
 						/>
 						<el-row
 							v-if="!bandChartOption"
@@ -216,8 +220,7 @@
 						</el-row>
 					</el-col>
 					<el-col class="button-box" :xl="8" :md="8">
-						<el-row class="data-info" v-if="bandChartOption">
-							<el-row></el-row>
+						<el-row class="data-info" v-if="attributes.band.data">
 							<!-- Update Date -->
 							<el-row :gutter="20" type="flex" align="middle">
 								<el-col :span="DetailSpan / 3">
@@ -257,16 +260,23 @@
 							</el-row>
 						</el-row>
 						<el-row>
-							<el-button type="primary" plain
+							<el-button
+								type="primary"
+								plain
+								@click="exportChartData('band', 'image')"
 								>Export Image</el-button
 							>
-							<el-button type="primary" plain
+							<el-button
+								type="primary"
+								plain
+								@click="exportChartData('band', 'file')"
 								>Download Data</el-button
 							>
 						</el-row>
 						<el-row class="cover">
 							<el-upload
 								class="upload-box"
+								action=""
 								drag
 								ref="uploadBand"
 								:auto-upload="false"
@@ -274,6 +284,7 @@
 								:on-preview="bandPreview"
 								:on-change="bandFileChange"
 								:multiple="false"
+								:limit="1"
 							>
 								<i class="el-icon-upload"></i>
 								<div class="el-upload__text">
@@ -300,9 +311,13 @@
 				<el-row :gutter="20" justify="space-around">
 					<el-col class="chart-box" :xl="16" :md="16">
 						<v-chart
-							v-if="phononChartOption"
+							v-if="
+								phononChartOption &&
+									currentTab == 'Phonon Dispersion'
+							"
 							class="chart"
 							:option="phononChartOption"
+							ref="phononChart"
 						/>
 						<el-row
 							v-if="!phononChartOption"
@@ -315,7 +330,7 @@
 						</el-row>
 					</el-col>
 					<el-col class="button-box" :xl="8" :md="8">
-						<el-row class="data-info" v-if="phononChartOption">
+						<el-row class="data-info" v-if="attributes.phonon.data">
 							<!-- Update Date -->
 							<el-row :gutter="20" type="flex" align="middle">
 								<el-col :span="DetailSpan / 3">
@@ -327,9 +342,7 @@
 								</el-col>
 								<el-col :span="(DetailSpan * 2) / 3">
 									<div class="content">
-										<router-link to="/users">
-											{{ attributes.phonon.date }}
-										</router-link>
+										{{ attributes.phonon.date }}
 									</div>
 								</el-col>
 							</el-row>
@@ -344,27 +357,36 @@
 								</el-col>
 								<el-col :span="(DetailSpan * 2) / 3">
 									<div class="content">
-										<el-link type="primary"
-											>ID
-											{{
-												attributes.phonon.user
-											}}</el-link
-										>
+										<router-link to="/users">
+											<el-link type="primary"
+												>ID
+												{{
+													attributes.phonon.user
+												}}</el-link
+											>
+										</router-link>
 									</div>
 								</el-col>
 							</el-row>
 						</el-row>
 						<el-row>
-							<el-button type="primary" plain
+							<el-button
+								type="primary"
+								plain
+								@click="exportChartData('phonon', 'image')"
 								>Export Image</el-button
 							>
-							<el-button type="primary" plain
+							<el-button
+								type="primary"
+								plain
+								@click="exportChartData('phonon', 'file')"
 								>Download Data</el-button
 							>
 						</el-row>
 						<el-row class="cover">
 							<el-upload
 								class="upload-box"
+								action=""
 								drag
 								ref="uploadPhonon"
 								:auto-upload="false"
@@ -372,6 +394,7 @@
 								:on-preview="phononPreview"
 								:on-change="phononFileChange"
 								:multiple="false"
+								:limit="1"
 							>
 								<i class="el-icon-upload"></i>
 								<div class="el-upload__text">
@@ -432,6 +455,7 @@ use([
 	GridComponent,
 	DataZoomComponent
 ]);
+// TODO: hidden charts that donot need to show
 export default {
 	name: "data-structure",
 	components: {
@@ -444,13 +468,14 @@ export default {
 	data() {
 		return {
 			id: "",
-			structure: {},
-			attributes: {
-				cell: [],
-				reciprocal_cell: [],
-				center_of_mass: [],
-				phonon: {},
-				band: {}
+			structure: {
+				attributes: {
+					cell: [],
+					reciprocal_cell: [],
+					center_of_mass: [],
+					phonon: { data: null, user: null, date: null },
+					band: { data: null, user: null, date: null }
+				}
 			},
 			fullscreenLoading: true,
 			currentTab: "Material Detail",
@@ -463,6 +488,21 @@ export default {
 			phononChartOption: null,
 			bandChartOption: null
 		};
+	},
+	computed: {
+		attributes() {
+			// phonon, band should at least be an object
+			return Object.assign(
+				{
+					cell: [],
+					reciprocal_cell: [],
+					center_of_mass: [],
+					phonon: { data: null, user: null, date: null },
+					band: { data: null, user: null, date: null }
+				},
+				this.structure.attributes
+			);
+		}
 	},
 	methods: {
 		handleTabSwitch(event) {
@@ -482,6 +522,7 @@ export default {
 					] = this.loadPhononData(this.attributes.phonon.data);
 					this.phononFileString = phononFileString;
 					this.phononFileOption = phononFileOption;
+					!!this.$refs.phononChart && this.$refs.phononChart.clear();
 					this.phononChartOption = phononFileOption;
 				}
 			} else if (this.currentTab == "Band Structure") {
@@ -491,6 +532,7 @@ export default {
 					);
 					this.bandFileString = fileString;
 					this.bandFileOption = fileOption;
+					!!this.$refs.bandChart && this.$refs.bandChart.clear();
 					this.bandChartOption = fileOption;
 				}
 			}
@@ -511,11 +553,11 @@ export default {
 			viewer_id = $(`#detail-viewer-${this.id}`);
 			viewer_id.children("canvas").remove();
 			viewer = $3Dmol.createViewer(viewer_id, viewer_config);
-			let m = viewer.addModel(fileString, ext_name);
-			viewer.addUnitCell(m, {
-				box: { color: "purple" }
+			viewer.setBackgroundColor(0xffffffff, 0);
+			let m = viewer.addModel(fileString, ext_name, {
+				duplicateAssemblyAtoms: true,
+				doAssembly: true
 			});
-			viewer.addUnitCell(m);
 			viewer.setHoverable(
 				{},
 				true,
@@ -536,11 +578,19 @@ export default {
 					}
 				}
 			);
-
 			viewer.setStyle({
-				stick: { radius: 0.15, opacity: 0.7, singleBonds: true },
-				sphere: { scale: 0.4 }
+				stick: {
+					radius: 0.1,
+					colorscheme: "Jmol",
+					opacity: 0.9,
+					singleBonds: true
+				},
+				sphere: { radius: 0.6, colorscheme: "Jmol", opacity: 1 }
 			});
+			viewer.addUnitCell(m, {
+				box: { color: "purple" }
+			});
+			viewer.replicateUnitCell(2, 2, 2);
 			viewer.zoomTo();
 			viewer.render();
 		},
@@ -565,6 +615,7 @@ export default {
 					] = this.loadPhononData(event.target.result.trim());
 					this.phononFileString = phononFileString;
 					this.phononFileOption = phononFileOption;
+					this.phononFileList = fileList;
 				} catch (err) {
 					return (this.fullscreenLoading =
 						false &&
@@ -584,6 +635,7 @@ export default {
 					);
 					this.bandFileString = bandFileString;
 					this.bandFileOption = bandFileOption;
+					this.bandFileList = fileList;
 				} catch (err) {
 					return (this.fullscreenLoading =
 						false &&
@@ -595,7 +647,10 @@ export default {
 		loadPhononData(fileString) {
 			let option = {
 				grid: {
-					left: 50
+					show: true,
+					borderWidth: 0.5,
+					shadowColor: "rgba(0, 0, 0, 0.5)",
+					shadowBlur: 10
 				},
 				title: {
 					text: `Phonon Dispersion`,
@@ -606,27 +661,35 @@ export default {
 				},
 				xAxis: {
 					name: "Wave Vector",
+					nameLocation: "center",
+					nameTextStyle: {
+						lineHeight: 56,
+						fontWeight: "bold",
+						fontSize: 16
+					},
 					splitLine: {
-						show: true
-					},
-					minorTick: {
-						show: true
-					},
-					minorSplitLine: {
-						show: true
+						show: true,
+						lineStyle: {
+							width: 0.5,
+							opacity: 0.5
+						}
 					}
 				},
 				yAxis: {
 					name: "Frequency",
+					nameLocation: "center",
+					nameTextStyle: {
+						lineHeight: 56,
+						fontWeight: "bold",
+						fontSize: 16
+					},
 					type: "value",
 					splitLine: {
-						show: true
-					},
-					minorTick: {
-						show: true
-					},
-					minorSplitLine: {
-						show: true
+						show: true,
+						lineStyle: {
+							width: 0.5,
+							opacity: 0.5
+						}
 					}
 				},
 				series: []
@@ -660,7 +723,10 @@ export default {
 		loadBandData(fileString) {
 			let option = {
 				grid: {
-					// left: 50
+					show: true,
+					borderWidth: 0.5,
+					shadowColor: "rgba(0, 0, 0, 0.5)",
+					shadowBlur: 10
 				},
 				title: {
 					text: `Band Structure`,
@@ -687,26 +753,28 @@ export default {
 				],
 				xAxis: {
 					splitLine: {
-						show: true
+						show: true,
+						lineStyle: {
+							width: 0.5,
+							opacity: 0.5
+						}
 					},
 					minorTick: {
-						show: true
-					},
-					minorSplitLine: {
 						show: true
 					},
 					min: "dataMin",
 					max: "dataMax"
 				},
 				yAxis: {
-					splitLine: {
-						show: true
-					},
 					type: "value",
-					minorTick: {
-						show: true
+					splitLine: {
+						show: true,
+						lineStyle: {
+							width: 0.5,
+							opacity: 0.5
+						}
 					},
-					minorSplitLine: {
+					minorTick: {
 						show: true
 					},
 					min: "dataMin",
@@ -747,7 +815,7 @@ export default {
 			this.bandChartOption = this.bandFileOption;
 		},
 		submitPhononUpload() {
-			if (!this.phononFileString) {
+			if (this.phononFileList.length == 0) {
 				return this.$notify.info("You have to choose a file.");
 			}
 			this.fullscreenLoading = true;
@@ -762,6 +830,7 @@ export default {
 						if (resp.code == 0) {
 							this.structure = resp.data;
 							this.loadTabData();
+							this.phononFileList = [];
 							this.fullscreenLoading = false;
 							this.$message.success("Submit successfully!");
 						} else {
@@ -778,15 +847,19 @@ export default {
 						cancelButtonText: "cancel",
 						type: "warning"
 					}
-				).then(() => {
-					callback();
-				});
+				)
+					.then(() => {
+						callback();
+					})
+					.catch(() => {
+						this.fullscreenLoading = false;
+					});
 			} else {
 				callback();
 			}
 		},
 		submitBandUpload() {
-			if (!this.bandFileString) {
+			if (this.bandFileList.length == 0) {
 				return this.$notify.info("You have to choose a file.");
 			}
 			this.fullscreenLoading = true;
@@ -801,6 +874,7 @@ export default {
 						if (resp.code == 0) {
 							this.structure = resp.data;
 							this.loadTabData();
+							this.bandFileList = [];
 							this.fullscreenLoading = false;
 							this.$message.success("Submit successfully!");
 						} else {
@@ -817,11 +891,53 @@ export default {
 						cancelButtonText: "cancel",
 						type: "warning"
 					}
-				).then(() => {
-					callback();
-				});
+				)
+					.then(() => {
+						callback();
+					})
+					.catch(() => {
+						this.fullscreenLoading = false;
+					});
 			} else {
 				callback();
+			}
+		},
+		exportChartData(chart, type) {
+			let data = null;
+			if (type == "image") {
+				if (chart == "phonon") {
+					data = this.$refs.phononChart;
+				} else if (chart == "band") {
+					data = this.$refs.bandChart;
+				}
+				if (!data) return this.$notify.info("No chart data currently.");
+				let img = {
+					src: data.getDataURL({
+						pixelRatio: window.devicePixelRatio || 2
+					}),
+					width: data.getWidth(),
+					height: data.getHeight()
+				};
+				const element = document.createElement("a");
+				element.setAttribute("href", img.src);
+				element.setAttribute("download", chart + ".png");
+				element.style.display = "none";
+				element.click();
+			} else if (type == "file") {
+				if (chart == "phonon") {
+					data = this.phononFileString;
+				} else if (chart == "band") {
+					data = this.bandFileString;
+				}
+				if (!data) return this.$notify.info("No chart data currently.");
+				const element = document.createElement("a");
+				element.setAttribute(
+					"href",
+					"data:text/plain;charset=utf-8," + encodeURIComponent(data)
+				);
+				element.setAttribute("download", chart + ".data");
+				element.style.display = "none";
+				element.click();
 			}
 		}
 	},
@@ -835,7 +951,6 @@ export default {
 		}
 		api.GetObj(this.id).then(resp => {
 			this.structure = resp.data;
-			this.attributes = this.structure.attributes;
 			this.fullscreenLoading = false;
 
 			this.$store.dispatch("d2admin/page/update", {
@@ -875,12 +990,9 @@ export default {
 }
 .chart-box {
 	padding: 16px;
-	// height: 100%;
-	height: 60vh;
+	height: 75vh;
 	border: 1px dashed #d9d9d9;
 	border-radius: 6px;
-	max-width: 720px;
-	max-height: 600px;
 	position: relative;
 	.cover {
 		@extend %unable-select;
@@ -900,6 +1012,11 @@ export default {
 			top: 0;
 			left: 0;
 		}
+	}
+	.chart {
+		// max-width: 720px;
+		// max-height: 600px;
+		margin: 16px auto;
 	}
 }
 .button-box {

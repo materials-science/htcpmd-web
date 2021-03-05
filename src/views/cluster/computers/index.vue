@@ -417,7 +417,7 @@ export default {
 				description: "localhost computer only for test",
 				transport_type: "ssh",
 				scheduler_type: "direct",
-				workdir: "/workdir/aiida",
+				workdir: "",
 				shebang: "#!/bin/bash",
 				mpirun_command: "mpirun -np {tot_num_mpiprocs}",
 				prepend_text: "",

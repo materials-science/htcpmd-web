@@ -198,7 +198,7 @@ export default {
 			tableLoading: true,
 			currentPage: 1,
 			totalCount: 0,
-			pageSize: 2,
+			pageSize: 8,
 			queryForm: {},
 			multipleSelection: []
 		};
