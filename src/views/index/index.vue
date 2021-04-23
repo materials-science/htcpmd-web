@@ -1,9 +1,11 @@
 <template>
-	<d2-container type="ghost">
-		<PeriodicTable
-			v-on:selectedElements="selectedElements"
-			class="periodic-table-wrap"
-		/>
+	<d2-container type="full">
+		<el-row class="periodic-container">
+			<PeriodicTable
+				v-on:selectedElements="selectedElements"
+				class="periodic-table-wrap"
+			/>
+		</el-row>
 		<template slot="footer">
 			<div class="query-container">
 				<el-form
@@ -156,21 +158,29 @@ export default {
 
 <style lang="scss">
 @import "@/assets/style/variable.scss";
-.periodic-table-wrap {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	padding: 3vh 1vw;
-	transform: scale(0.95);
-	// overflow: hidden;
-	.periodictable {
-		margin: 0 auto;
-	}
+@import "@/assets/style/public.scss";
+.periodic-container {
+	@extend %flex-center-col;
+	@include scrollBar($width: 6px);
+	height: 100%;
+	overflow-y: auto;
 }
-.d2-container-ghost__footer {
+.periodic-table-wrap {
+	// position: absolute;
+	// left: 0;
+	// right: 0;
+	// top: 0;
+	// bottom: 0;
+	// padding: 4vh 1vw;
+	transform: scale(0.95);
+	border-radius: 6px;
+	// background: rgba(255, 255, 255, 0.8) !important;
+	// overflow: hidden;
+	@extend %unable-select;
+}
+.d2-container-full__footer {
 	background: rgba(255, 255, 255, 0.8) !important;
+	// padding: 8px !important;
 	.el-collapse {
 		border: none;
 	}
@@ -206,18 +216,5 @@ export default {
 			}
 		}
 	}
-
-	// .query-form-inline {
-	// 	// text-align: center;
-	// 	.el-form-item {
-	// 		margin: 20px;
-	// 	}
-	// }
-	// .query-container {
-	// 	padding: 0 10%;
-	// 	.el-form-item {
-	// 		// width: 40%;
-	// 	}
-	// }
 }
 </style>

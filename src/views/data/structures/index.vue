@@ -30,21 +30,140 @@
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column type="expand">
 				<template slot-scope="props">
-					<el-form
+					<!-- <el-form
 						label-position="left"
 						inline
 						class="structure-table-expand"
-					>
-						<el-form-item label="ID">
+					> -->
+					<el-row class="structure-table-expand">
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain"> ID </el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<el-tag>{{ props.row.id }}</el-tag>
+								</div>
+							</el-col>
+						</el-row>
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain">
+										center of mass
+									</el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<number-table
+										:span="(DetailSpan * 2) / 3"
+										:data="
+											props.row.attributes.center_of_mass
+										"
+										:precision="2"
+										disabled
+									></number-table>
+								</div>
+							</el-col>
+						</el-row>
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain">
+										cell
+									</el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<number-table
+										:span="(DetailSpan * 2) / 3"
+										:data="props.row.attributes.cell"
+										:precision="6"
+										disabled
+									></number-table>
+								</div>
+							</el-col>
+						</el-row>
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain">
+										reciprocal cell
+									</el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<number-table
+										:span="(DetailSpan * 2) / 3"
+										:data="
+											props.row.attributes.reciprocal_cell
+										"
+										:precision="6"
+										disabled
+									></number-table>
+								</div>
+							</el-col>
+						</el-row>
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain">
+										created time
+									</el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<el-date-picker
+										v-model="props.row.created_time"
+										type="datetime"
+										placeholder="created time"
+										readonly
+										class="structure-date-picker"
+									>
+									</el-date-picker>
+								</div>
+							</el-col>
+						</el-row>
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain">
+										last modified
+									</el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<el-date-picker
+										v-model="props.row.last_modified_time"
+										type="datetime"
+										placeholder="last modified"
+										readonly
+										class="structure-date-picker"
+									>
+									</el-date-picker>
+								</div>
+							</el-col>
+						</el-row>
+						<!-- <el-form-item label="ID">
 							<span>{{ props.row.id }}</span>
-						</el-form-item>
-						<el-form-item label="center of mass">
-							<span>{{
-								props.row.attributes.center_of_mass
-							}}</span>
-						</el-form-item>
-						<el-form-item label="cell"> </el-form-item>
-						<div class="inline-display-block">
+						</el-form-item> -->
+						<!-- <el-form-item label="center of mass">
+							<number-table
+								:span="(DetailSpan * 2) / 3"
+								:data="props.row.attributes.center_of_mass"
+								:precision="6"
+								disabled
+							></number-table>
+						</el-form-item> -->
+						<!-- <el-form-item label="cell"> </el-form-item> -->
+						<!-- <div class="inline-display-block">
 							<el-row>
 								<el-col :span="12">
 									<el-row
@@ -61,8 +180,8 @@
 									</el-row>
 								</el-col>
 							</el-row>
-						</div>
-						<el-form-item label="reciprocal cell"> </el-form-item>
+						</div> -->
+						<!-- <el-form-item label="reciprocal cell"> </el-form-item>
 						<div class="inline-display-block">
 							<el-row>
 								<el-col :span="12">
@@ -81,8 +200,8 @@
 									</el-row>
 								</el-col>
 							</el-row>
-						</div>
-						<el-form-item label="created time">
+						</div> -->
+						<!-- <el-form-item label="created time">
 							<el-date-picker
 								v-model="props.row.created_time"
 								type="datetime"
@@ -91,8 +210,8 @@
 								class="structure-date-picker"
 							>
 							</el-date-picker>
-						</el-form-item>
-						<el-form-item label="last modified">
+						</el-form-item> -->
+						<!-- <el-form-item label="last modified">
 							<el-date-picker
 								v-model="props.row.last_modified_time"
 								type="datetime"
@@ -101,8 +220,9 @@
 								class="structure-date-picker"
 							>
 							</el-date-picker>
-						</el-form-item>
-					</el-form>
+						</el-form-item> -->
+					</el-row>
+					<!-- </el-form> -->
 				</template>
 			</el-table-column>
 			<el-table-column prop="id" label="id" sortable align="center">
@@ -162,8 +282,12 @@
 <script>
 import * as api from "./api";
 import setting from "@/setting.js";
+import NumberTable from "@/components/number-table";
 export default {
 	name: "data-structures",
+	components: {
+		NumberTable
+	},
 	data() {
 		return {
 			tableData: [
@@ -198,9 +322,10 @@ export default {
 			tableLoading: true,
 			currentPage: 1,
 			totalCount: 0,
-			pageSize: 8,
+			pageSize: 10,
 			queryForm: {},
-			multipleSelection: []
+			multipleSelection: [],
+			DetailSpan: 24
 		};
 	},
 	methods: {
@@ -298,7 +423,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import "@/assets/style/public.scss";
 .add-tasks-button {
 	position: absolute;
 	right: 16px;
@@ -309,6 +435,9 @@ export default {
 	border: none !important;
 	color: inherit !important;
 	cursor: default !important;
+}
+.structure-table {
+	@include scrollBar($width: 6px);
 }
 .structure-date-picker input {
 	border: none !important;
@@ -322,10 +451,11 @@ export default {
 	font-size: 16px;
 	font-weight: bold;
 }
-.structure-table-expand .el-form-item {
-	margin-right: 0;
-	margin-bottom: 0;
-	width: 100%;
+.structure-table-expand {
+	> .el-row {
+		margin: 8px 0;
+		width: 100%;
+	}
 }
 .inline-display-block {
 	text-align: center;

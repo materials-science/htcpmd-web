@@ -33,7 +33,8 @@
 				sortable
 				align="center"
 			></el-table-column>
-			<el-table-column prop="name" label="name" align="center"> </el-table-column>
+			<el-table-column prop="name" label="name" align="center">
+			</el-table-column>
 			<el-table-column prop="user.email" label="user" align="center">
 			</el-table-column>
 			<el-table-column label="created time">
@@ -83,7 +84,7 @@ export default {
 					user: {
 						id: "1325121640423690200",
 						email: "user@eamil.com",
-						username: "user",
+						username: "user"
 					},
 					created_time: "",
 					last_modified_time: "",
@@ -101,14 +102,14 @@ export default {
 						broker_host: "localhost",
 						broker_port: 5672,
 						broker_virtual_host: "",
-						repository_uri: "file://~/.aiida/repository/aiida",
-					},
-				},
+						repository_uri: "file://~/.aiida/repository/aiida"
+					}
+				}
 			],
 			tableLoading: true,
 			currentPage: 1,
 			totalCount: 0,
-			pageSize: 2,
+			pageSize: 10
 		};
 	},
 	methods: {
@@ -117,11 +118,14 @@ export default {
 			size = this.pageSize,
 			options = this.queryForm
 		) {
-			return this.$api.GetList(apiPrefix, Object.assign({ page, size }, options));
+			return this.$api.GetList(
+				apiPrefix,
+				Object.assign({ page, size }, options)
+			);
 		},
 		handleCurrentPageChange(page) {
 			this.tableLoading = true;
-			this.pageRequest(page).then((resp) => {
+			this.pageRequest(page).then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
@@ -132,22 +136,22 @@ export default {
 		handlePageSizeChange(size) {
 			this.tableLoading = true;
 			this.pageSize = size;
-			this.pageRequest().then((resp) => {
+			this.pageRequest().then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
 				this.tableLoading = false;
 			});
-		},
+		}
 	},
 	mounted() {
-		this.pageRequest().then((resp) => {
+		this.pageRequest().then(resp => {
 			let data = resp.data;
 			this.tableData = data.results;
 			this.totalCount = data.count;
 			this.tableLoading = false;
 		});
-	},
+	}
 };
 </script>
 

@@ -142,6 +142,15 @@ export default {
 			tableData: [
 				{
 					id: "1325121640423690200",
+					structure: { id: "1325121640423690200", formula: "Si" },
+					calc_jobs_type: "ShengBTE",
+					calc_jobs_label: "ShengBTEWorkChain",
+					user: "IAS",
+					supports: 0,
+					status: "running"
+				},
+				{
+					id: "1325121640423690200",
 					celery_id: "e96741e4-f36a-448c-affa-4d7a1bcb70ef",
 					structure: { id: "1325121640423690200", formula: "Si" },
 					user: { id: "1325121640423690200", name: "ias" },
@@ -159,15 +168,6 @@ export default {
 					user: "IAS",
 					supports: 2,
 					status: "created"
-				},
-				{
-					id: "1325121640423690200",
-					structure: { id: "1325121640423690200", formula: "Si" },
-					calc_jobs_type: "ShengBTE",
-					calc_jobs_label: "ShengBTEWorkChain",
-					user: "IAS",
-					supports: 0,
-					status: "running"
 				}
 			],
 			tableLoading: true,
@@ -254,7 +254,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .add-tasks-button {
 	position: absolute;
 	right: 16px;

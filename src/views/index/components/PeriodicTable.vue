@@ -579,7 +579,7 @@ export default {
 		color: #666;
 		transform-origin: center;
 		opacity: 1;
-		transition: all 0.2s ease-in-out;
+		transition: all 0.1s ease-in-out;
 		.el_number {
 			display: block;
 			font-size: 50%;
@@ -652,9 +652,9 @@ export default {
 /* //  */
 .periodictable {
 	@mixin hover-element-class() {
-		background: #fff !important;
+		background: rgba(#fff, 0.3) !important;
 		color: #000000;
-		transform: scale(1.1);
+		transform: scale(1.05);
 		opacity: 1;
 	}
 	.item {
