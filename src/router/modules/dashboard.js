@@ -4,25 +4,34 @@ import layoutHeaderAside from "@/layout/header-aside";
 const _import = require("@/libs/util.import." + process.env.NODE_ENV);
 
 const meta = {
-  auth: true
+	auth: true
 };
 export default {
-  path: "/dashboard",
-  name: "dashboard",
-  meta,
-  redirect: {
-    name: "dashboard-index"
-  },
-  component: layoutHeaderAside,
-  children: (pre => [
-    {
-      path: "calctasks",
-      name: `${pre}calctasks`,
-      component: _import("dashboard/calctasks"),
-      meta: {
-        ...meta,
-        title: "CalcJobs Monitor"
-      }
-    }
-  ])("dashboard-")
+	path: "/dashboard",
+	name: "dashboard",
+	meta,
+	redirect: {
+		name: "dashboard-index"
+	},
+	component: layoutHeaderAside,
+	children: (pre => [
+		{
+			path: "system-tasks",
+			name: `${pre}system-tasks`,
+			component: _import("dashboard/system-tasks"),
+			meta: {
+				...meta,
+				title: "System Tasks"
+			}
+		},
+		{
+			path: "calctasks",
+			name: `${pre}calctasks`,
+			component: _import("dashboard/calctasks"),
+			meta: {
+				...meta,
+				title: "CalcJobs Monitor"
+			}
+		}
+	])("dashboard-")
 };

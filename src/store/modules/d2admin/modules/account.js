@@ -24,7 +24,7 @@ export default {
 			// token 代表用户当前登录状态 建议在网络请求中携带 token
 			// 如有必要 token 需要定时更新，默认保存一天
 			res = res.data;
-			util.cookies.set("uuid", res.user.pk);
+			util.cookies.set("uuid", res.user.uuid);
 			util.cookies.set("token", res.key);
 			// 设置 vuex 用户信息
 			await dispatch(

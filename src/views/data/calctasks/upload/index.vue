@@ -1,96 +1,44 @@
 <template>
 	<d2-container
 		class="data-calctasks-upload-index-container"
-		v-loading="load_calctask_categories || load_calctasks_types"
+		v-loading="load_calctask_categories"
 		better-scroll
 	>
-		<el-collapse v-model="activeCards">
-			<el-collapse-item
-				class="box-card"
-				v-for="category in calctask_categories"
-				:key="category.id"
-				:name="category.id"
+		<el-row :gutter="20">
+			<el-col
+				:xl="6"
+				:sm="8"
+				v-for="(category, index) in calctask_categories"
+				:key="category.uuid"
+				:name="category.uuid"
 			>
-				<template slot="title">
-					<el-row
-						type="flex"
-						justify="space-between"
-						align="center"
-						style="flex: 1"
-					>
-						<el-col :xl="6" :sm="8">
-							<h2>{{ category.category_name }}</h2>
-						</el-col>
-						<el-col :xl="6" :sm="16">
-							<el-button
-								:icon="
-									category.disabled
-										? 'el-icon-close'
-										: 'el-icon-plus'
-								"
-								:disabled="category.disabled"
-								:type="category.disabled ? 'danger' : 'primary'"
-								plain
-								@click.native.prevent.stop="
-									AddNewTasks(
-										category.id,
-										category.category_name
-									)
-								"
-								>Add A Task</el-button
-							>
-							<el-button
-								icon="el-icon-reading"
-								:disabled="category.disabled"
-								:type="category.disabled ? 'danger' : 'primary'"
-								plain
-								@click.native.prevent.stop="
-									goToDocsPage(
-										'http://aiida-shengbte.ias.poryoung.cn/index.html'
-									)
-								"
-								>Watch Docs</el-button
-							>
-						</el-col>
-					</el-row>
-				</template>
 				<el-card class="box-card d2-card" shadow="hover">
-					<template v-for="type in calctasks_types">
-						<template v-if="type.category.id == category.id">
-							<div :key="type.id" class="types-list">
-								<el-row>
-									<el-col :span="6">
-										<h3>
-											<el-link
-												type="primary"
-												:href="type.doc_link"
-												:disabled="!type.doc_link"
-												target="_blank"
-												>{{ type.type_name }}</el-link
-											><i
-												class="el-icon-warning-outline"
-												style="color: #f56c6c; padding: 8px"
-												v-if="type.disabled"
-											></i>
-										</h3>
-									</el-col>
-								</el-row>
-								<el-row>
-									<el-col :span="12">
-										<p>
-											{{
-												type.description ||
-													"No description"
-											}}
-										</p>
-									</el-col>
-								</el-row>
-							</div>
-						</template>
-					</template>
+					<div slot="header" class="d2-text-center">
+						<span>{{ category.category_name }}</span>
+					</div>
+					<el-progress
+						:percentage="percentage"
+						:color="customColorMethod"
+					></el-progress>
+					<div class="d2-text-center d2-mt-20">
+						<el-button
+							:icon="
+								category.disabled
+									? 'el-icon-close'
+									: 'el-icon-plus'
+							"
+							:disabled="category.disabled"
+							:type="category.disabled ? 'danger' : 'primary'"
+							plain
+							@click.native.prevent.stop="
+								AddNewTasks(category.uuid, category.category_name)
+							"
+							>New Task</el-button
+						>
+					</div>
 				</el-card>
-			</el-collapse-item>
-		</el-collapse>
+			</el-col>
+		</el-row>
 	</d2-container>
 </template>
 
@@ -99,16 +47,30 @@ export default {
 	name: "data-calctasks-upload-index",
 	data() {
 		return {
+			percentage: 20,
 			calctask_categories: [],
 			calctasks_types: [],
 			load_calctask_categories: true,
-			load_calctasks_types: true,
 			activeCards: []
 		};
 	},
 	methods: {
+		customColorMethod(percentage) {
+			if (percentage < 30) {
+				return "#909399";
+			} else if (percentage < 70) {
+				return "#e6a23c";
+			} else {
+				return "#67c23a";
+			}
+		},
 		AddNewTasks(category_id, category_name) {
-			this.$router.replace(`/data/upload/calctasks/${category_name}`);
+			if (category_name == "") {
+				this.$message.error("Invalid category name.");
+			} else {
+				category_name = category_name.toLowerCase();
+				this.$router.replace(`/data/upload/calctasks/${category_name}`);
+			}
 		},
 		goToDocsPage(url) {
 			window.open(url, "_blank");
@@ -120,24 +82,10 @@ export default {
 			if (resp.code == 0) {
 				this.calctask_categories = resp.data;
 				this.calctask_categories.forEach(element => {
-					this.activeCards.push(element.id);
+					this.activeCards.push(element.uuid);
 				});
 			}
 			this.load_calctask_categories = false;
-		});
-		this.$api.GetList(`/calctask_types/`).then(resp => {
-			if (resp.code == 0) {
-				this.calctasks_types = resp.data;
-			} else {
-				this.$message.error("No CalcTasks Types Avaliable.");
-				setTimeout(() => {
-					this.$store.dispatch("d2admin/page/close", {
-						tagName: "/data/upload/calctasks"
-					});
-				}, 1500);
-				return;
-			}
-			this.load_calctasks_types = false;
 		});
 	}
 };
@@ -146,18 +94,7 @@ export default {
 <style lang="scss">
 .data-calctasks-upload-index-container {
 	.box-card {
-		.el-collapse-item__header {
-			padding: 36px 0;
-		}
-		.el-collapse-item__wrap {
-			background-color: transparent;
-		}
-		.types-list {
-			margin: 0 8px 32px;
-			p {
-				padding: 8px 16px;
-			}
-		}
+		background: transparent;
 	}
 }
 </style>

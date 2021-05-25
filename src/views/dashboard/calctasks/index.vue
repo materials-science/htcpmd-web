@@ -1,12 +1,12 @@
 <template>
-	<d2-container>
+	<d2-container class="dashboard-calctasks-container">
 		<el-table
 			v-loading="tableLoading"
 			:data="tableData"
 			style="width: 100%"
-			:default-sort="{ prop: 'id', order: 'descending' }"
+			:default-sort="{ prop: 'uuid', order: 'descending' }"
 			@row-click="viewDetail"
-			class="structure-table"
+			class="data-table"
 		>
 			<el-table-column type="expand">
 				<template slot-scope="props">
@@ -15,11 +15,11 @@
 						inline
 						class="structure-table-expand"
 					>
-						<el-form-item label="ID">
-							<span>{{ props.row.id }}</span>
+						<el-form-item label="UUID">
+							<span>{{ props.row.uuid }}</span>
 						</el-form-item>
 						<el-form-item label="calc task label">
-							<span>{{ props.row.calctask_label }}</span>
+							<span>{{ props.row.label }}</span>
 						</el-form-item>
 						<el-form-item label="created time">
 							<el-date-picker
@@ -34,7 +34,7 @@
 					</el-form>
 				</template>
 			</el-table-column>
-			<el-table-column prop="id" label="id" sortable align="center">
+			<el-table-column prop="uuid" label="uuid" sortable align="center">
 			</el-table-column>
 			<!-- TODO: Filter -->
 			<el-table-column
@@ -47,7 +47,7 @@
 				<template slot-scope="props">
 					<el-button
 						@click.native.prevent="
-							goToStructurePage(props.row.structure.id)
+							goToStructurePage(props.row.structure.uuid)
 						"
 						type="text"
 						size="small"
@@ -123,10 +123,10 @@ export default {
 		return {
 			tableData: [
 				{
-					id: "1325121640423690200",
+					uuid: "1325121640423690200",
 					celery_id: "e96741e4-f36a-448c-affa-4d7a1bcb70ef",
-					structure: { id: "1325121640423690200", formula: "Si" },
-					user: { id: "1325121640423690200", name: "ias" },
+					structure: { uuid: "1325121640423690200", formula: "Si" },
+					user: { uuid: "1325121640423690200", name: "ias" },
 					code: {},
 					calc_jobs_type: "ShengBTE",
 					calc_jobs_label: "ShengBTEWorkChain",
@@ -134,8 +134,8 @@ export default {
 					status: "failed"
 				},
 				{
-					id: "1325121640423690200",
-					structure: { id: "1325121640423690200", formula: "Si" },
+					uuid: "1325121640423690200",
+					structure: { uuid: "1325121640423690200", formula: "Si" },
 					calc_jobs_type: "ShengBTE",
 					calc_jobs_label: "ShengBTEWorkChain",
 					user: "IAS",
@@ -143,8 +143,8 @@ export default {
 					status: "created"
 				},
 				{
-					id: "1325121640423690200",
-					structure: { id: "1325121640423690200", formula: "Si" },
+					uuid: "1325121640423690200",
+					structure: { uuid: "1325121640423690200", formula: "Si" },
 					calc_jobs_type: "ShengBTE",
 					calc_jobs_label: "ShengBTEWorkChain",
 					user: "IAS",
@@ -191,20 +191,20 @@ export default {
 			});
 		},
 		viewDetail(row, column, event) {
-			let id = row.id;
-			if (id == "") {
-				this.$message.error("ID is None!");
+			let uuid = row.uuid;
+			if (uuid == "") {
+				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/calctasks/${id}`
+				path: `/data/calctasks/${uuid}`
 			});
 		},
-		goToStructurePage(id) {
-			if (id == "") {
-				this.$message.error("Structure ID is None!");
+		goToStructurePage(uuid) {
+			if (uuid == "") {
+				this.$message.error("Structure UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${id}`
+				path: `/data/structures/${uuid}`
 			});
 		},
 		addNewTasks() {
@@ -224,10 +224,19 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .add-tasks-button {
 	position: absolute;
 	right: 16px;
 	bottom: 16px;
+}
+</style>
+<style lang="scss">
+.dashboard-calctasks-container {
+	.data-table {
+		.el-table__body-wrapper {
+			@include scrollBar();
+		}
+	}
 }
 </style>

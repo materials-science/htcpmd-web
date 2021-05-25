@@ -4,7 +4,7 @@
 			v-loading="tableLoading"
 			:data="tableData"
 			style="width: 100%"
-			:default-sort="{ prop: 'id', order: 'descending' }"
+			:default-sort="{ prop: 'uuid', order: 'descending' }"
 			class="data-table"
 		>
 			<el-table-column type="expand">
@@ -28,8 +28,8 @@
 				</template>
 			</el-table-column>
 			<el-table-column
-				prop="id"
-				label="id"
+				prop="uuid"
+				label="uuid"
 				sortable
 				align="center"
 			></el-table-column>
@@ -79,10 +79,10 @@ export default {
 		return {
 			tableData: [
 				{
-					id: "1325121640423690200",
+					uuid: "474f05e0-47fe-4af6-b977-8b9f9cc74823",
 					name: "aiida",
 					user: {
-						id: "1325121640423690200",
+						uuid: "474f05e0-47fe-4af6-b977-8b9f9cc74823",
 						email: "user@eamil.com",
 						username: "user"
 					},

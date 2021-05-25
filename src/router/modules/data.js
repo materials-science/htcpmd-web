@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-22 09:01:16
- * @LastEditTime: 2021-01-23 15:19:08
+ * @LastEditTime: 2021-05-24 11:14:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /web-admin-kit/src/router/modules/data.js
@@ -35,7 +35,7 @@ export default {
 			}
 		},
 		{
-			path: "structures/:id",
+			path: "structures/:uuid",
 			name: `${pre}structure-detail`,
 			component: _import("data/structures/detail.vue"),
 			meta: {
@@ -85,7 +85,7 @@ export default {
 			}
 		},
 		{
-			path: "upload/calctasks/ShengBTE",
+			path: "upload/calctasks/shengbte",
 			name: `${pre}calctasks-upload-shengbte`,
 			component: _import("data/calctasks/upload/components/shengbte"),
 			meta: {
@@ -105,10 +105,20 @@ export default {
 			}
 		},
 		{
-			path: "upload/calctasks/automated_wannier",
+			path: "upload/calctasks/ph",
+			name: `${pre}calctasks-upload-qe-ph`,
+			component: _import("data/calctasks/upload/components/qe/ph.vue"),
+			meta: {
+				...meta,
+				cache: true,
+				title: "Upload QE-PW CalcTasks"
+			}
+		},
+		{
+			path: "upload/calctasks/wannier",
 			name: `${pre}calctasks-upload-qe-automated_wannier`,
 			component: _import(
-				"data/calctasks/upload/components/qe/automated-wannier.vue"
+				"data/calctasks/upload/components/wannier/automated-wannier.vue"
 			),
 			meta: {
 				...meta,

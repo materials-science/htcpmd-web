@@ -14,6 +14,7 @@
 					v-permission="'usersphere:user:add'"
 					size="small"
 					type="primary"
+                    plain
 					@click="addRow"
 					><i class="el-icon-plus" /> 新增</el-button
 				>

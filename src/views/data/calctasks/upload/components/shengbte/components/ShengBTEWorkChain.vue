@@ -995,7 +995,7 @@ export default {
 				(settings.structures.length == 0 ||
 					settings.calctasks_type == "" ||
 					settings.computer == "" ||
-					settings.calctasks_label == "" ||
+					settings.label == "" ||
 					settings.code == "") &&
 					(failed = true);
 				if (failed) {
@@ -1031,7 +1031,7 @@ export default {
 			this.fullscreenLoading = true;
 			this.$api
 				.AddObj(
-					`/utils/shengbte/files/control/?structure=${this.calctasks_settings.structures[0].id}`,
+					`/utils/shengbte/files/control/?structure=${this.calctasks_settings.structures[0].uuid}`,
 					this.formData.control
 				)
 				.then(resp => {

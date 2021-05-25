@@ -1,5 +1,5 @@
 <template>
-	<d2-container>
+	<d2-container class="data-structures-container">
 		<template slot="header">
 			<el-row>
 				<el-button
@@ -22,7 +22,7 @@
 			v-loading="tableLoading"
 			:data="tableData"
 			style="width: 100%"
-			:default-sort="{ prop: 'id', order: 'descending' }"
+			:default-sort="{ prop: 'formula', order: 'ascending' }"
 			@row-click="viewDetail"
 			@selection-change="handleSelectionChange"
 			class="structure-table"
@@ -39,73 +39,12 @@
 						<el-row :gutter="20" type="flex" align="middle">
 							<el-col :span="DetailSpan / 3">
 								<div class="label">
-									<el-tag effect="plain"> ID </el-tag>
+									<el-tag effect="plain"> UUID </el-tag>
 								</div>
 							</el-col>
 							<el-col :span="(DetailSpan * 2) / 3">
 								<div class="content">
-									<el-tag>{{ props.row.id }}</el-tag>
-								</div>
-							</el-col>
-						</el-row>
-						<el-row :gutter="20" type="flex" align="middle">
-							<el-col :span="DetailSpan / 3">
-								<div class="label">
-									<el-tag effect="plain">
-										center of mass
-									</el-tag>
-								</div>
-							</el-col>
-							<el-col :span="(DetailSpan * 2) / 3">
-								<div class="content">
-									<number-table
-										:span="(DetailSpan * 2) / 3"
-										:data="
-											props.row.attributes.center_of_mass
-										"
-										:precision="2"
-										disabled
-									></number-table>
-								</div>
-							</el-col>
-						</el-row>
-						<el-row :gutter="20" type="flex" align="middle">
-							<el-col :span="DetailSpan / 3">
-								<div class="label">
-									<el-tag effect="plain">
-										cell
-									</el-tag>
-								</div>
-							</el-col>
-							<el-col :span="(DetailSpan * 2) / 3">
-								<div class="content">
-									<number-table
-										:span="(DetailSpan * 2) / 3"
-										:data="props.row.attributes.cell"
-										:precision="6"
-										disabled
-									></number-table>
-								</div>
-							</el-col>
-						</el-row>
-						<el-row :gutter="20" type="flex" align="middle">
-							<el-col :span="DetailSpan / 3">
-								<div class="label">
-									<el-tag effect="plain">
-										reciprocal cell
-									</el-tag>
-								</div>
-							</el-col>
-							<el-col :span="(DetailSpan * 2) / 3">
-								<div class="content">
-									<number-table
-										:span="(DetailSpan * 2) / 3"
-										:data="
-											props.row.attributes.reciprocal_cell
-										"
-										:precision="6"
-										disabled
-									></number-table>
+									<el-tag>{{ props.row.uuid }}</el-tag>
 								</div>
 							</el-col>
 						</el-row>
@@ -151,82 +90,51 @@
 								</div>
 							</el-col>
 						</el-row>
-						<!-- <el-form-item label="ID">
-							<span>{{ props.row.id }}</span>
-						</el-form-item> -->
-						<!-- <el-form-item label="center of mass">
-							<number-table
-								:span="(DetailSpan * 2) / 3"
-								:data="props.row.attributes.center_of_mass"
-								:precision="6"
-								disabled
-							></number-table>
-						</el-form-item> -->
-						<!-- <el-form-item label="cell"> </el-form-item> -->
-						<!-- <div class="inline-display-block">
-							<el-row>
-								<el-col :span="12">
-									<el-row
-										:gutter="20"
-										v-for="row of props.row.attributes.cell"
-										:key="row"
-									>
-										<el-col
-											:span="8"
-											v-for="(it, idx) in row"
-											:key="idx"
-											>{{ it }}</el-col
-										>
-									</el-row>
-								</el-col>
-							</el-row>
-						</div> -->
-						<!-- <el-form-item label="reciprocal cell"> </el-form-item>
-						<div class="inline-display-block">
-							<el-row>
-								<el-col :span="12">
-									<el-row
-										:gutter="10"
-										v-for="row of props.row.attributes
-											.reciprocal_cell"
-										:key="row"
-									>
-										<el-col
-											:span="8"
-											v-for="(it, idx) of row"
-											:key="idx"
-											>{{ it }}</el-col
-										>
-									</el-row>
-								</el-col>
-							</el-row>
-						</div> -->
-						<!-- <el-form-item label="created time">
-							<el-date-picker
-								v-model="props.row.created_time"
-								type="datetime"
-								placeholder="created time"
-								readonly
-								class="structure-date-picker"
-							>
-							</el-date-picker>
-						</el-form-item> -->
-						<!-- <el-form-item label="last modified">
-							<el-date-picker
-								v-model="props.row.last_modified_time"
-								type="datetime"
-								placeholder="last modified"
-								readonly
-								class="structure-date-picker"
-							>
-							</el-date-picker>
-						</el-form-item> -->
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain">
+										center of mass
+									</el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<number-table
+										:span="(DetailSpan * 2) / 3"
+										:data="
+											props.row.attributes.center_of_mass
+										"
+										:precision="2"
+										disabled
+									></number-table>
+								</div>
+							</el-col>
+						</el-row>
+						<el-row :gutter="20" type="flex" align="middle">
+							<el-col :span="DetailSpan / 3">
+								<div class="label">
+									<el-tag effect="plain">
+										cell
+									</el-tag>
+								</div>
+							</el-col>
+							<el-col :span="(DetailSpan * 2) / 3">
+								<div class="content">
+									<number-table
+										:span="(DetailSpan * 2) / 3"
+										:data="props.row.attributes.cell"
+										:precision="6"
+										disabled
+									></number-table>
+								</div>
+							</el-col>
+						</el-row>
 					</el-row>
-					<!-- </el-form> -->
 				</template>
 			</el-table-column>
-			<el-table-column prop="id" label="id" sortable align="center">
-			</el-table-column>
+			<!-- <el-table-column prop="uuid" label="uuid" sortable align="center"> -->
+			<!-- </el-table-column> -->
 			<el-table-column label="formula" align="center">
 				<template slot-scope="props">
 					<span v-html="props.row.attributes.formula"></span>
@@ -263,6 +171,39 @@
 				align="center"
 			>
 			</el-table-column>
+			<el-table-column label="tags" align="center">
+				<template slot-scope="props">
+					<el-tag
+						v-for="(tag, index) in props.row.tags.slice(0, 2)"
+						effect="plain"
+						:key="index"
+						@click.stop="
+							showCurrentRowTags(props.$index, props.row)
+						"
+						class="d2-mr-10"
+						>{{ tag.name }}</el-tag
+					>
+					<el-button
+						v-if="props.row.tags.length > 2"
+						size="small"
+						@click.stop="
+							showCurrentRowTags(props.$index, props.row)
+						"
+						>...</el-button
+					>
+				</template>
+			</el-table-column>
+			<el-table-column label="operations" align="center" min-width="150">
+				<template slot-scope="scope">
+					<el-button
+						size="mini"
+						type="danger"
+						plain
+						@click.stop="handleDelete(scope.$index, scope.row)"
+						>delete</el-button
+					>
+				</template>
+			</el-table-column>
 		</el-table>
 		<template slot="footer">
 			<el-pagination
@@ -276,6 +217,35 @@
 				:total="totalCount"
 			></el-pagination>
 		</template>
+		<el-dialog
+			title="Tags"
+			:visible.sync="tags_dialog_visible"
+			destroy-on-close
+		>
+			<el-table :data="current_showed_tags">
+				<el-table-column
+					property="name"
+					label="name"
+					width="150"
+				></el-table-column>
+				<el-table-column label="created time" width="250">
+					<template slot-scope="props">
+						<el-date-picker
+							v-model="props.row.created_time"
+							type="datetime"
+							placeholder="created time"
+							readonly
+							class="data-date-picker"
+						>
+						</el-date-picker>
+					</template>
+				</el-table-column>
+				<el-table-column
+					property="description"
+					label="description"
+				></el-table-column>
+			</el-table>
+		</el-dialog>
 	</d2-container>
 </template>
 
@@ -283,6 +253,7 @@
 import * as api from "./api";
 import setting from "@/setting.js";
 import NumberTable from "@/components/number-table";
+const apiPrefix = "/structures/";
 export default {
 	name: "data-structures",
 	components: {
@@ -292,31 +263,34 @@ export default {
 		return {
 			tableData: [
 				{
-					id: "1325121640423690200",
+					uuid: "1325121640423690200",
 					attributes: {
 						formula: "C<sub>4</sub>Si<sub>4</sub>",
 						number_of_atoms: 8,
 						spacegroup: 216,
 						volume: 84.0024
-					}
+					},
+					tags: []
 				},
 				{
-					id: "1325121640423690200",
+					uuid: "1325121640423690200",
 					attributes: {
 						formula: "C<sub>4</sub>Si<sub>4</sub>",
 						number_of_atoms: 8,
 						spacegroup: 216,
 						volume: 84.0024
-					}
+					},
+					tags: []
 				},
 				{
-					id: "1325121640423690200",
+					uuid: "1325121640423690200",
 					attributes: {
 						formula: "C<sub>4</sub>Si<sub>4</sub>",
 						number_of_atoms: 8,
 						spacegroup: 216,
 						volume: 84.0024
-					}
+					},
+					tags: []
 				}
 			],
 			tableLoading: true,
@@ -325,6 +299,8 @@ export default {
 			pageSize: 10,
 			queryForm: {},
 			multipleSelection: [],
+			current_showed_tags: [],
+			tags_dialog_visible: false,
 			DetailSpan: 24
 		};
 	},
@@ -359,14 +335,46 @@ export default {
 		handleSelectionChange(val) {
 			this.multipleSelection = val;
 		},
+		handleDelete(index, row) {
+			if (row.uuid == "") {
+				return this.$message.error("UUID is None!");
+			}
+			this.$confirm("This will delete permanently, sure?", "Warning", {
+				confirmButtonText: "confirm",
+				cancelButtonText: "cancel",
+				type: "warning"
+			})
+				.then(() => {
+					this.tableLoading = true;
+					this.$api.DelObj(apiPrefix, row.uuid).then(resp => {
+						if (resp.code == 0) {
+							this.$message.success("Delete Success");
+							return this.handleCurrentPageChange(
+								this.currentPage
+							);
+						}
+						this.tableLoading = false;
+					});
+				})
+				.catch(() => {
+					this.$message({
+						type: "info",
+						message: "canceled"
+					});
+				});
+		},
 		viewDetail(row, column, event) {
-			let id = row.id;
-			if (id == "") {
-				return this.$message.error("ID is None!");
+			let uuid = row.uuid;
+			if (uuid == "") {
+				return this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${id}`
+				path: `/data/structures/${uuid}`
 			});
+		},
+		showCurrentRowTags(index, row) {
+			this.current_showed_tags = row.tags;
+			this.tags_dialog_visible = true;
 		},
 		async addNewTasks() {
 			if (this.multipleSelection.length == 0) {
@@ -430,15 +438,6 @@ export default {
 	right: 16px;
 	bottom: 16px;
 }
-.volume-input input {
-	background: none !important;
-	border: none !important;
-	color: inherit !important;
-	cursor: default !important;
-}
-.structure-table {
-	@include scrollBar($width: 6px);
-}
 .structure-date-picker input {
 	border: none !important;
 }
@@ -466,6 +465,21 @@ export default {
 	.el-col {
 		font-size: 14px;
 		padding: 8px;
+	}
+}
+</style>
+<style lang="scss">
+.data-structures-container {
+	.structure-table {
+		.el-table__body-wrapper {
+			@include scrollBar();
+		}
+	}
+	.volume-input input {
+		background: none !important;
+		border: none !important;
+		color: inherit !important;
+		cursor: default !important;
 	}
 }
 </style>

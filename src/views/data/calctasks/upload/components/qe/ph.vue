@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-01-21 23:34:46
- * @LastEditTime: 2021-01-22 16:54:34
+ * @LastEditTime: 2021-05-23 10:28:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /web-admin-kit/src/views/data/calctasks/components/qe/ph.vue
@@ -85,7 +85,7 @@
 				</el-row>
 				<el-row type="flex" justify="center">
 					<el-col :xl="16">
-						<el-input v-model="calctasks_label"></el-input>
+						<el-input v-model="label"></el-input>
 					</el-col>
 				</el-row>
 			</el-row>
@@ -152,9 +152,9 @@
 						>
 							<el-option
 								v-for="item in computers_list"
-								:key="item.id"
-								:label="`${item.label} - (${item.id})`"
-								:value="item.id"
+								:key="item.uuid"
+								:label="`${item.label} - (${item.uuid})`"
+								:value="item.uuid"
 							>
 							</el-option>
 						</el-select>
@@ -188,9 +188,9 @@
 						>
 							<el-option
 								v-for="item in codes_list"
-								:key="item.id"
-								:label="`${item.label} - (${item.id})`"
-								:value="item.id"
+								:key="item.uuid"
+								:label="`${item.label} - (${item.uuid})`"
+								:value="item.uuid"
 							>
 							</el-option>
 						</el-select>
@@ -300,9 +300,9 @@
 						>
 							<el-option
 								v-for="item in pw_calc_list"
-								:key="item.id"
-								:label="`${item.label} - (${item.id})`"
-								:value="item.id"
+								:key="item.uuid"
+								:label="`${item.label} - (${item.uuid})`"
+								:value="item.uuid"
 							>
 							</el-option>
 						</el-select>
@@ -629,7 +629,7 @@ export default {
 			TaskInfo: {
 				title: "PW"
 			},
-			calctasks_label: "",
+			label: "",
 			calctasks_type_selected_id: null,
 			calctasks_type_selected: "ph",
 			calctasks_types: [
@@ -731,7 +731,7 @@ export default {
 		calctasks_settings() {
 			return {
 				calcTask_category: "QuantumEspresso",
-				calctasks_label: this.calctasks_label,
+				label: this.label,
 				calctasks_type: this.calctasks_type_selected_id,
 				calctasks_description: this.calctasks_description,
 				computer: this.computers_selected,
@@ -751,12 +751,12 @@ export default {
 			rows.splice(index, 1);
 		},
 		viewDetail(row, column, event) {
-			let id = row.id;
-			if (id == "") {
-				this.$message.error("ID is None!");
+			let uuid = row.uuid;
+			if (uuid == "") {
+				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${id}`
+				path: `/data/structures/${uuid}`
 			});
 		},
 		async loadStructures() {
@@ -778,7 +778,7 @@ export default {
 		addNewStructure() {
 			if (this.new_structure_id == "") {
 				return this.$message.error(
-					"Please input a valid structure id."
+					"Please input a valid structure uuid."
 				);
 			}
 			// @todo[1]
@@ -815,7 +815,7 @@ export default {
 			}
 			this.loading_computers_list = true;
 			this.$api
-				.GetList("/computers/", { label: query, id: query })
+				.GetList("/computers/", { label: query, uuid: query })
 				.then(resp => {
 					if (resp.code == 0) {
 						this.computers_list = resp.data.results;
@@ -836,7 +836,7 @@ export default {
 			this.$api
 				.GetList("/codes/", {
 					label: query,
-					id: query,
+					uuid: query,
 					computer: this.computers_selected
 				})
 				.then(resp => {
@@ -888,7 +888,7 @@ export default {
 				(settings.structures.length == 0 ||
 					settings.calctasks_type == "" ||
 					settings.computer == "" ||
-					settings.calctasks_label == "" ||
+					settings.label == "" ||
 					settings.code == "" ||
 					settings.pseudo_family == "") &&
 					(failed = true);
@@ -937,7 +937,7 @@ export default {
 					data.forEach(item => {
 						calctasks_types.push({
 							label: item.type_name,
-							value: item.id,
+							value: item.uuid,
 							disabled: item.disabled
 						});
 					});

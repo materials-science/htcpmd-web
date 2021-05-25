@@ -4,7 +4,7 @@
 			v-loading="tableLoading"
 			:data="tableData"
 			style="width: 100%"
-			:default-sort="{ prop: 'id', order: 'descending' }"
+			:default-sort="{ prop: 'uuid', order: 'descending' }"
 			class="data-table"
 			height="100%"
 		>
@@ -12,7 +12,9 @@
 				<template slot-scope="props">
 					<el-tabs
 						type="border-card"
-						@tab-click="handleTabSwitch($event, props.$index, props.row)"
+						@tab-click="
+							handleTabSwitch($event, props.$index, props.row)
+						"
 					>
 						<el-tab-pane label="Attributes">
 							<el-form
@@ -60,12 +62,13 @@
 				</template>
 			</el-table-column>
 			<el-table-column
-				prop="id"
-				label="id"
+				prop="uuid"
+				label="uuid"
 				sortable
 				align="center"
 			></el-table-column>
-			<el-table-column prop="label" label="label" align="center"> </el-table-column>
+			<el-table-column prop="label" label="label" align="center">
+			</el-table-column>
 			<el-table-column
 				prop="computer.label"
 				label="computer"
@@ -130,23 +133,24 @@
 <script>
 const apiPrefix = "/codes/";
 export default {
+	name: "cluster-codes",
 	data() {
 		return {
 			tableData: [
 				{
-					id: "1325121640423690200",
+					uuid: "9676960c-8547-4fad-8614-954e0760715c",
 					label: "aiida",
 					computer: {
-						id: "1325121640423690200",
+						uuid: "9676960c-8547-4fad-8614-954e0760715c",
 						label: "test",
 						email: "user@eamil.com",
 						username: "user",
-						hostname: "172.31.220.82",
+						hostname: "172.31.220.82"
 					},
 					user: {
-						id: "1325121640423690200",
+						uuid: "9676960c-8547-4fad-8614-954e0760715c",
 						email: "user@eamil.com",
-						username: "user",
+						username: "user"
 					},
 					version: "1.0",
 					created_time: "",
@@ -159,14 +163,14 @@ export default {
 						remote_exec_path: "/bin/bash",
 						input_plugin: "",
 						prepend_text: "",
-						append_text: "",
-					},
-				},
+						append_text: ""
+					}
+				}
 			],
 			tableLoading: true,
 			currentPage: 1,
 			totalCount: 0,
-			pageSize: 10,
+			pageSize: 10
 		};
 	},
 	methods: {
@@ -175,11 +179,14 @@ export default {
 			size = this.pageSize,
 			options = this.queryForm
 		) {
-			return this.$api.GetList(apiPrefix, Object.assign({ page, size }, options));
+			return this.$api.GetList(
+				apiPrefix,
+				Object.assign({ page, size }, options)
+			);
 		},
 		handleCurrentPageChange(page) {
 			this.tableLoading = true;
-			this.pageRequest(page).then((resp) => {
+			this.pageRequest(page).then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
@@ -190,7 +197,7 @@ export default {
 		handlePageSizeChange(size) {
 			this.tableLoading = true;
 			this.pageSize = size;
-			this.pageRequest().then((resp) => {
+			this.pageRequest().then(resp => {
 				let data = resp.data;
 				this.tableData = data.results;
 				this.totalCount = data.count;
@@ -198,20 +205,22 @@ export default {
 			});
 		},
 		handleDelete(index, row) {
-			if (row.id == "") {
-				return this.$message.error("ID is None!");
+			if (row.uuid == "") {
+				return this.$message.error("uuid is None!");
 			}
 			this.$confirm("This will delete permanently, sure?", "Warning", {
 				confirmButtonText: "confirm",
 				cancelButtonText: "cancel",
-				type: "warning",
+				type: "warning"
 			})
 				.then(() => {
 					this.tableLoading = true;
-					this.$api.DelObj(apiPrefix, row.id).then((resp) => {
+					this.$api.DelObj(apiPrefix, row.uuid).then(resp => {
 						if (resp.code == 0) {
 							this.$message.success("Delete Success");
-							return this.handleCurrentPageChange(this.currentPage);
+							return this.handleCurrentPageChange(
+								this.currentPage
+							);
 						}
 						this.tableLoading = false;
 					});
@@ -219,20 +228,28 @@ export default {
 				.catch(() => {
 					this.$message({
 						type: "info",
-						message: "canceled",
+						message: "canceled"
 					});
 				});
-		},
+		}
 	},
 	mounted() {
-		this.pageRequest().then((resp) => {
+		this.pageRequest().then(resp => {
 			let data = resp.data;
 			this.tableData = data.results;
 			this.totalCount = data.count;
 			this.tableLoading = false;
 		});
-	},
+	}
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.cluster-codes-container {
+	.data-table {
+		.el-table__body-wrapper {
+			@include scrollBar();
+		}
+	}
+}
+</style>

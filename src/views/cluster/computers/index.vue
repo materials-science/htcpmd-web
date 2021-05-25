@@ -4,7 +4,7 @@
 			v-loading="tableLoading"
 			:data="tableData"
 			style="width: 100%"
-			:default-sort="{ prop: 'id', order: 'descending' }"
+			:default-sort="{ prop: 'uuid', order: 'descending' }"
 			class="data-table"
 			height="100%"
 		>
@@ -37,7 +37,7 @@
 							<el-card>
 								<transition-group name="log-list" tag="div">
 									<d2-highlight
-										v-for="item in testLogs[props.row.id]"
+										v-for="item in testLogs[props.row.uuid]"
 										:key="item.id"
 										:code="item.msg"
 										lang="bash"
@@ -50,8 +50,8 @@
 				</template>
 			</el-table-column>
 			<el-table-column
-				prop="id"
-				label="id"
+				prop="uuid"
+				label="uuid"
 				sortable
 				align="center"
 			></el-table-column>
@@ -382,10 +382,10 @@ export default {
 		return {
 			tableData: [
 				{
-					id: "1325121640423690200",
+					uuid: "9676960c-8547-4fad-8614-954e0760715c",
 					label: "vasp",
 					user: {
-						id: "1325121640423690200",
+						uuid: "9676960c-8547-4fad-8614-954e0760715c",
 						email: "user@eamil.com",
 						username: "user"
 					},
@@ -527,8 +527,8 @@ export default {
 			this.$message.success("copied id_rsa.pub to clipboard");
 		},
 		handleDelete(index, row) {
-			if (row.id == "") {
-				return this.$message.error("ID is None!");
+			if (row.uuid == "") {
+				return this.$message.error("UUID is None!");
 			}
 			this.$confirm("This will delete permanently, sure?", "Warning", {
 				confirmButtonText: "confirm",
@@ -537,7 +537,7 @@ export default {
 			})
 				.then(() => {
 					this.tableLoading = true;
-					this.$api.DelObj(apiPrefix, row.id).then(resp => {
+					this.$api.DelObj(apiPrefix, row.uuid).then(resp => {
 						if (resp.code == 0) {
 							this.$message.success("Delete Success");
 							return this.handleCurrentPageChange(
@@ -555,10 +555,10 @@ export default {
 				});
 		},
 		handleTest(index, row) {
-			if (row.id == "") {
-				return this.$message.error("ID is None!");
+			if (row.uuid == "") {
+				return this.$message.error("UUID is None!");
 			}
-			if (!(row.id in this.testLogs)) {
+			if (!(row.uuid in this.testLogs)) {
 				this.$confirm(
 					"This will make a series of tests to check if connection is available",
 					"Notice",
@@ -570,15 +570,15 @@ export default {
 				)
 					.then(() => {
 						this.tableLoading = true;
-						this.$set(this.testLogs, row.id, []);
-						this.currentTestComputer = row.id;
+						this.$set(this.testLogs, row.uuid, []);
+						this.currentTestComputer = row.uuid;
 						// this.socket = openWebsocket(
-						// 	`${wsPrefix}${row.id}/test/`,
+						// 	`${wsPrefix}${row.uuid}/test/`,
 						// 	this.onWSMessage,
 						// 	this.onWSError
 						// );
 						this.$connect(
-							util.getWebsocketUrl(`${wsPrefix}${row.id}/test/`)
+							util.getWebsocketUrl(`${wsPrefix}${row.uuid}/test/`)
 						);
 						this.socket = this.$socket;
 						this.socket.onmessage = data => this.onWSMessage(data);
@@ -612,11 +612,11 @@ export default {
 		},
 		onWSError() {},
 		handleNewCode(index, row) {
-			if (row.id == "") {
-				return this.$message.error("ID is None!");
+			if (row.uuid == "") {
+				return this.$message.error("UUID is None!");
 			}
 			this.newCodeDialogVisible = true;
-			this.selectedComputer = row.id;
+			this.selectedComputer = row.uuid;
 		}
 	},
 	mounted() {
@@ -637,16 +637,23 @@ export default {
 </script>
 
 <style lang="scss">
-.d2-highlight {
-	border-radius: initial !important;
-}
-.log-list-enter-active,
-.list-leave-active {
-	transition: all 1s;
-}
-.log-list-enter,
-.list-leave-to {
-	opacity: 0;
-	transform: translateY(30px);
+.cluster-computers-container {
+	.data-table {
+		.el-table__body-wrapper {
+			@include scrollBar();
+		}
+	}
+	.d2-highlight {
+		border-radius: initial !important;
+	}
+	.log-list-enter-active,
+	.list-leave-active {
+		transition: all 1s;
+	}
+	.log-list-enter,
+	.list-leave-to {
+		opacity: 0;
+		transform: translateY(30px);
+	}
 }
 </style>

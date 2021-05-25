@@ -87,8 +87,8 @@ export default {
 		return {
 			// 表单
 			formLogin: {
-				email: "poryoung@outlook.com",
-				password: "PorYoung",
+				email: "guest@szu.edu.cn",
+				password: "guest@ias",
 				code: "v9am"
 			},
 			// 表单校验

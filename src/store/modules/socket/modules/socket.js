@@ -21,7 +21,8 @@ export default {
 		},
 		SOCKET_ONERROR(state, event) {
 			console.error(state, event);
-			Message.error("ws connection fail, retry latter");
+			// Message.error("ws connection fail, retry latter");
+            Message.info("ws closed.")
 		},
 		// default handler called for all methods
 		SOCKET_ONMESSAGE(state, message) {

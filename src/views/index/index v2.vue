@@ -1,12 +1,100 @@
 <template>
 	<d2-container type="full" class="periodic-table-page-container">
-		<el-row class="periodic-container">
+		<el-row :gutter="20">
+			<el-col :xl="16" :lg="20">
+				<PeriodicTable
+					v-on:selectedElements="selectedElements"
+					class="periodic-table-wrap"
+				/>
+			</el-col>
+			<el-col :xl="8" lg="4">
+				<el-form :model="queryForm">
+					<el-form-item label="Elements">
+						<el-input
+							v-model="queryForm.elements"
+							placeholder="Elements"
+							readonly
+						>
+						</el-input>
+					</el-form-item>
+					<el-form-item label="Mode">
+						<el-select
+							v-model="queryForm.mode"
+							placeholder="ALL/ANY"
+						>
+							<el-option label="ALL" value="ALL"></el-option>
+							<el-option label="ANY" value="ANY"></el-option>
+						</el-select>
+					</el-form-item>
+
+					<el-form-item>
+						<el-button
+							icon="el-icon-search"
+							circle
+							@click="querySubmit"
+						></el-button>
+					</el-form-item>
+					<el-tooltip
+						class="item"
+						effect="dark"
+						content="Click the blank to show more info"
+						placement="top-start"
+					>
+						<el-button
+							circle
+							icon="el-icon-question"
+							style="
+												background: none;
+												border: none;
+												position: relative;
+												top: -3px;
+											"
+						></el-button>
+					</el-tooltip>
+					<el-form-item label="Number of Atoms">
+						<el-input
+							type="number"
+							v-model="queryForm.number_of_atoms"
+							placeholder="Number of Atoms"
+						>
+						</el-input>
+					</el-form-item>
+					<el-form-item label="Volume">
+						<el-col :span="11">
+							<el-input
+								type="number"
+								placeholder="Min"
+								v-model="queryForm.volume_min"
+								style="width: 100%"
+							></el-input>
+						</el-col>
+						<el-col class="line" :span="2">-</el-col>
+						<el-col :span="11">
+							<el-input
+								type="number"
+								placeholder="Max"
+								v-model="queryForm.volume_max"
+								style="width: 100%"
+							></el-input>
+						</el-col>
+					</el-form-item>
+					<el-form-item label="Get All">
+						<el-input
+							v-model="queryForm.get_all"
+							placeholder="get all structures"
+						>
+						</el-input>
+					</el-form-item>
+				</el-form>
+			</el-col>
+		</el-row>
+		<!-- <el-row class="periodic-container">
 			<PeriodicTable
 				v-on:selectedElements="selectedElements"
 				class="periodic-table-wrap"
 			/>
-		</el-row>
-		<template slot="footer">
+		</el-row> -->
+		<!-- <template slot="footer">
 			<div class="query-container">
 				<el-form
 					:inline="true"
@@ -107,7 +195,7 @@
 					</el-collapse>
 				</el-form>
 			</div>
-		</template>
+		</template> -->
 	</d2-container>
 </template>
 

@@ -51,8 +51,8 @@ export const crudOptions = vm => {
     },
     columns: [
       {
-        title: "id",
-        key: "id",
+        title: "uuid",
+        key: "uuid",
         width: 70,
         search: {
           disabled: false

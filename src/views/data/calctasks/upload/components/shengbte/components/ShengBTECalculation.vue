@@ -1159,7 +1159,7 @@ export default {
 				(settings.structures.length == 0 ||
 					settings.calctasks_type == "" ||
 					settings.computer == "" ||
-					settings.calctasks_label == "" ||
+					settings.label == "" ||
 					settings.code == "") &&
 					(failed = true);
 				if (failed) {
