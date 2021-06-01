@@ -3,7 +3,6 @@
 		<el-table
 			v-loading="tableLoading"
 			:data="tableData"
-			style="width: 100%"
 			:default-sort="{ prop: 'uuid', order: 'descending' }"
 			@row-click="viewDetail"
 			class="data-table"

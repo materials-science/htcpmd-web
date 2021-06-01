@@ -37,6 +37,7 @@ function createService() {
 					case 200:
 					case 201:
 					case 202:
+					case 404:
 						console.log(dataAxios);
 						// return dataAxios.data
 						return dataAxios;

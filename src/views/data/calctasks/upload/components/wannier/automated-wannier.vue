@@ -253,7 +253,9 @@
 									<el-option
 										v-for="item in computers_list"
 										:key="item.uuid"
-										:label="`${item.label} - (${item.uuid})`"
+										:label="
+											`${item.label} - (${item.uuid})`
+										"
 										:value="item.uuid"
 									>
 									</el-option>
@@ -364,6 +366,45 @@
 										:key="item.uuid"
 										:label="
 											`${item.label} | ${item.computer.label} | (${item.uuid})`
+										"
+										:value="item.uuid"
+									>
+									</el-option>
+								</el-select>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- pseudo family -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag><h3>Pseudo Family</h3></el-tag>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set the pseudo_family for your
+									calculations</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-select
+									v-model="calctasks_settings.pseudo_family"
+									placeholder="Choose the pseudo_family"
+									filterable
+									default-first-option
+									remote
+									:remote-method="getPseudoFamilyList"
+									:loading="loading_pseudo_family_list"
+								>
+									<el-option
+										v-for="item in pseudo_family_list"
+										:key="item.uuid"
+										:label="
+											`${item.label} | (${item.uuid})`
 										"
 										:value="item.uuid"
 									>
@@ -898,6 +939,9 @@ export default {
 			// codes
 			loading_codes_list: false,
 			codes_list: [],
+			// pseudo family
+			loading_pseudo_family_list: false,
+			pseudo_family_list: [],
 			// protocol
 			loading_protocol: true,
 			protocols_list: [],
@@ -938,7 +982,8 @@ export default {
 							calctasks_group: "wannier",
 							should_run_relax: false,
 							should_run_dft_bands: false,
-							should_plot_bands: false
+							should_plot_bands: false,
+							pseudo_family: null
 						},
 						calctasks_options: {
 							withmpi: true,
@@ -963,6 +1008,7 @@ export default {
 				pw2wannier90_code: null,
 				projwfc_code: null,
 				wannier90_code: null,
+				pseudo_family: null,
 				protocol: null,
 				structures: [],
 				should_run_relax: false,
@@ -1065,6 +1111,25 @@ export default {
 						this.$message.error("Retrivied failed! Please retry.");
 					}
 					this.loading_codes_list = false;
+				});
+		},
+		getPseudoFamilyList(query) {
+			if (query == "") {
+				return (this.pseudo_family_list = []);
+			}
+			this.loading_pseudo_family_list = true;
+			this.$api
+				.GetList("/potentials/", {
+					label: query,
+					uuid: query
+				})
+				.then(resp => {
+					if (resp.code == 0) {
+						this.pseudo_family_list = resp.data.results;
+					} else {
+						this.$message.error("Retrivied failed! Please retry.");
+					}
+					this.loading_pseudo_family_list = false;
 				});
 		},
 		async loadData() {
@@ -1179,7 +1244,7 @@ export default {
 					settings.pw2wannier90_code == "" ||
 					settings.projwfc_code == "" ||
 					settings.wannier90_code == "" ||
-					settings.protocol == "") &&
+					!settings.protocol) &&
 					(failed = true);
 				if (failed) {
 					this.$message.error(
@@ -1193,14 +1258,17 @@ export default {
 				this.fullscreenLoading = false;
 				return false;
 			}
-			this.formData.structures = this.structures;
+			// this.formData.structures = { uuid: this.structures.uuid };
+			this.formData.structures = this.structures.map(item => {
+				return { uuid: item.uuid };
+			});
 			this.formData.calctasks_settings = this.calctasks_settings;
 			this.formData.calctasks_options = this.calctasks_options;
 			this.formData.inputs = this.inputsForm;
 			typeof callback === "function" && callback();
 		},
 		uploadSubmit() {
-			/* this.preUploadCheck(() => {
+			this.preUploadCheck(() => {
 				this.$api
 					.AddObj(
 						"/calctasks/wannier/automated_wannier/",
@@ -1211,11 +1279,11 @@ export default {
 						this.fullscreenLoading = false;
 						this.$message.success("Submit successfully!");
 					});
-			}); */
-			this.preUploadCheck(() => {
+			});
+			/* this.preUploadCheck(() => {
 				console.log(JSON.stringify(this.formData));
 				this.fullscreenLoading = false;
-			});
+			}); */
 		},
 		calctasksTypeChange(val) {
 			const type = this.calctasks_types.find(item => {

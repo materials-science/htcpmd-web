@@ -3,9 +3,9 @@
 		<el-table
 			v-loading="tableLoading"
 			:data="tableData"
-			style="width: 100%"
 			:default-sort="{ prop: 'uuid', order: 'descending' }"
 			class="data-table"
+			height="100%"
 		>
 			<el-table-column type="expand" fixed>
 				<template slot-scope="props">
@@ -17,7 +17,7 @@
 					>
 						<el-tab-pane label="Attributes">
 							<el-form
-								label-position="left"
+								label-position="top"
 								class="data-table-expand--wrap"
 							>
 								<el-form-item prop="aiida_pk" label="aiida_pk">
@@ -32,14 +32,15 @@
 										:value="props.row.dirpath"
 									></el-input>
 								</el-form-item>
-								<el-form-item
-									prop="created_time"
-									label="created time"
-								>
-									<el-input
-										disabled
-										:value="props.row.created_time"
-									></el-input>
+								<el-form-item label="created time">
+									<el-date-picker
+										v-model="props.row.created_time"
+										type="datetime"
+										placeholder="created time"
+										readonly
+										class="structure-date-picker"
+									>
+									</el-date-picker>
 								</el-form-item>
 								<el-form-item
 									prop="description"

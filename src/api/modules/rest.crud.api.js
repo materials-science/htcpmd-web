@@ -22,33 +22,39 @@ export default ({
 		});
 	},
 
-	AddObj(apiPrefix, obj = {}) {
+	AddObj(apiPrefix, obj = {}, user_info = true) {
 		return request({
 			url: apiPrefix,
 			method: "post",
-			data: Object.assign(obj, util.cookies.get("uuid"))
+			data: user_info
+				? Object.assign(obj, { user: util.cookies.get("uuid") })
+				: obj
 		});
 	},
 
-	UpdateObj(apiPrefix, obj = {}) {
+	UpdateObj(apiPrefix, obj = {}, user_info = true) {
 		return request({
 			url: apiPrefix,
 			method: "put",
-			data: Object.assign(obj, util.cookies.get("uuid"))
+			data: user_info
+				? Object.assign(obj, { user: util.cookies.get("uuid") })
+				: obj
 		});
 	},
 
-	PatchObj(apiPrefix, obj = {}) {
+	PatchObj(apiPrefix, obj = {}, user_info = true) {
 		return request({
 			url: apiPrefix,
 			method: "patch",
-			data: Object.assign(obj, util.cookies.get("uuid"))
+			data: user_info
+				? Object.assign(obj, { user: util.cookies.get("uuid") })
+				: obj
 		});
 	},
 
-	DelObj(apiPrefix, id) {
+	DelObj(apiPrefix, id, user_info = true, appendix = "/") {
 		return request({
-			url: `${apiPrefix}${id}/`,
+			url: `${apiPrefix}${id}${appendix}`,
 			method: "delete",
 			data: {
 				user: util.cookies.get("uuid")
@@ -56,18 +62,33 @@ export default ({
 		});
 	},
 
-	PartialDelObj(apiPrefix, obj = {}) {
+	PartialDelObj(apiPrefix, obj = {}, user_info = true) {
 		return request({
 			url: apiPrefix,
 			method: "delete",
-			data: Object.assign(obj, util.cookies.get("uuid"))
+			data: user_info
+				? Object.assign(obj, { user: util.cookies.get("uuid") })
+				: obj
 		});
 	},
 
-	GetObj(apiPrefix, id) {
+	GetObj(apiPrefix, id, appendix = "/", query = {}, user_info = false) {
 		return request({
-			url: `${apiPrefix}${id}/`,
-			method: "get"
+			url: `${apiPrefix}${id}${appendix}`,
+			method: "get",
+			params: user_info
+				? Object.assign(query, { user: util.cookies.get("uuid") })
+				: query
+		});
+	},
+
+	ApiRequest(apiPrefix, method = "get", obj = {}, user_info = true) {
+		return request({
+			url: apiPrefix,
+			method: method,
+			data: user_info
+				? Object.assign(obj, { user: util.cookies.get("uuid") })
+				: obj
 		});
 	},
 

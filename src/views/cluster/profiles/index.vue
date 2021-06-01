@@ -3,9 +3,9 @@
 		<el-table
 			v-loading="tableLoading"
 			:data="tableData"
-			style="width: 100%"
 			:default-sort="{ prop: 'uuid', order: 'descending' }"
 			class="data-table"
+			height="100%"
 		>
 			<el-table-column type="expand">
 				<template slot-scope="props">

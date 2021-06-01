@@ -25,14 +25,6 @@
 // 注意 这个文件里只写class
 // mixin等内容请在 public.scss 里书写
 
-// 文字相关
-.#{$prefix}-text-center {
-	text-align: center;
-}
-.#{$prefix}-text-end {
-	text-align: end;
-}
-
 // 浮动相关
 .#{$prefix}-fl {
 	float: left;
@@ -114,21 +106,80 @@ $sizes: (0, 4, 5, 8, 10, 15, 16, 20, 24, 30, 32, 40, 48);
 
 // Color
 .color-text-placeholder {
-	color: $color-text-placeholder;
+	color: $color-text-placeholder !important;
 }
 .color-text-sub {
-	color: $color-text-sub;
+	color: $color-text-sub !important;
 }
 .color-text-normal {
-	color: $color-text-normal;
+	color: $color-text-normal !important;
 }
 .color-text-main {
-	color: $color-text-main;
+	color: $color-text-main !important;
+}
+
+// text
+.#{$prefix}-text-center {
+	text-align: center;
+}
+.#{$prefix}-text-end {
+	text-align: end;
+}
+
+$el-font-sizes: (12, 13, 14, 16, 18, 20);
+@for $index from 1 to 6 {
+	.text-size-#{nth($el-font-sizes, $index)} {
+		font-size: #{nth($el-font-sizes, $index)}px !important;
+	}
+}
+
+// line-height
+$el-line-height: (1, 1.3, 1.5, 1.7, 2);
+@for $index from 1 to 5 {
+	.line-helight-#{$index} {
+		line-height: #{nth($el-line-height, $index)}px !important;
+	}
+}
+
+// background
+.no-bg {
+	background: transparent !important;
+}
+
+// board-shadow
+.box-shadow {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.shallow-box-shadow {
+	box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%) !important;
+}
+
+.no-box-shadow {
+	box-shadow: initial !important;
+}
+
+// board-radius
+$el-board-radius-sizes: (0, 2, 4, 8, 16, 30);
+@for $index from 1 to 6 {
+	.border-radius-#{nth($el-board-radius-sizes, $index)} {
+		border-radius: #{nth($el-board-radius-sizes, $index)}px !important;
+	}
 }
 
 // flex
 .flex-center-row {
 	@extend %flex-center-row;
+}
+.flex-between-row {
+	@extend %flex-row;
+	align-items: center;
+	justify-content: space-between;
+}
+.flex-around-row {
+	@extend %flex-row;
+	align-items: center;
+	justify-content: space-around;
 }
 
 .flex-end-row {
@@ -166,8 +217,9 @@ $sizes: (0, 4, 5, 8, 10, 15, 16, 20, 24, 30, 32, 40, 48);
 
 // data-table
 .data-table {
+	width: 100%;
 	.el-table__body-wrapper {
-		overflow-y: auto;
+		// overflow-y: auto;
 		@include scrollBar();
 	}
 }
@@ -188,17 +240,10 @@ $sizes: (0, 4, 5, 8, 10, 15, 16, 20, 24, 30, 32, 40, 48);
 .data-date-picker input {
 	border: none !important;
 }
-// .data-table-expand {
-// 	font-size: 0;
-// }
-// .data-table-expand label {
-// 	width: 20%;
-// 	color: #99a9bf;
-// 	font-size: 16px;
-// 	font-weight: bold;
-// }
-// .data-table-expand .el-form-item {
-// 	margin-right: 0;
-// 	margin-bottom: 0;
-// 	width: 100%;
-// }
+
+// scroll
+.d2-container-full {
+	.d2-container-full__body {
+		@include scrollBar();
+	}
+}

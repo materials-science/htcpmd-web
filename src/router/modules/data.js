@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-22 09:01:16
- * @LastEditTime: 2021-05-24 11:14:51
+ * @LastEditTime: 2021-05-31 11:00:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /web-admin-kit/src/router/modules/data.js
@@ -36,7 +36,7 @@ export default {
 		},
 		{
 			path: "structures/:uuid",
-			name: `${pre}structure-detail`,
+			name: `${pre}structure`,
 			component: _import("data/structures/detail.vue"),
 			meta: {
 				...meta,
@@ -72,6 +72,16 @@ export default {
 				...meta,
 				cache: true,
 				title: "CalcTasks Home"
+			}
+		},
+		{
+			path: "calctasks/:uuid",
+			name: `${pre}calctask`,
+			component: _import("data/calctasks/detail/index.vue"),
+			meta: {
+				...meta,
+				cache: true,
+				title: "CalcTask Detail"
 			}
 		},
 		{

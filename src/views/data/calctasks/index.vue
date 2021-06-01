@@ -3,39 +3,97 @@
 		<el-table
 			v-loading="tableLoading"
 			:data="tableData"
-			style="width: 100%"
-			:default-sort="{ prop: 'uuid', order: 'descending' }"
+			:default-sort="{ prop: 'label', order: 'descending' }"
 			@sort-change="sortChange"
 			@row-click="viewDetail"
 			class="data-table"
+			height="100%"
 		>
 			<el-table-column type="expand">
 				<template slot-scope="props">
-					<el-form
-						label-position="left"
-						inline
-						class="structure-table-expand"
-					>
-						<el-form-item label="UUID">
-							<span>{{ props.row.uuid }}</span>
-						</el-form-item>
-						<el-form-item label="calc task label">
-							<span>{{ props.row.label }}</span>
-						</el-form-item>
-						<el-form-item label="created time">
-							<el-date-picker
-								v-model="props.row.created_time"
-								type="datetime"
-								placeholder="created time"
-								readonly
-								class="structure-date-picker"
+					<el-tabs type="border-card">
+						<el-tab-pane label="Attributes">
+							<el-form
+								label-position="top"
+								class="data-table-expand--wrap"
 							>
-							</el-date-picker>
-						</el-form-item>
-					</el-form>
+								<el-form-item label="uuid">
+									<el-input
+										disabled
+										:value="props.row.uuid"
+									></el-input>
+								</el-form-item>
+								<el-form-item prop="label" label="task label">
+									<el-input
+										disabled
+										:value="props.row.label"
+									></el-input>
+								</el-form-item>
+								<el-form-item prop="aiida_pk" label="aiida pk">
+									<el-input
+										disabled
+										:value="props.row.aiida_pk"
+									></el-input>
+								</el-form-item>
+								<el-form-item label="created time">
+									<el-date-picker
+										v-model="props.row.created_time"
+										type="datetime"
+										placeholder="created time"
+										readonly
+									>
+									</el-date-picker>
+								</el-form-item>
+								<el-form-item
+									prop="description"
+									label="task description"
+								>
+									<el-input
+										disabled
+										type="textarea"
+										autosize
+										:value="props.row.description"
+									></el-input>
+								</el-form-item>
+								<el-form-item
+									prop="status_message"
+									label="status message"
+								>
+									<el-input
+										disabled
+										type="textarea"
+										autosize
+										:value="props.row.status_message"
+									></el-input>
+								</el-form-item>
+							</el-form>
+						</el-tab-pane>
+						<el-tab-pane label="User">
+							<el-form
+								label-position="left"
+								class="data-table-expand--wrap"
+							>
+								<el-form-item
+									v-for="(val, key) in props.row.user"
+									:key="key"
+									:label="key"
+								>
+									<el-input disabled :value="val"></el-input>
+								</el-form-item>
+							</el-form>
+						</el-tab-pane>
+						<el-tab-pane label="Logs">
+							<el-card>
+								<d2-highlight
+									:code="props.row.logs.join('\n')"
+									lang="bash"
+								/>
+							</el-card>
+						</el-tab-pane>
+					</el-tabs>
 				</template>
 			</el-table-column>
-			<el-table-column prop="uuid" label="uuid" sortable align="center">
+			<el-table-column prop="label" label="label" sortable align="center">
 			</el-table-column>
 			<!-- TODO: Filter -->
 			<el-table-column
@@ -44,7 +102,7 @@
 				align="center"
 			>
 			</el-table-column>
-			<el-table-column label="structure" align="center">
+			<el-table-column prop="structure.formula" label="structure" sortable align="center">
 				<template slot-scope="props">
 					<el-button
 						@click.native.prevent="
@@ -69,7 +127,7 @@
 						type="datetime"
 						placeholder="created time"
 						readonly
-						class="structure-date-picker"
+						class="data-date-picker"
 					>
 					</el-date-picker>
 				</template>
@@ -81,7 +139,14 @@
 				align="center"
 			>
 			</el-table-column>
-			<el-table-column prop="status" label="status" align="center">
+			<el-table-column prop="user.username" label="user" align="center">
+			</el-table-column>
+			<el-table-column
+				prop="status"
+				label="status"
+				sortable
+				align="center"
+			>
 				<template slot-scope="props">
 					<i
 						class="el-icon-warning-outline"
@@ -112,6 +177,37 @@
 			</el-table-column>
 		</el-table>
 		<template slot="footer">
+			<el-row :gutter="20" class="color-text-sub d2-text-center d2-m-10">
+				<el-col class="flex-center-row">
+					<span class="d2-mr-10">Tasks</span>
+					<el-tag class="d2-mr-10" effect="plain" size="small"
+						>{{ calctasks_info.count }} pending</el-tag
+					>
+					<span class="d2-mr-10">Checking Interval</span>
+					<el-tag class="d2-mr-10" effect="plain" size="small"
+						>{{ calctasks_info.check_interval_time }} s</el-tag
+					>
+					<span class="d2-mr-10">Last Checking Date</span>
+					<el-tag class="d2-mr-10" effect="plain" size="small">{{
+						dayjs(calctasks_info.last_check_tasks_date).format(
+							"YYYY-M-D HH:mm:ss"
+						)
+					}}</el-tag>
+					<span class="d2-mr-10">daemon</span>
+					<!-- <el-tag class="d2-mr-10" effect="plain" size="small">{{
+					calctasks_info.daemon.status
+				}}</el-tag> -->
+					<el-button
+						:type="
+							calctasks_info.daemon.is_running
+								? 'success'
+								: 'danger'
+						"
+						circle
+						size="mini"
+					></el-button>
+				</el-col>
+			</el-row>
 			<el-pagination
 				background
 				@size-change="handlePageSizeChange"
@@ -134,11 +230,13 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 const apiPrefix = "/calctasks/";
 export default {
 	name: "data-calctasks",
 	data() {
 		return {
+			dayjs,
 			tableData: [
 				{
 					uuid: "1325121640423690200",
@@ -174,10 +272,25 @@ export default {
 			currentPage: 1,
 			totalCount: 0,
 			pageSize: 10,
-			queryForm: {}
+			queryForm: {},
+			calctasks_info: {
+				daemon: {},
+				count: 0,
+				last_check_tasks_date: null
+			},
+			loading_calctasks_info: true
 		};
 	},
 	methods: {
+		getTasksInfo() {
+			return this.$api.ApiRequest(`${apiPrefix}info`).then(resp => {
+				if (resp.code == 0) {
+					this.calctasks_info = resp.data;
+					this.loading_calctasks_info = false;
+					console.log(this.calctasks_info);
+				}
+			});
+		},
 		pageRequest(
 			page = this.currentPage,
 			size = this.pageSize,
@@ -250,6 +363,7 @@ export default {
 			this.totalCount = data.count;
 			this.tableLoading = false;
 		});
+		this.getTasksInfo();
 	}
 };
 </script>
@@ -259,14 +373,5 @@ export default {
 	position: absolute;
 	right: 16px;
 	bottom: 16px;
-}
-</style>
-<style lang="scss">
-.upload-calctasks-container {
-	.data-table {
-		.el-table__body-wrapper {
-			@include scrollBar();
-		}
-	}
 }
 </style>

@@ -17,18 +17,21 @@ import "./crud";
 
 import vuetify from "@/plugin/vuetify";
 
-// 核心插件
-Vue.use(d2Admin);
-
 // verify plugin
 import SlideVerify from "vue-monoplasty-slide-verify";
-Vue.use(SlideVerify);
 
 // util
 import util from "@/libs/util";
 
+// style
+// import "@/assets/style/public-class.scss";
+
 // vue native socket
 import VueNativeSock from "vue-native-websocket";
+
+Vue.use(d2Admin);
+
+Vue.use(SlideVerify);
 
 Vue.use(VueNativeSock, util.getWebsocketUrl(), {
 	store: store,
