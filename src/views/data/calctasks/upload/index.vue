@@ -12,12 +12,16 @@
 				:key="category.uuid"
 				:name="category.uuid"
 			>
-				<el-card class="box-card d2-card" shadow="hover">
+				<el-card class="box-card d2-card d2-mt-16" shadow="hover">
 					<div slot="header" class="d2-text-center">
 						<span>{{ category.category_name }}</span>
 					</div>
 					<el-progress
-						:percentage="percentage"
+						:percentage="
+							parseFloat(
+								(Math.random() * 100 * index) / 10
+							).toFixed(0)
+						"
 						:color="customColorMethod"
 					></el-progress>
 					<div class="d2-text-center d2-mt-20">
@@ -31,9 +35,24 @@
 							:type="category.disabled ? 'danger' : 'primary'"
 							plain
 							@click.native.prevent.stop="
-								AddNewTasks(category.uuid, category.category_name)
+								AddNewTasks(
+									category.uuid,
+									category.category_name
+								)
 							"
 							>New Task</el-button
+						>
+						<el-button
+							icon="el-icon-reading"
+							:disabled="category.disabled"
+							:type="category.disabled ? 'danger' : 'primary'"
+							plain
+							@click.native.prevent.stop="
+								goToDocsPage(
+									'http://aiida-shengbte.ias.poryoung.cn/index.html'
+								)
+							"
+							>Watch Docs</el-button
 						>
 					</div>
 				</el-card>

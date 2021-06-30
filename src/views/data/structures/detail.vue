@@ -351,6 +351,9 @@
 						</el-row>
 					</el-col>
 					<el-col class="button-box" :xl="8" :md="8">
+						<el-row class="d2-mb-20 color-text-normal">
+							<h3>Data Info</h3>
+						</el-row>
 						<el-row class="data-info" v-if="attributes.bands.data">
 							<!-- Update Date -->
 							<el-row :gutter="20" type="flex" align="middle">
@@ -435,6 +438,70 @@
 								>Upload</el-button
 							>
 						</el-row>
+						<!-- supplement -->
+						<el-row class="d2-mb-20 color-text-normal">
+							<h3>Data Supplement</h3>
+						</el-row>
+						<el-row
+							class="data-info"
+							v-if="attributes.bands.supplement.filepath"
+						>
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											File
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										<el-link
+											type="primary"
+											:href="
+												attributes.bands.supplement
+													.filepath
+											"
+											>{{
+												attributes.bands.supplement.name
+											}}</el-link
+										>
+									</div>
+								</el-col>
+							</el-row>
+						</el-row>
+						<el-row>
+							<el-row class="cover">
+								<el-upload
+									class="upload-box"
+									action=""
+									drag
+									ref="uploadBandSupplement"
+									:auto-upload="false"
+									:file-list="bandFileSupllement"
+									:http-request="bandFileSupllementUpload"
+									:multiple="false"
+									:limit="1"
+								>
+									<i class="el-icon-upload"></i>
+									<div class="el-upload__text">
+										Drag here, or <em>click to upload</em>
+									</div>
+									<div class="el-upload__tip" slot="tip">
+										Mind the format of your file, tap file
+										name to preview.
+									</div>
+								</el-upload>
+							</el-row>
+							<el-row>
+								<el-button
+									type="success"
+									plain
+									@click="submitBandSupplementUpload"
+									>Upload supplement</el-button
+								>
+							</el-row>
+						</el-row>
 					</el-col>
 				</el-row>
 			</el-tab-pane>
@@ -465,6 +532,9 @@
 						</el-row>
 					</el-col>
 					<el-col class="button-box" :xl="8" :md="8">
+						<el-row class="d2-mb-20 color-text-normal">
+							<h3>Data Info</h3>
+						</el-row>
 						<el-row
 							class="data-info"
 							v-if="attributes.phonons.data"
@@ -552,10 +622,164 @@
 								>Upload</el-button
 							>
 						</el-row>
+						<!-- supplement -->
+						<el-row class="d2-mb-20 color-text-normal">
+							<h3>Data Supplement</h3>
+						</el-row>
+						<el-row
+							class="data-info"
+							v-if="attributes.phonons.supplement.filepath"
+						>
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											File
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										<el-link
+											type="primary"
+											:href="
+												attributes.phonons.supplement
+													.filepath
+											"
+											>{{
+												attributes.phonons.supplement
+													.name
+											}}</el-link
+										>
+									</div>
+								</el-col>
+							</el-row>
+						</el-row>
+						<el-row>
+							<el-row class="cover">
+								<el-upload
+									class="upload-box"
+									action=""
+									drag
+									ref="uploadPhononSupplement"
+									:auto-upload="false"
+									:file-list="phononFileSupllement"
+									:http-request="phononFileSupllementUpload"
+									:multiple="false"
+									:limit="1"
+								>
+									<i class="el-icon-upload"></i>
+									<div class="el-upload__text">
+										Drag here, or <em>click to upload</em>
+									</div>
+									<div class="el-upload__tip" slot="tip">
+										Mind the format of your file, tap file
+										name to preview.
+									</div>
+								</el-upload>
+							</el-row>
+							<el-row>
+								<el-button
+									type="success"
+									plain
+									@click="submitPhononSupplementUpload"
+									>Upload supplement</el-button
+								>
+							</el-row>
+						</el-row>
 					</el-col>
 				</el-row>
 			</el-tab-pane>
-			<el-tab-pane label="Conductivity"></el-tab-pane>
+			<el-tab-pane label="Conductivity">
+				<!-- <d2-container-frame
+					:src="attributes.phonons.supplement.filepath"
+				/> -->
+				<el-row :gutter="20" justify="space-around">
+					<el-col class="chart-box" :xl="16" :md="16">
+						<iframe
+							v-for="sup in attributes.mobility.supplement.files"
+							:key="sup.id"
+							class="pdf-container-frame"
+							:src="sup.filepath"
+							frameborder="0"
+							seamless
+						/>
+					</el-col>
+					<el-col class="button-box" :xl="8" :md="8">
+						<el-row class="d2-mb-20 color-text-normal">
+							<h3>Data Supllement</h3>
+						</el-row>
+						<el-row class="data-info" v-if="attributes.mobility">
+							<!-- Update Date -->
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											Update Date
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										{{ attributes.mobility.date }}
+									</div>
+								</el-col>
+							</el-row>
+							<!-- Update By -->
+							<el-row :gutter="20" type="flex" align="middle">
+								<el-col :span="DetailSpan / 3">
+									<div class="label">
+										<el-tag effect="plain">
+											Update By
+										</el-tag>
+									</div>
+								</el-col>
+								<el-col :span="(DetailSpan * 2) / 3">
+									<div class="content">
+										<router-link to="/users">
+											<el-link type="primary"
+												>UUID
+												{{
+													attributes.mobility.user
+												}}</el-link
+											>
+										</router-link>
+									</div>
+								</el-col>
+							</el-row>
+						</el-row>
+						<el-row class="cover">
+							<el-upload
+								class="upload-box"
+								action=""
+								drag
+								ref="uploadMobilitySupplement"
+								:auto-upload="false"
+								:file-list="mobilityFileSupllement"
+								:http-request="mobilityFileSupllementUpload"
+								:multiple="true"
+							>
+								<i class="el-icon-upload"></i>
+								<div class="el-upload__text">
+									Drag here, or <em>click to upload</em>
+								</div>
+								<div class="el-upload__tip" slot="tip">
+									Mind the format of your file, tap file name
+									to preview.
+								</div>
+							</el-upload>
+						</el-row>
+						<el-row>
+							<el-button
+								type="success"
+								plain
+								@click="submitMobilitySupplementUpload"
+								>Upload Supplement</el-button
+							>
+						</el-row>
+					</el-col>
+				</el-row>
+			</el-tab-pane>
 		</el-tabs>
 	</d2-container>
 </template>
@@ -582,6 +806,7 @@ import {
 	DataZoomComponent
 } from "echarts/components";
 import { default as VChart, THEME_KEY } from "vue-echarts";
+import d2ContainerFrame from "@/components/d2-container-frame";
 use([
 	CanvasRenderer,
 	LineChart,
@@ -591,13 +816,14 @@ use([
 	GridComponent,
 	DataZoomComponent
 ]);
-
+import { errorCreate } from "@/api/tools";
 // TODO: hidden charts that donot need to show
 export default {
 	name: "data-structure",
 	components: {
 		VChart,
-		NumberTable
+		NumberTable,
+		d2ContainerFrame
 	},
 	provide: {
 		// [THEME_KEY]: "dark"
@@ -621,7 +847,11 @@ export default {
 			viewerLoading: false,
 			viewerCoverTip: true,
 			phononFileList: [],
+			phononFileSupllement: [],
 			bandFileList: [],
+			bandFileSupllement: [],
+			mobilityFileList: [],
+			mobilityFileSupllement: [],
 			phononChartOption: null,
 			bandChartOption: null,
 			loadingPhononData: false,
@@ -647,8 +877,27 @@ export default {
 					cell: [],
 					reciprocal_cell: [],
 					center_of_mass: [],
-					phonons: { data: null, user: null, date: null, type: "" },
-					bands: { data: null, user: null, date: null, type: "" }
+					phonons: {
+						data: null,
+						user: null,
+						date: null,
+						type: "",
+						supplement: {}
+					},
+					bands: {
+						data: null,
+						user: null,
+						date: null,
+						type: "",
+						supplement: {}
+					},
+					mobility: {
+						data: null,
+						user: null,
+						date: null,
+						type: "",
+						supplement: {}
+					}
 				},
 				this.structure.attributes
 			);
@@ -877,6 +1126,15 @@ export default {
 				this.fullscreenLoading = false;
 			};
 		},
+		phononFileSupllementUpload(event) {
+			const file = event.file;
+			const ext = file.name.substring(file.name.lastIndexOf("."));
+			if ([".pdf"].includes(ext)) {
+				return this.phononFileSupllementFileData.append("file", file);
+			}
+			this.fullscreenLoading = false;
+			errorCreate("ERROR: File type Not support");
+		},
 		bandFileChange(file, fileList) {
 			this.fullscreenLoading = true;
 			const reader = new FileReader();
@@ -911,6 +1169,24 @@ export default {
 				}
 				this.fullscreenLoading = false;
 			};
+		},
+		bandFileSupllementUpload(event) {
+			const file = event.file;
+			const ext = file.name.substring(file.name.lastIndexOf("."));
+			if ([".pdf"].includes(ext)) {
+				return this.bandFileSupllementFileData.append("file", file);
+			}
+			this.fullscreenLoading = false;
+			errorCreate("ERROR: File type Not support");
+		},
+		mobilityFileSupllementUpload(event) {
+			const file = event.file;
+			const ext = file.name.substring(file.name.lastIndexOf("."));
+			if ([".pdf"].includes(ext)) {
+				return this.mobilityFileSupllementFileData.append("file", file);
+			}
+			this.fullscreenLoading = false;
+			errorCreate("ERROR: File type Not support");
 		},
 		loadPhononData(fileString) {
 			let option = {
@@ -1344,6 +1620,37 @@ export default {
 				callback();
 			}
 		},
+		submitPhononSupplementUpload() {
+			this.fullscreenLoading = true;
+			let callback = () => {
+				this.phononFileSupllementFileData = new FormData();
+				this.$refs.uploadPhononSupplement.submit();
+				this.phononFileSupllementFileData.append(
+					"form",
+					JSON.stringify({
+						uuid: this.structure.uuid,
+						user: util.cookies.get("uuid"),
+						type: "pdf"
+					})
+				);
+				this.$api
+					.AddObj(
+						"/structures/phonons/supplement/",
+						this.phononFileSupllementFileData
+					)
+					.then(resp => {
+						if (resp.code == 0) {
+							this.structure = resp.data;
+							this.phononFileSupllement = [];
+							this.fullscreenLoading = false;
+							this.$message.success("Submit successfully!");
+						} else {
+							this.$message.error(resp.code);
+						}
+					});
+			};
+			callback();
+		},
 		submitBandUpload() {
 			if (this.bandFileList.length == 0) {
 				return this.$notify.info("You have to choose a file.");
@@ -1351,7 +1658,7 @@ export default {
 			this.fullscreenLoading = true;
 			let callback = () => {
 				this.$api
-					.AddObj("/structures/band/", {
+					.AddObj("/structures/bands/", {
 						uuid: this.structure.uuid,
 						user: util.cookies.get("uuid"),
 						data: this.bandFileString,
@@ -1388,6 +1695,68 @@ export default {
 			} else {
 				callback();
 			}
+		},
+		submitBandSupplementUpload() {
+			this.fullscreenLoading = true;
+			let callback = () => {
+				this.bandFileSupllementFileData = new FormData();
+				this.$refs.uploadBandSupplement.submit();
+				this.bandFileSupllementFileData.append(
+					"form",
+					JSON.stringify({
+						uuid: this.structure.uuid,
+						user: util.cookies.get("uuid"),
+						type: "pdf"
+					})
+				);
+				this.$api
+					.AddObj(
+						"/structures/bands/supplement/",
+						this.bandFileSupllementFileData
+					)
+					.then(resp => {
+						if (resp.code == 0) {
+							this.structure = resp.data;
+							this.bandFileSupllement = [];
+							this.fullscreenLoading = false;
+							this.$message.success("Submit successfully!");
+						} else {
+							this.$message.error(resp.code);
+						}
+					});
+			};
+			callback();
+		},
+		submitMobilitySupplementUpload() {
+			this.fullscreenLoading = true;
+			let callback = () => {
+				this.mobilityFileSupllementFileData = new FormData();
+				this.$refs.uploadMobilitySupplement.submit();
+				this.mobilityFileSupllementFileData.append(
+					"form",
+					JSON.stringify({
+						uuid: this.structure.uuid,
+						user: util.cookies.get("uuid"),
+						type: "pdf"
+					})
+				);
+				this.$api
+					.AddObj(
+						"/structures/mobility/supplement/",
+						this.mobilityFileSupllementFileData
+					)
+					.then(resp => {
+						if (resp.code == 0) {
+							this.structure = resp.data;
+							this.mobilityFileSupllement = [];
+							this.fullscreenLoading = false;
+							this.$message.success("Submit successfully!");
+						} else {
+							this.$message.error(resp.code);
+						}
+					});
+			};
+			callback();
 		},
 		exportChartData(chart, type) {
 			let data = null;
@@ -1606,6 +1975,11 @@ export default {
 		canvas {
 			padding: 8px !important;
 		}
+	}
+	.pdf-container-frame {
+		text-align: center;
+		height: 50%;
+		width: 100%;
 	}
 }
 </style>

@@ -1,271 +1,72 @@
 <template>
 	<d2-container class="data-calctasks-upload-qe-pw">
-		<el-row type="flex" justify="center">
+		<!-- title -->
+		<el-row>
 			<el-col :xl="16"
 				><h1>{{ TaskInfo.title }}</h1></el-col
 			>
 		</el-row>
-		<!-- Load Template -->
-		<el-row type="flex" justify="center">
-			<el-col :xl="16">
-				<el-divider content-position="center"
-					><el-tag effect="plain"
-						><h2>Load Template</h2></el-tag
-					></el-divider
-				>
-			</el-col>
-		</el-row>
-		<el-row>
-			<el-row type="flex" justify="center">
-				<el-col :xl="16"
-					><el-tag><h3>Load Template</h3></el-tag>
-				</el-col>
-			</el-row>
-			<el-row type="flex" justify="center">
-				<el-col :xl="16">
-					<el-divider content-position="left"
-						>Load parameters from a template</el-divider
-					>
-				</el-col>
-			</el-row>
-			<el-row type="flex" justify="center">
-				<el-col :xl="16">
-					<el-select
-						v-model="params_templates_selected"
-						placeholder="Choose A Template"
-						filterable
-						default-first-option
-						remote
-						@change="params_templates_changed"
-					>
-						<el-option
-							v-for="item in params_templates_list"
-							:key="item.id"
-							:label="`${item.label} - (${item.id})`"
-							:value="item.id"
-						>
-						</el-option>
-					</el-select>
-				</el-col>
-			</el-row>
-		</el-row>
-		<!-- Task Settings -->
-		<el-row type="flex" justify="center">
-			<el-col :xl="16">
-				<el-divider content-position="center"
-					><el-tag effect="plain"
-						><h2>{{ TaskInfo.title }} Task Settings</h2></el-tag
-					></el-divider
-				>
-			</el-col>
-		</el-row>
-		<div class="form-box">
-			<!-- CalcJob Label -->
+		<!-- Load Template and Structure -->
+		<el-row class="form-box">
+			<!-- Load Template -->
 			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>CalcTask Label</h3></el-tag></el-col
+				<el-col :xl="16">
+					<el-divider content-position="center"
+						><el-tag effect="plain"
+							><h2>Load Template</h2></el-tag
+						></el-divider
 					>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-row>
+					<el-col :xl="16"
+						><el-tag><h3>Load Template</h3></el-tag>
+					</el-col>
 				</el-row>
-				<el-row type="flex" justify="center">
+				<el-row>
 					<el-col :xl="16">
 						<el-divider content-position="left"
-							>Set a label for your task</el-divider
+							>Load parameters from a template</el-divider
 						>
 					</el-col>
 				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-input v-model="label"></el-input>
-					</el-col>
-				</el-row>
-			</el-row>
-			<!-- CalcJob Type -->
-			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>CalcTask Type</h3></el-tag></el-col
-					>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-divider content-position="left">
-							Select calculations or workchains model you
-							want</el-divider
-						>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
+				<el-row>
 					<el-col :xl="16">
 						<el-select
-							v-model="calctasks_type_selected_id"
-							placeholder="Choose A Type"
+							v-model="params_templates_selected"
+							placeholder="Choose A Template"
+							filterable
 							default-first-option
-							:loading="load_calctasks_types"
-							@change="calctasksTypeChange"
+							remote
+							@change="paramsTemplatesChange"
 						>
 							<el-option
-								v-for="item in calctasks_types"
-								:key="item.value"
+								v-for="(item, index) in params_templates_list"
+								:key="item.label"
 								:label="item.label"
-								:value="item.value"
+								:value="index"
 							>
 							</el-option>
 						</el-select>
-					</el-col>
-				</el-row>
-			</el-row>
-			<!-- Computer -->
-			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>Computer</h3></el-tag>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-divider content-position="left"
-							>Set a computer where your calculations submit
-							to</el-divider
-						>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-select
-							v-model="computers_selected"
-							placeholder="Choose A Computer"
-							filterable
-							default-first-option
-							remote
-							:remote-method="getComputersList"
-							:loading="loading_computers_list"
-						>
-							<el-option
-								v-for="item in computers_list"
-								:key="item.uuid"
-								:label="`${item.label} - (${item.uuid})`"
-								:value="item.uuid"
-							>
-							</el-option>
-						</el-select>
-					</el-col>
-				</el-row>
-			</el-row>
-			<!-- code -->
-			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>Code</h3></el-tag></el-col
-					>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-divider content-position="left"
-							>Set a code for your calculations
-						</el-divider>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-select
-							v-model="codes_selected"
-							placeholder="Choose A Code"
-							filterable
-							default-first-option
-							remote
-							:remote-method="getCodesList"
-							:loading="loading_codes_list"
-						>
-							<el-option
-								v-for="item in codes_list"
-								:key="item.uuid"
-								:label="`${item.label} - (${item.uuid})`"
-								:value="item.uuid"
-							>
-							</el-option>
-						</el-select>
-					</el-col>
-				</el-row>
-			</el-row>
-			<!-- pseudo family -->
-			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>Pseudo Family</h3></el-tag></el-col
-					>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-divider content-position="left"
-							>Set the pseudo_family for your calculations
-						</el-divider>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-select
-							v-model="pseudo_family_selected"
-							placeholder="Choose the pseudo_family"
-							filterable
-							default-first-option
-							remote
-							:remote-method="getPseudoFamilyList"
-							:loading="loading_pseudo_family_list"
-						>
-							<el-option
-								v-for="item in pseudo_family_list"
-								:key="item.uuid"
-								:label="`${item.label} - (${item.uuid})`"
-								:value="item.uuid"
-							>
-							</el-option>
-						</el-select>
-					</el-col>
-				</el-row>
-			</el-row>
-			<!-- CalcJob Description -->
-			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>CalcTask Description</h3></el-tag></el-col
-					>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-divider content-position="left"
-							>Description of your task</el-divider
-						>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-input
-							type="textarea"
-							:autosize="{ minRows: 2 }"
-							placeholder=""
-							v-model="calctasks_description"
-							show-word-limit
-						>
-						</el-input>
 					</el-col>
 				</el-row>
 			</el-row>
 			<!-- Structures -->
 			<el-row>
-				<el-row type="flex" justify="center">
+				<el-row>
 					<el-col :xl="16"
 						><el-tag><h3>Structures</h3></el-tag></el-col
 					>
 				</el-row>
-				<el-row type="flex" justify="center">
+				<el-row>
 					<el-col :xl="16">
 						<el-divider content-position="left"
 							>Set Structures for your calculations</el-divider
 						>
 					</el-col>
 				</el-row>
-				<el-row type="flex" justify="center">
+				<el-row>
 					<el-col :xl="16">
 						<el-table
 							:data="structures"
@@ -355,55 +156,372 @@
 					</el-col>
 				</el-row>
 			</el-row>
-			<!-- number of machines -->
-			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag><h3>num_machines</h3></el-tag></el-col
-					>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-divider content-position="left"
-							>Set number of machines</el-divider
-						>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-input-number
-							v-model="num_machines"
-							:min="1"
-						></el-input-number>
-					</el-col>
-				</el-row>
+		</el-row>
+		<el-row>
+			<el-row type="flex" justify="center">
+				<el-col :xl="16"
+					><el-tag><h3>Load Template</h3></el-tag>
+				</el-col>
 			</el-row>
-			<!-- process per machine -->
-			<el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16"
-						><el-tag
-							><h3>num_mpiprocs_per_machine</h3></el-tag
-						></el-col
+			<el-row type="flex" justify="center">
+				<el-col :xl="16">
+					<el-divider content-position="left"
+						>Load parameters from a template</el-divider
 					>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-divider content-position="left"
-							>Set number of mpi process per machine</el-divider
-						>
-					</el-col>
-				</el-row>
-				<el-row type="flex" justify="center">
-					<el-col :xl="16">
-						<el-input-number
-							v-model="num_mpiprocs_per_machine"
-							:min="1"
-						></el-input-number>
-					</el-col>
-				</el-row>
+				</el-col>
 			</el-row>
-		</div>
+			<el-row type="flex" justify="center">
+				<el-col :xl="16">
+					<el-select
+						v-model="params_templates_selected"
+						placeholder="Choose A Template"
+						filterable
+						default-first-option
+						remote
+						@change="params_templates_changed"
+					>
+						<el-option
+							v-for="item in params_templates_list"
+							:key="item.id"
+							:label="`${item.label} - (${item.id})`"
+							:value="item.id"
+						>
+						</el-option>
+					</el-select>
+				</el-col>
+			</el-row>
+		</el-row>
+		<!-- Task Settings and Options-->
+		<el-row type="flex" justify="center">
+			<!-- Task Settings -->
+			<el-col :xl="12">
+				<el-divider content-position="center"
+					><el-tag effect="plain"
+						><h2>{{ TaskInfo.title }} Task Settings</h2></el-tag
+					></el-divider
+				>
+				<div class="form-box">
+					<!-- CalcJob Label -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag
+									><h3>CalcTask Label</h3></el-tag
+								></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set a label for your task</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-input
+									v-model="calctasks_settings.label"
+								></el-input>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- CalcJob Type -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag><h3>CalcTask Type</h3></el-tag></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left">
+									Select calculations or workchains model you
+									want</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-select
+									v-model="calctasks_settings.calctasks_type"
+									placeholder="Choose A Type"
+									default-first-option
+									:loading="load_calctasks_types"
+									@change="calctasksTypeChange"
+								>
+									<el-option
+										v-for="item in calctasks_types"
+										:key="item.value"
+										:label="item.label"
+										:value="item.value"
+									>
+									</el-option>
+								</el-select>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- Computer -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag><h3>Computer</h3></el-tag>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set a computer where your calculations
+									submit to</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-select
+									v-model="calctasks_settings.computer"
+									placeholder="Choose A Computer"
+									filterable
+									default-first-option
+									remote
+									:remote-method="getComputersList"
+									:loading="loading_computers_list"
+								>
+									<el-option
+										v-for="item in computers_list"
+										:key="item.uuid"
+										:label="
+											`${item.label} - (${item.uuid})`
+										"
+										:value="item.uuid"
+									>
+									</el-option>
+								</el-select>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- code -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag
+									><h3>Executable Codes</h3></el-tag
+								></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set codes for your calculations
+								</el-divider>
+							</el-col>
+						</el-row>
+						<el-row>
+							<!-- pw code -->
+							<el-col :xl="6" :sm="12">
+								<el-select
+									v-model="calctasks_settings.pw_code"
+									placeholder="PW Code"
+									filterable
+									default-first-option
+									remote
+									:remote-method="getCodesList"
+									:loading="loading_codes_list"
+								>
+									<el-option
+										v-for="item in codes_list"
+										:key="item.uuid"
+										:label="
+											`${item.label} | ${item.computer.label} | (${item.uuid})`
+										"
+										:value="item.uuid"
+									>
+									</el-option>
+								</el-select>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- pseudo family -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag><h3>Pseudo Family</h3></el-tag>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set the pseudo_family for your
+									calculations</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-select
+									v-model="calctasks_settings.pseudo_family"
+									placeholder="Choose the pseudo_family"
+									filterable
+									default-first-option
+									remote
+									:remote-method="getPseudoFamilyList"
+									:loading="loading_pseudo_family_list"
+								>
+									<el-option
+										v-for="item in pseudo_family_list"
+										:key="item.uuid"
+										:label="
+											`${item.label} | (${item.uuid})`
+										"
+										:value="item.uuid"
+									>
+									</el-option>
+								</el-select>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- CalcJob Description -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag
+									><h3>CalcTask Description</h3></el-tag
+								></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Description of your task</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-input
+									type="textarea"
+									:autosize="{ minRows: 2 }"
+									placeholder=""
+									v-model="
+										calctasks_settings.calctasks_description
+									"
+									show-word-limit
+								>
+								</el-input>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- CalcJob Group -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag
+									><h3>CalcTask Group</h3></el-tag
+								></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set a group for your task</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-input
+									v-model="calctasks_settings.calctasks_group"
+								></el-input>
+							</el-col>
+						</el-row>
+					</el-row>
+				</div>
+			</el-col>
+			<!-- Task Options -->
+			<el-col :xl="12">
+				<el-divider content-position="center"
+					><el-tag effect="plain"
+						><h2>{{ TaskInfo.title }} Task Settings</h2></el-tag
+					></el-divider
+				>
+				<div class="form-box">
+					<!-- number of machines -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag><h3>num_machines</h3></el-tag></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set number of machines</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-input-number
+									v-model="calctasks_settings.num_machines"
+									:min="1"
+									:precision="0"
+								></el-input-number>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- process per machine -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag
+									><h3>num_mpiprocs_per_machine</h3></el-tag
+								></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set number of mpi process per
+									machine</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-input-number
+									v-model="
+										calctasks_settings.num_mpiprocs_per_machine
+									"
+									:min="1"
+									:precision="0"
+								></el-input-number>
+							</el-col>
+						</el-row>
+					</el-row>
+					<!-- PBS queue -->
+					<el-row>
+						<el-row>
+							<el-col :xl="16"
+								><el-tag><h3>queue</h3></el-tag></el-col
+							>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-divider content-position="left"
+									>Set queue of PBS</el-divider
+								>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :xl="16">
+								<el-input
+									v-model="calctasks_settings.queue"
+								></el-input>
+							</el-col>
+						</el-row>
+					</el-row>
+				</div>
+			</el-col>
+		</el-row>
 		<!-- Parameters -->
 		<el-row type="flex" justify="center">
 			<el-col :xl="16">
@@ -567,14 +685,14 @@
 								></el-input-number>
 							</el-form-item>
 							<el-form-item
-								label="set_2d_mesh(optional)"
-								prop="set_2d_mesh"
+								label="system_2d(optional)"
+								prop="system_2d"
 							>
 								<p class="color-text-sub">
 									Set mesh [x, x, 1] if this value si True.
 								</p>
 								<el-switch
-									v-model="inputsForm.set_2d_mesh"
+									v-model="inputsForm.system_2d"
 									active-text="True"
 									inactive-text="False"
 								>
@@ -773,12 +891,11 @@ export default {
 				title: "PW"
 			},
 			label: "",
-			calctasks_type_selected_id: null,
-			calctasks_type_selected: "pw",
+			calctasks_type_selected: "pw_base",
 			calctasks_types: [
 				{
 					label: "PW",
-					value: "pw"
+					value: "pw_base"
 				},
 				{
 					label: "PW_Relax",
@@ -790,9 +907,9 @@ export default {
 				}
 			],
 			load_calctasks_types: true,
-			calctasks_description: "",
-			structures: [],
+			// structures
 			loading_structures: true,
+			structures: [],
 			new_structure_id: "",
 			// computers
 			loading_computers_list: false,
@@ -801,13 +918,12 @@ export default {
 			// codes
 			loading_codes_list: false,
 			codes_list: [],
-			codes_selected: "",
 			// pseudo family
 			loading_pseudo_family_list: false,
 			pseudo_family_list: [],
-			pseudo_family_selected: "",
-			num_machines: 1,
-			num_mpiprocs_per_machine: 1,
+			// protocol
+			loading_protocol: true,
+			protocols_list: [],
 			// parameters
 			inputsForm: {
 				relaxation_scheme: "vc-relax",
@@ -817,7 +933,10 @@ export default {
 				kpoints_distance: 0.1,
 				nbands_factor: 0,
 				bands_kpoints_distance: 0.1,
-				set_2d_mesh: true
+				kpoints_mesh: [0, 0, 0],
+				cutoff: null,
+				dual: null,
+				system_2d: true
 			},
 			inputsFormRules: {},
 			parametersForm: {

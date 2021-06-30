@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-22 09:01:16
- * @LastEditTime: 2021-05-31 11:00:40
+ * @LastEditTime: 2021-06-17 16:51:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /web-admin-kit/src/router/modules/data.js
@@ -134,6 +134,18 @@ export default {
 				...meta,
 				cache: true,
 				title: "Upload Automated Wannier CalcTasks"
+			}
+		},
+        {
+			path: "upload/calctasks/BTE4ElPh",
+			name: `${pre}calctasks-upload-BTE4ElPh`,
+			component: _import(
+				"data/calctasks/upload/components/BTE4ElPh"
+			),
+			meta: {
+				...meta,
+				cache: true,
+				title: "Upload BTE4ElPh CalcTasks"
 			}
 		}
 	])("data-")

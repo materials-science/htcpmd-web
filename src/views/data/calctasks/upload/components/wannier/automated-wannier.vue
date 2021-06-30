@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-calctasks-upload-qe-pw">
+	<d2-container class="data-calctasks-upload-wannier-automated_wannier">
 		<el-row>
 			<el-col :xl="16"
 				><h1>{{ TaskInfo.title }}</h1></el-col
@@ -602,61 +602,6 @@
 								></el-switch>
 							</el-form-item>
 						</el-form>
-						<!-- <el-row>
-							<el-col :xl="16">
-								<el-divider content-position="left"
-									>run dft bands</el-divider
-								>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :xl="16">
-								<el-switch
-									v-model="
-										calctasks_settings.should_run_dft_bands
-									"
-									active-text="True"
-									inactive-text="False"
-								></el-switch>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :xl="16">
-								<el-divider content-position="left"
-									>Whether or not to plot bands</el-divider
-								>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :xl="16">
-								<el-switch
-									v-model="
-										calctasks_settings.should_plot_bands
-									"
-									active-text="True"
-									inactive-text="False"
-								></el-switch>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :xl="16">
-								<el-divider content-position="left"
-									>Whether or not to relax
-									structure</el-divider
-								>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :xl="16">
-								<el-switch
-									v-model="
-										calctasks_settings.should_run_relax
-									"
-									active-text="True"
-									inactive-text="False"
-								></el-switch>
-							</el-col>
-						</el-row> -->
 					</el-row>
 				</div>
 			</el-col>
