@@ -413,10 +413,10 @@ export default {
 			this.totalCount = data.count;
 			this.tableLoading = false;
 		});
-		this.$store.dispatch("d2admin/page/update", {
-			tagName: this.$route.fullPath,
-			title: `search-${this.$route.query.elements}`
-		});
+		// this.$store.dispatch("d2admin/page/update", {
+		// 	tagName: this.$route.fullPath,
+		// 	title: `search-${this.$route.query.elements}`
+		// });
 	},
 	beforeCreate() {
 		if (!this.$route.query.elements || !this.$route.query.mode) {

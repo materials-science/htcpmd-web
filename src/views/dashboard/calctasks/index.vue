@@ -520,12 +520,11 @@ export default {
 						count: data.count,
 						last_check_tasks_date: data.last_check_tasks_date
 					};
-					this.loading_daemon_status &&
-						(this.loading_daemon_status = false);
 				}
 			} else {
 				this.$message.info(data.msg);
 			}
+            this.loading_daemon_status = false
 		},
 		onWSError() {},
 		percentageFormator(per, text) {

@@ -134,7 +134,7 @@ function createRequestFunction(service) {
 					"application/json"
 				)
 			},
-			timeout: 5000,
+			timeout: 5000 * 3600,
 			baseURL: process.env.VUE_APP_API,
 			data: {}
 		};

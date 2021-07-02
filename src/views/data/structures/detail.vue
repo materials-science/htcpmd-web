@@ -444,7 +444,7 @@
 						</el-row>
 						<el-row
 							class="data-info"
-							v-if="attributes.bands.supplement.filepath"
+							v-if="attributes.bands.supplement"
 						>
 							<el-row :gutter="20" type="flex" align="middle">
 								<el-col :span="DetailSpan / 3">
@@ -628,7 +628,7 @@
 						</el-row>
 						<el-row
 							class="data-info"
-							v-if="attributes.phonons.supplement.filepath"
+							v-if="attributes.phonons.supplement"
 						>
 							<el-row :gutter="20" type="flex" align="middle">
 								<el-col :span="DetailSpan / 3">
@@ -695,7 +695,12 @@
 					:src="attributes.phonons.supplement.filepath"
 				/> -->
 				<el-row :gutter="20" justify="space-around">
-					<el-col class="chart-box" :xl="16" :md="16">
+					<el-col
+						class="chart-box"
+						:xl="16"
+						:md="16"
+						v-if="attributes.mobility.supplement"
+					>
 						<iframe
 							v-for="sup in attributes.mobility.supplement.files"
 							:key="sup.id"
@@ -836,8 +841,27 @@ export default {
 					cell: [],
 					reciprocal_cell: [],
 					center_of_mass: [],
-					phonons: { data: null, user: null, date: null },
-					band: { data: null, user: null, date: null }
+					phonons: {
+						data: null,
+						user: null,
+						date: null,
+						type: "",
+						supplement: { filepath: "" }
+					},
+					bands: {
+						data: null,
+						user: null,
+						date: null,
+						type: "",
+						supplement: { filepath: "" }
+					},
+					mobility: {
+						data: null,
+						user: null,
+						date: null,
+						type: "",
+						supplement: { filepath: "" }
+					}
 				}
 			},
 			fullscreenLoading: true,
@@ -882,21 +906,23 @@ export default {
 						user: null,
 						date: null,
 						type: "",
-						supplement: {}
+						supplement: { filepath: "" }
 					},
 					bands: {
 						data: null,
 						user: null,
 						date: null,
 						type: "",
-						supplement: {}
+						supplement: { filepath: "" }
 					},
 					mobility: {
 						data: null,
 						user: null,
 						date: null,
 						type: "",
-						supplement: {}
+						supplement: {
+							filepath: ""
+						}
 					}
 				},
 				this.structure.attributes

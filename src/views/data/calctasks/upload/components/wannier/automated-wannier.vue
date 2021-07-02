@@ -676,6 +676,24 @@
 								v-model="inputsForm.write_u_matrices"
 							></el-switch>
 						</el-form-item>
+						<el-form-item
+							label="spin_polarized"
+							prop="spin_polarized"
+						>
+							<p class="color-text-sub"></p>
+							<el-switch
+								v-model="inputsForm.spin_polarized"
+							></el-switch>
+						</el-form-item>
+						<el-form-item
+							label="spin_orbit_coupling"
+							prop="spin_orbit_coupling"
+						>
+							<p class="color-text-sub"></p>
+							<el-switch
+								v-model="inputsForm.spin_orbit_coupling"
+							></el-switch>
+						</el-form-item>
 					</el-form>
 				</el-col>
 			</el-row>
@@ -898,6 +916,8 @@ export default {
 				do_disentanglement: false,
 				do_mlwf: false,
 				write_u_matrices: false,
+				spin_polarized: false,
+				spin_orbit_coupling: false,
 				kpoints_mesh: [0, 0, 0],
 				cutoff: null,
 				dual: null,
