@@ -161,7 +161,9 @@ export default {
 <style lang="scss">
 // 快速选择用户面板
 .page-login--quick-user {
-	@extend %flex-center-col;
+	@extend %flex-col;
+	justify-content: center;
+	align-items: center;
 	padding: 10px 0px;
 	border-radius: 4px;
 	&:hover {

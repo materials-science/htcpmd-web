@@ -88,7 +88,7 @@
 				</el-form>
 			</el-col>
 		</el-row>
-		<!-- <el-row class="periodic-container">
+		<!-- <el-row class="periodic-container flex-center-col">
 			<PeriodicTable
 				v-on:selectedElements="selectedElements"
 				class="periodic-table-wrap"
@@ -202,7 +202,7 @@
 <script>
 import PeriodicTable from "./components/PeriodicTable";
 export default {
-	name: "PeriodicTablePage",
+	name: "structures-index",
 	components: {
 		PeriodicTable
 	},
@@ -258,7 +258,6 @@ export default {
 	@import "@/assets/style/variable.scss";
 	@import "@/assets/style/public.scss";
 	.periodic-container {
-		@extend %flex-center-col;
 		@include scrollBar();
 		height: 100%;
 		overflow-y: auto;
@@ -303,7 +302,9 @@ export default {
 			.el-collapse-item__content {
 				padding: 20px 0 0 0;
 				.collapse-content {
-					@extend %flex-center-row;
+					@extend %flex-row;
+					justify-content: center;
+					align-items: center;
 					text-align: center;
 					.el-form-item {
 						margin: 0 20px;

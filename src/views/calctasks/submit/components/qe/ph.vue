@@ -1,14 +1,5 @@
-<!--
- * @Author: your name
- * @Date: 2021-01-21 23:34:46
- * @LastEditTime: 2021-05-23 10:28:02
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /web-admin-kit/src/views/data/calctasks/components/qe/ph.vue
--->
-
 <template>
-	<d2-container class="data-calctasks-upload-qe-pw">
+	<d2-container class="calctasks-submit-qe-pw">
 		<el-row type="flex" justify="center">
 			<el-col :xl="16"
 				><h1>{{ TaskInfo.title }}</h1></el-col
@@ -618,7 +609,7 @@ import util from "@/libs/util";
 import CollapseTransition from "@/components/collapse-transition";
 const apiPrefix = "/calctasks/";
 export default {
-	name: "data-calctasks-upload-qe-ph",
+	name: "calctasks-submit-qe-ph",
 	components: {
 		CollapseTransition
 	},
@@ -756,7 +747,7 @@ export default {
 				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `/structures/detail/${uuid}`
 			});
 		},
 		async loadStructures() {
@@ -946,7 +937,7 @@ export default {
 					this.$message.error("No CalcTasks Types Avaliable.");
 					setTimeout(() => {
 						this.$store.dispatch("d2admin/page/close", {
-							tagName: "/data/upload/calctasks"
+							tagName: "/calctasks/submit"
 						});
 					}, 1500);
 					return;

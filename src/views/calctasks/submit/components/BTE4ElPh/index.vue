@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-calctasks-upload-shengbte-container">
+	<d2-container class="calctasks-submit-shengbte-container">
 		<el-row type="flex" justify="center">
 			<el-col :xl="16"><h1>BTE4ElPh</h1></el-col>
 		</el-row>
@@ -335,7 +335,7 @@ import BTECalculation from "./components/BTECalculation";
 import util from "@/libs/util";
 const apiPrefix = "/calctasks/";
 export default {
-	name: "data-calctasks-upload-BTE4ElPh",
+	name: "calctasks-submit-BTE4ElPh",
 	components: { BTECalculation },
 	data() {
 		return {
@@ -388,7 +388,7 @@ export default {
 				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `/structures/detail/${uuid}`
 			});
 		},
 		async loadStructures() {
@@ -488,37 +488,13 @@ export default {
 		}
 	},
 	mounted() {
-		// load calctasks type
-		// this.$api.GetList(`/calctask_types/`).then(resp => {
-		// 	if (resp.code == 0) {
-		// 		let data = resp.data;
-		// 		let calctasks_types = [];
-		// 		data.forEach(item => {
-		// 			calctasks_types.push({
-		// 				label: item.type_name,
-		// 				value: item.uuid,
-		// 				disabled: item.disabled
-		// 			});
-		// 		});
-		// 		this.calctasks_types = calctasks_types;
-		// 	} else {
-		// 		this.$message.error("No CalcTasks Types Avaliable.");
-		// 		setTimeout(() => {
-		// 			this.$store.dispatch("d2admin/page/close", {
-		// 				tagName: "/data/upload/calctasks"
-		// 			});
-		// 		}, 1500);
-		// 		return;
-		// 	}
-		// 	this.load_calctasks_types = false;
-		// });
 		this.loadStructures();
 	}
 };
 </script>
 
 <style lang="scss">
-.data-calctasks-upload-shengbte-container {
+.calctasks-submit-shengbte-container {
 	.form-box {
 		> .el-row {
 			margin: 0 8px 64px;

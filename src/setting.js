@@ -9,7 +9,7 @@ export default {
   },
   // 侧边栏默认配置
   menu: {
-    asideCollapse: true,
+    asideCollapse: false,
     asideTransition: true
   },
   activeFullscreen: false,

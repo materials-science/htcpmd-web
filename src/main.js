@@ -22,6 +22,7 @@ import SlideVerify from "vue-monoplasty-slide-verify";
 
 // util
 import util from "@/libs/util";
+import vueJsonTreeView from "vue-json-tree-view";
 
 // style
 // import "@/assets/style/public-class.scss";
@@ -32,6 +33,8 @@ import VueNativeSock from "vue-native-websocket";
 Vue.use(d2Admin);
 
 Vue.use(SlideVerify);
+
+Vue.use(vueJsonTreeView);
 
 Vue.use(VueNativeSock, util.getWebsocketUrl(), {
 	store: store,

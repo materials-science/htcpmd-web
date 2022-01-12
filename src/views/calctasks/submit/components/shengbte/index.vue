@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-calctasks-upload-shengbte-container">
+	<d2-container class="calctasks-submit-shengbte-container">
 		<el-row type="flex" justify="center">
 			<el-col :xl="16"><h1>ShengBTE</h1></el-col>
 		</el-row>
@@ -336,7 +336,7 @@ import ShengBTEWorkChain from "./components/ShengBTEWorkChain";
 import util from "@/libs/util";
 const apiPrefix = "/calctasks/";
 export default {
-	name: "data-calctasks-upload-shengbte",
+	name: "calctasks-submit-shengbte",
 	components: { ShengBTECalculation, ShengBTEWorkChain },
 	data() {
 		return {
@@ -384,7 +384,7 @@ export default {
 				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `structures/detail/${uuid}`
 			});
 		},
 		async loadStructures() {
@@ -501,7 +501,7 @@ export default {
 				this.$message.error("No CalcTasks Types Avaliable.");
 				setTimeout(() => {
 					this.$store.dispatch("d2admin/page/close", {
-						tagName: "/data/upload/calctasks"
+						tagName: "/calctasks/submit"
 					});
 				}, 1500);
 				return;
@@ -514,7 +514,7 @@ export default {
 </script>
 
 <style lang="scss">
-.data-calctasks-upload-shengbte-container {
+.calctasks-submit-shengbte-container {
 	.form-box {
 		> .el-row {
 			margin: 0 8px 64px;

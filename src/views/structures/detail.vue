@@ -2,7 +2,7 @@
 	<d2-container
 		type="full"
 		v-loading.fullscreen.lock="fullscreenLoading"
-		class="data-structure-container"
+		class="structures-detail-container"
 	>
 		<el-tabs
 			tab-position="top"
@@ -37,10 +37,11 @@
 								</div>
 							</el-col>
 						</el-row>
+						<!-- Tags -->
 						<el-row :gutter="20">
 							<el-col :span="DetailSpan / 3">
 								<div class="label">
-									<el-tag effect="plain"> UUID </el-tag>
+									<el-tag effect="plain"> Tags </el-tag>
 								</div>
 							</el-col>
 							<el-col :span="DetailSpan / 3">
@@ -51,6 +52,17 @@
 									@click.stop="tags_dialog_visible = true"
 									class="d2-mr-10"
 									>{{ tag.name }}</el-link
+								>
+								<el-link
+									type="primary"
+									@click.stop="tags_dialog_visible = true"
+									class="d2-mr-10"
+									v-if="
+										structure.tags &&
+											structure.tags.length == 0
+									"
+									><d2-icon name="plus"></d2-icon>
+									New</el-link
 								>
 								<!-- <el-tag
 									v-for="(tag, index) in structure.tags"
@@ -209,7 +221,7 @@
 							</el-col>
 						</el-row>
 						<div
-							class="structure-viewer"
+							class="structure-viewer flex-center-col"
 							:id="`detail-viewer-${uuid}`"
 						>
 							<div
@@ -796,9 +808,6 @@ import * as api from "./api";
 import NumberTable from "@/components/number-table";
 import util from "@/libs/util";
 import Axios from "axios";
-let viewer = null;
-let viewer_id = null;
-const viewer_config = { backgroundColor: "white" };
 // echart
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
@@ -823,8 +832,11 @@ use([
 ]);
 import { errorCreate } from "@/api/tools";
 // TODO: hidden charts that donot need to show
+let viewer = null;
+let viewer_id = null;
+const viewer_config = { backgroundColor: "white" };
 export default {
-	name: "data-structure",
+	name: "structures-detail",
 	components: {
 		VChart,
 		NumberTable,
@@ -1936,7 +1948,6 @@ export default {
 		@include detail-title();
 	}
 	.structure-viewer {
-		@extend %flex-center-col;
 		background-color: rgba($color: #fff, $alpha: 0.1);
 		color: #99a9bf;
 		padding: 12px;
@@ -1969,7 +1980,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.data-structure-container {
+.structures-detail-container {
 	.tab-container {
 		width: 100%;
 		height: 100%;

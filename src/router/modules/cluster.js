@@ -25,6 +25,15 @@ export default {
 			}
 		},
 		{
+			path: "plugins",
+			name: `${pre}plugins`,
+			component: _import("cluster/plugins"),
+			meta: {
+				...meta,
+				title: "Plugins List"
+			}
+		},
+		{
 			path: "computers",
 			name: `${pre}computers`,
 			component: _import("cluster/computers"),

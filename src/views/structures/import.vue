@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-structures-upload-container">
+	<d2-container class="structures-import-container">
 		<el-tabs type="border-card" class="tabs-container">
 			<el-tab-pane label="Upload Structure Files">
 				<!-- <template slot="header">区域划分</template> -->
@@ -173,7 +173,8 @@
 										</el-link>
 									</p>
 									<p v-else>
-										<d2-icon name="folder-o" /> bands
+										<d2-icon name="folder-o" />
+										{{ item.name }}
 									</p>
 									<p
 										v-for="child in item.children"
@@ -224,7 +225,7 @@ const viewer_config = {
 	id: "upload-viewer-canvas"
 };
 export default {
-	name: "data-structures-upload",
+	name: "structures-import",
 	data() {
 		return {
 			formLabelWidth: "200px",
@@ -480,7 +481,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.data-structures-upload-container {
+.structures-import-container {
 	.tabs-container {
 		.el-tabs__content {
 			@include scrollBar(4px);

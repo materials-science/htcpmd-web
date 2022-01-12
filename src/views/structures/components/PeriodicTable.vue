@@ -1,5 +1,5 @@
 <template>
-	<section>
+	<section v-loading="disabled">
 		<div class="periodictable">
 			<button
 				class="item"
@@ -192,8 +192,12 @@ export default {
 			],
 			atomModel: null,
 			selected_elements: [],
-			selected_id: []
+			selected_id: [],
+			disabled: false
 		};
+	},
+	props: {
+		updated: { require: false, default: "" }
 	},
 	components: {
 		Modal
@@ -236,6 +240,47 @@ export default {
 			if (this.animations) {
 				this.atomModel.rotateOrbitals(orbitalRotationConfig);
 			}
+		},
+		updated: function() {
+			this.disabled = false;
+			let elements = this.updated === "" ? [] : this.updated.split("-");
+			let selected_elements = [];
+			let selected_id = [];
+
+			elements.forEach(el => {
+				let index = this.selected_elements.findIndex(name => {
+					return el === name;
+				});
+				if (index !== -1) {
+					selected_elements.push(el);
+					selected_id.push(this.selected_id[index]);
+				} else {
+					let found = this.Elements.first.find(item => {
+						return item.name_small === el;
+					});
+					found === undefined &&
+						(found = this.Elements.second.find(item => {
+							return item.name_small === el;
+						}));
+					found === undefined &&
+						(found = this.Elements.body.find(item => {
+							return item.name_small === el;
+						}));
+					found === undefined &&
+						(found = this.Elements.bottom.find(item => {
+							return item.name_small === el;
+						}));
+					if (found === undefined) {
+						this.disabled = true;
+					} else {
+						selected_elements.push(el);
+						selected_id.push(found.id);
+					}
+					console.log(found);
+				}
+			});
+			this.selected_elements = selected_elements;
+			this.selected_id = selected_id;
 		}
 	},
 	methods: {
@@ -263,29 +308,35 @@ export default {
 			}
 			this.info = element;
 			if (!this.atomModel) {
-				var atomicConfig = {
-					containerId: "#bohr-model-container",
-					numElectrons: this.info.number,
-					nucleusColor: this.classify(this.info)[3],
-					electronRadius: 1.2,
-					electronColor: this.classify(this.info)[2],
-					// orbitalWidth: 0.05,
-					orbitalColor: this.classify(this.info)[3],
-					idNumber: this.info.number,
-					animationTime: 0,
-					orbitalRotationConfig: {
-						pattern: {
-							alternating: false,
-							clockwise: false,
-							preset: "cubedNegative"
-						}
-					},
-					symbolOffset: 2.5,
-					drawSymbol: true
-				};
-				this.atomModel = new Atom(atomicConfig);
+				if (!this.atomModelInitialized)
+					setTimeout(() => {
+						var atomicConfig = {
+							containerId: "#bohr-model-container",
+							numElectrons: this.info.number,
+							nucleusColor: this.classify(this.info)[3],
+							electronRadius: 1.2,
+							electronColor: this.classify(this.info)[2],
+							// orbitalWidth: 0.05,
+							orbitalColor: this.classify(this.info)[3],
+							idNumber: this.info.number,
+							animationTime: 0,
+							orbitalRotationConfig: {
+								pattern: {
+									alternating: false,
+									clockwise: false,
+									preset: "cubedNegative"
+								}
+							},
+							symbolOffset: 2.5,
+							drawSymbol: true
+						};
+						this.atomModel = new Atom(atomicConfig);
+						this.element = element;
+					}, 10);
+				this.atomModelInitialized = true;
+			} else {
+				this.element = element;
 			}
-			this.element = element;
 		},
 		blurOthers(group) {
 			this.blur = group;

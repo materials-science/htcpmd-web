@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-calctasks-upload-qe-pw">
+	<d2-container class="calctasks-submit-qe-pw">
 		<!-- title -->
 		<el-row>
 			<el-col :xl="16"
@@ -879,7 +879,7 @@ import util from "@/libs/util";
 import CollapseTransition from "@/components/collapse-transition";
 const apiPrefix = "/calctasks/";
 export default {
-	name: "data-calctasks-upload-qe-pw",
+	name: "calctasks-submit-qe-pw",
 	components: {
 		CollapseTransition
 	},
@@ -1028,7 +1028,7 @@ export default {
 				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `/structures/detail/${uuid}`
 			});
 		},
 		async loadStructures() {
@@ -1216,7 +1216,7 @@ export default {
 					this.$message.error("No CalcTasks Types Avaliable.");
 					setTimeout(() => {
 						this.$store.dispatch("d2admin/page/close", {
-							tagName: "/data/upload/calctasks"
+							tagName: "/calctasks/submit"
 						});
 					}, 1500);
 					return;

@@ -14,7 +14,7 @@ export default ({
 	 * @param {Object} query
 	 * @param {Object} data
 	 */
-	GetList(apiPrefix, query) {
+	GetList(apiPrefix, query = {}) {
 		return request({
 			url: apiPrefix,
 			method: "get",

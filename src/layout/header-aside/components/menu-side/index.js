@@ -13,7 +13,7 @@ export default {
       <el-menu
         collapse={ this.asideCollapse }
         collapseTransition={ this.asideTransition }
-        uniqueOpened={ true }
+        // uniqueOpened={ true }
         defaultActive={ this.$route.fullPath }
         ref="menu"
         onSelect={ this.handleMenuSelect }>

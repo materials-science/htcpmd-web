@@ -2,6 +2,8 @@ import { uniqueId } from "lodash";
 import dashboard from "@/menu/modules/dashboard";
 import data from "@/menu/modules/data";
 import cluster from "@/menu/modules/cluster";
+import structures from "@/menu/modules/structures";
+import calctasks from "@/menu/modules/calctasks";
 
 /**
  * @description 给菜单数据补充上 path 字段
@@ -28,6 +30,8 @@ export const menuHeader = supplementPath([
 	},
 	dashboard,
 	cluster,
+	structures,
+	calctasks,
 	data,
 	{
 		path: "/users",
@@ -44,6 +48,8 @@ export const menuAside = supplementPath([
 	},
 	dashboard,
 	cluster,
+	structures,
+	calctasks,
 	data,
 	{
 		path: "/users",

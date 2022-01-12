@@ -1,6 +1,6 @@
 <template>
 	<d2-container
-		class="data-calctasks-upload-index-container"
+		class="calctasks-submit-index-container"
 		v-loading="load_calctask_categories"
 		better-scroll
 	>
@@ -63,7 +63,7 @@
 
 <script>
 export default {
-	name: "data-calctasks-upload-index",
+	name: "calctasks-submit-index",
 	data() {
 		return {
 			percentage: 20,
@@ -88,7 +88,7 @@ export default {
 				this.$message.error("Invalid category name.");
 			} else {
 				category_name = category_name.toLowerCase();
-				this.$router.replace(`/data/upload/calctasks/${category_name}`);
+				this.$router.replace(`/calctasks/submit/${category_name}`);
 			}
 		},
 		goToDocsPage(url) {
@@ -111,7 +111,7 @@ export default {
 </script>
 
 <style lang="scss">
-.data-calctasks-upload-index-container {
+.calctasks-submit-index-container {
 	.box-card {
 		background: transparent;
 	}

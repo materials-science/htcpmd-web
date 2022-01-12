@@ -84,7 +84,7 @@ export default {
 					this.$message.error("No CalcTasks Types Avaliable.");
 					setTimeout(() => {
 						this.$store.dispatch("d2admin/page/close", {
-							tagName: "/data/upload/calctasks"
+							tagName: "/calctasks/submit"
 						});
 					}, 1500);
 					return;

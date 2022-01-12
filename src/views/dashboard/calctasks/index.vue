@@ -483,7 +483,7 @@ export default {
 				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/calctasks/${uuid}`
+				path: `/data/calctasks/detail/${uuid}`
 			});
 		},
 		goToStructurePage(uuid) {
@@ -491,12 +491,12 @@ export default {
 				this.$message.error("Structure UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `/structures/detail/${uuid}`
 			});
 		},
 		addNewTasks() {
 			this.$router.replace({
-				path: `/data/upload/calctasks`
+				path: `/calctasks/submit`
 			});
 		},
 		closeWebSocket() {

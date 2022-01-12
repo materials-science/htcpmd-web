@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-calctasks-upload-wannier-automated_wannier">
+	<d2-container class="calctasks-submit-wannier-automated_wannier">
 		<el-row>
 			<el-col :xl="16"
 				><h1>{{ TaskInfo.title }}</h1></el-col
@@ -870,7 +870,7 @@ import CollapseTransition from "@/components/collapse-transition";
 const apiPrefix = "/calctasks/";
 import NumberTable from "@/components/number-table";
 export default {
-	name: "data-calctasks-upload-wannier-automated_wannier",
+	name: "calctasks-submit-wannier-automated_wannier",
 	components: {
 		CollapseTransition,
 		NumberTable
@@ -999,7 +999,7 @@ export default {
 				this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `/structures/detail/${uuid}`
 			});
 		},
 		addNewStructure() {
@@ -1276,7 +1276,7 @@ export default {
 					this.$message.error("No CalcTasks Types Avaliable.");
 					setTimeout(() => {
 						this.$store.dispatch("d2admin/page/close", {
-							tagName: "/data/upload/calctasks"
+							tagName: "/calctasks/submit"
 						});
 					}, 1500);
 					return;
@@ -1313,7 +1313,7 @@ export default {
 					);
 					setTimeout(() => {
 						this.$store.dispatch("d2admin/page/close", {
-							tagName: "/data/upload/calctasks"
+							tagName: "/calctasks/submit"
 						});
 					}, 1500);
 					return;

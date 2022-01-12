@@ -9,6 +9,11 @@ export default {
 			icon: "server"
 		},
 		{
+			path: `${pre}plugins`,
+			title: "Plugins",
+			icon: "plug"
+		},
+		{
 			path: `${pre}computers`,
 			title: "Computers",
 			icon: "television"

@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-calctask-container">
+	<d2-container class="calctasks-detail-container">
 		<el-row
 			:gutter="20"
 			v-loading="loading_nodes_tree"
@@ -15,7 +15,7 @@
 				<el-input placeholder="输入关键字进行过滤" v-model="filterText">
 				</el-input>
 				<el-tree
-					class="nodes-tree d2-mt-16 d2-pr-16 no-bg box-shadow"
+					class="nodes-tree d2-mt-16 d2-pr-  4 no-bg box-shadow"
 					:data="nodes_tree"
 					:expand-on-click-node="false"
 					@node-click="onClickNode"
@@ -33,7 +33,7 @@
 							{{ node.label }}
 						</el-col>
 						<el-col :span="6" class="d2-text-end">
-							<span class="d2-pr-16">{{
+							<span class="d2-pr-8">{{
 								dayjs(data.ctime).fromNow()
 							}}</span>
 							<el-tooltip
@@ -87,7 +87,7 @@
 										:value="calctask.uuid"
 									></el-input>
 								</el-form-item>
-								<el-form-item label="calctask category">
+								<!-- <el-form-item label="calctask category">
 									<el-input
 										disabled
 										:value="calctask.calctask_category"
@@ -98,7 +98,7 @@
 										disabled
 										:value="calctask.calctask_type"
 									></el-input>
-								</el-form-item>
+								</el-form-item> -->
 								<el-form-item label="user">
 									<el-input
 										disabled
@@ -133,7 +133,19 @@
 										v-for="(tag, index) in calctask.tags"
 										:key="index"
 										class="d2-mr-10"
+										@click.stop="tags_dialog_visible = true"
 										>{{ tag.name }}</el-link
+									>
+									<el-link
+										type="primary"
+										@click.stop="tags_dialog_visible = true"
+										class="d2-mr-10"
+										v-if="
+											calctask.tags &&
+												calctask.tags.length == 0
+										"
+										><d2-icon name="plus"></d2-icon>
+										New</el-link
 									>
 								</el-form-item>
 								<el-form-item label="structure">
@@ -168,6 +180,104 @@
 								lang="bash"
 							/>
 						</el-card>
+						<el-dialog
+							title="Tags"
+							:visible.sync="tags_dialog_visible"
+							destroy-on-close
+						>
+							<el-dialog
+								width="30%"
+								title="New Tag"
+								:visible.sync="tags_dialog_inner_visible"
+								append-to-body
+							>
+								<el-form
+									:model="new_tag_form"
+									:rules="new_tag_form_rules"
+									ref="new_tag_form"
+									label-position="left"
+								>
+									<el-form-item label="tag name" prop="name">
+										<el-input
+											v-model="new_tag_form.name"
+											autocomplete="off"
+										></el-input>
+									</el-form-item>
+									<el-form-item
+										label="tag description"
+										prop="description"
+									>
+										<el-input
+											v-model="new_tag_form.description"
+											autocomplete="off"
+										></el-input>
+									</el-form-item>
+									<el-form-item>
+										<el-button
+											type="primary"
+											@click="
+												newTagFormSubmit('new_tag_form')
+											"
+											plain
+											>Submit</el-button
+										>
+									</el-form-item>
+								</el-form>
+							</el-dialog>
+							<el-table :data="calctask.tags">
+								<el-table-column
+									property="name"
+									label="name"
+									width="150"
+								></el-table-column>
+								<el-table-column
+									label="created time"
+									width="250"
+								>
+									<template slot-scope="props">
+										<el-date-picker
+											v-model="props.row.created_time"
+											type="datetime"
+											placeholder="created time"
+											readonly
+											class="data-date-picker"
+										>
+										</el-date-picker>
+									</template>
+								</el-table-column>
+								<el-table-column
+									property="description"
+									label="description"
+								></el-table-column>
+								<el-table-column align="right">
+									<template slot="header" slot-scope="scope">
+										<el-button
+											size="small"
+											@click.stop="
+												tags_dialog_inner_visible = true
+											"
+											>+ New Tag</el-button
+										>
+									</template>
+								</el-table-column>
+								<el-table-column align="right">
+									<template slot-scope="scope">
+										<el-button
+											size="mini"
+											type="danger"
+											plain
+											@click="
+												handleDeleteTag(
+													scope.$index,
+													scope.row
+												)
+											"
+											>delete</el-button
+										>
+									</template>
+								</el-table-column>
+							</el-table>
+						</el-dialog>
 					</el-tab-pane>
 					<el-tab-pane
 						label="Info"
@@ -219,12 +329,13 @@
 </template>
 
 <script>
+import util from "@/libs/util";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 const apiPrefix = "/calctasks/";
 export default {
-	name: "data-calctask",
+	name: "calctasks-detail",
 	watch: {
 		filterText(val) {
 			this.$refs.tree.filter(val);
@@ -262,8 +373,58 @@ export default {
 				this.$message.error("Structure UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `/structures/detail/${uuid}`
 			});
+		},
+		newTagFormSubmit(formName) {
+			this.update_tag_loading = true;
+			let formData = Object.assign(
+				{
+					user: util.cookies.get("uuid")
+				},
+				this.new_tag_form
+			);
+			this.$refs[formName].validate(valid => {
+				if (valid) {
+					this.$api
+						.PatchObj(
+							`/calctasks/${this.calctask.uuid}/add_tags/`,
+							{
+								tags: [formData]
+							}
+						)
+						.then(resp => {
+							if (resp.code == 0) {
+								this.$message.success("Upload Success!");
+							}
+							this.calctask = resp.data;
+							this.$refs[formName].resetFields();
+							this.update_tag_loading = false;
+							this.tags_dialog_inner_visible = false;
+						});
+				} else {
+					this.$notify.error("Invaid Input");
+					this.update_tag_loading = false;
+					return false;
+				}
+			});
+		},
+		handleDeleteTag(index, row) {
+			this.update_tag_loading = true;
+			this.$api
+				.PartialDelObj(
+					`/calctasks/${this.calctask.uuid}/remove_tags/`,
+					{
+						tags: [{ name: row.name }]
+					}
+				)
+				.then(resp => {
+					if (resp.code == 0) {
+						this.$message.success("Remove Success!");
+					}
+					this.calctask = resp.data;
+					this.update_tag_loading = false;
+				});
 		}
 	},
 
@@ -274,14 +435,30 @@ export default {
 			activated_tab: "CalcTask",
 			loading_nodes_tree: true,
 			filterText: "",
-			calctask: {},
+			calctask: {
+				user: {},
+				tags: [],
+				structure: {},
+				logs: []
+			},
 			nodes_tree: [],
 			defaultProps: {
 				children: "children",
 				label: "label"
 			},
 			node_info: {},
-			loading_node_info: false
+			loading_node_info: false,
+			tags_dialog_visible: false,
+			tags_dialog_inner_visible: false,
+			new_tag_form: {
+				name: "",
+				description: ""
+			},
+			new_tag_form_rules: {
+				name: [{ required: true, trigger: "blur" }],
+				description: [{ required: true, trigger: "blur" }]
+			},
+			update_tag_loading: false
 		};
 	},
 	mounted() {
@@ -304,7 +481,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.data-calctask-container {
+.calctasks-detail-container {
 	.nodes-tree {
 		height: calc(100% - 40px);
 		overflow: auto;

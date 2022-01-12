@@ -2,6 +2,8 @@ import layoutHeaderAside from "@/layout/header-aside";
 import dataModules from "./modules/data";
 import dashboard from "./modules/dashboard";
 import cluster from "./modules/cluster";
+import structures from "./modules/structures";
+import calctasks from "./modules/calctasks";
 
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require("@/libs/util.import." + process.env.NODE_ENV);
@@ -24,7 +26,8 @@ const frameIn = [
 				meta: {
 					title: "Home",
 					auth: true,
-					cache: true
+					cache: true,
+					single: true
 				},
 				component: _import("index")
 			},
@@ -65,7 +68,9 @@ const frameIn = [
 	},
 	dataModules,
 	dashboard,
-	cluster
+	cluster,
+	structures,
+	calctasks
 ];
 
 /**

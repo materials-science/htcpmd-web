@@ -1,5 +1,5 @@
 <template>
-	<d2-container class="data-structures-container">
+	<d2-container class="structures-search-container">
 		<template slot="header">
 			<el-row>
 				<el-button
@@ -255,7 +255,7 @@ import setting from "@/setting.js";
 import NumberTable from "@/components/number-table";
 const apiPrefix = "/structures/";
 export default {
-	name: "data-structures",
+	name: "structures-search",
 	components: {
 		NumberTable
 	},
@@ -311,6 +311,34 @@ export default {
 			options = this.queryForm
 		) {
 			return api.GetList(Object.assign({ page, size }, options));
+		},
+		requestData() {
+			if (
+				(!this.$route.query.elements && !this.$route.query.tag) ||
+				!this.$route.query.mode
+			) {
+				this.$message.warning(
+					"No searching criteria. Ready to close this page!"
+				);
+				setTimeout(() => {
+					this.$store.dispatch("d2admin/page/close", {
+						tagName: this.$route.fullPath
+					});
+				}, 1000);
+			}
+			this.tableLoading = true;
+			this.queryForm = this.$route.query;
+			this.pageRequest().then(resp => {
+				let data = resp.data;
+				this.tableData = data.results;
+				this.totalCount = data.count;
+				this.tableLoading = false;
+			});
+			this.$store.dispatch("d2admin/page/update", {
+				tagName: this.$route.fullPath,
+				title: `Search-${this.$route.query.elements ||
+					this.$route.query.tag}`
+			});
 		},
 		handleCurrentPageChange(page) {
 			this.tableLoading = true;
@@ -369,7 +397,7 @@ export default {
 				return this.$message.error("UUID is None!");
 			}
 			this.$router.push({
-				path: `/data/structures/${uuid}`
+				path: `/structures/detail/${uuid}`
 			});
 		},
 		showCurrentRowTags(index, row) {
@@ -380,7 +408,7 @@ export default {
 			if (this.multipleSelection.length == 0) {
 				return this.$message.error("You must choose one at least.");
 			} else if (
-				this.multipleSelection.length >=
+				this.multipleSelection.length >
 				setting.calcjobs.max_structures_once
 			) {
 				return this.$message.error(
@@ -393,7 +421,7 @@ export default {
 			db.set("selectedStructures", this.multipleSelection).write();
 
 			this.$router.push({
-				path: `/data/upload/calctasks`
+				path: `/calctasks/submit`
 			});
 		},
 		addNewStructures() {
@@ -402,31 +430,19 @@ export default {
 			});
 		}
 	},
-	mounted() {
-		if (!this.$route.query.elements || !this.$route.query.mode) {
-			return;
+	watch: {
+		"$route.name"(name) {
+			if (
+				name == "structures-search" &&
+				this.$route.params.query_updated
+			) {
+				this.$route.params.query_updated = false;
+				this.requestData();
+			}
 		}
-		this.queryForm = this.$route.query;
-		this.pageRequest().then(resp => {
-			let data = resp.data;
-			this.tableData = data.results;
-			this.totalCount = data.count;
-			this.tableLoading = false;
-		});
-		// this.$store.dispatch("d2admin/page/update", {
-		// 	tagName: this.$route.fullPath,
-		// 	title: `search-${this.$route.query.elements}`
-		// });
 	},
-	beforeCreate() {
-		if (!this.$route.query.elements || !this.$route.query.mode) {
-			this.$message.warning("Please go to Home Page for searching!");
-			setTimeout(() => {
-				this.$store.dispatch("d2admin/page/close", {
-					tagName: "/data/structures"
-				});
-			}, 1500);
-		}
+	mounted() {
+		this.requestData();
 	}
 };
 </script>
@@ -469,7 +485,7 @@ export default {
 }
 </style>
 <style lang="scss">
-.data-structures-container {
+.structures-list-container {
 	.structure-table {
 		.el-table__body-wrapper {
 			@include scrollBar();
