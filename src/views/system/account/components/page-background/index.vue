@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       timeInterval: null,
-      time: dayjs().format("HH:mm:ss"),
+      time: dayjs().format("HH:mm:ss")
     };
   },
   mounted() {
@@ -34,15 +34,15 @@ export default {
   methods: {
     refreshTime() {
       this.time = dayjs().format("HH:mm:ss");
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss">
 .page-login {
   @extend %unable-select;
-  $backgroundColor: #F0F2F5;
+  $backgroundColor: #f0f2f5;
   // ---
   background-color: $backgroundColor;
   height: 100%;
@@ -75,7 +75,7 @@ export default {
       color: $color-text-normal;
       a {
         color: $color-text-normal;
-        margin: 0 .5em;
+        margin: 0 0.5em;
         &:hover {
           color: $color-text-main;
         }
@@ -121,16 +121,16 @@ export default {
       list-style: none;
       width: 20px;
       height: 20px;
-      background: #FFF;
+      background: #fff;
       animation: animate 25s linear infinite;
       bottom: -200px;
       @keyframes animate {
-        0%{
+        0% {
           transform: translateY(0) rotate(0deg);
           opacity: 1;
           border-radius: 0;
         }
-        100%{
+        100% {
           transform: translateY(-1000px) rotate(720deg);
           opacity: 0;
           border-radius: 50%;

@@ -39,20 +39,20 @@ const pages = undefined;
 const proxyObj = {
 	"/ws": {
 		ws: true,
-		target: "ws://localhost:8000",
+		target: "ws://localhost:8080",
 		changeOrigin: true
 	},
 	"/api": {
 		ws: false,
-		target: "http://localhost:8000",
+		target: `http://localhost:8080`,
 		changeOrigin: true,
 		pathRewrite: {
-			"^/api": "/api"
+			"^/api": ""
 		}
 	},
 	"/static": {
 		ws: false,
-		target: "http://localhost:8000",
+		target: "http://localhost:8080",
 		changeOrigin: true,
 		pathRewrite: {
 			"^/static": "/static"
@@ -66,7 +66,8 @@ module.exports = {
 	lintOnSave: true,
 	devServer: {
 		host: "0.0.0.0",
-		port: 8080,
+		port: 8001,
+		open: true,
 		proxy: proxyObj,
 		publicPath, // 和 publicPath 保持一致
 		disableHostCheck: process.env.NODE_ENV === "development" // 关闭 host check，方便使用 ngrok 之类的内网转发工具
