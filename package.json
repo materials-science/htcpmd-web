@@ -33,6 +33,7 @@
         "immutable": "^4.0.0-rc.12",
         "jquery": "^3.5.1",
         "js-cookie": "^2.2.1",
+        "jsencrypt": "^3.3.1",
         "lodash": "^4.17.15",
         "lowdb": "^1.0.0",
         "material-design-icons-iconfont": "^6.1.0",

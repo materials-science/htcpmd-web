@@ -10,7 +10,7 @@ export default {
   // 侧边栏默认配置
   menu: {
     asideCollapse: false,
-    asideTransition: true
+    asideTransition: false
   },
   activeFullscreen: false,
   // 在读取持久化数据失败时默认页面
@@ -76,8 +76,15 @@ export default {
   transition: {
     active: true
   },
-  //   calcjobs settings
+  // calcjobs settings
   calcjobs: {
     max_structures_once: 5
+  },
+  // Api Service Prefix
+  api: {
+    auth: "/auth",
+    htcpmd_system: "/htcpmd-system",
+    htcpmd_aiida: "/aiida-server",
+    system: "/system"
   }
 };

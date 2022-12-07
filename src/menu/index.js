@@ -11,49 +11,34 @@ import calctasks from "@/menu/modules/calctasks";
  * @param {Array} menu 原始的菜单数据
  */
 function supplementPath(menu) {
-	return menu.map(e => ({
-		...e,
-		path: e.path || uniqueId("d2-menu-empty-"),
-		...(e.children
-			? {
-					children: supplementPath(e.children)
-			  }
-			: {})
-	}));
+  return menu.map(e => ({
+    ...e,
+    path: e.path || uniqueId("d2-menu-empty-"),
+    ...(e.children
+      ? {
+          children: supplementPath(e.children)
+        }
+      : {})
+  }));
 }
 
 export const menuHeader = supplementPath([
-	{
-		path: "/index",
-		title: "Home",
-		icon: "home"
-	},
-	dashboard,
-	cluster,
-	structures,
-	calctasks,
-	data,
-	{
-		path: "/users",
-		title: "Users",
-		icon: "user"
-	}
+  dashboard,
+  structures,
+  cluster,
+  calctasks,
+  data,
+  {
+    path: "/users",
+    title: "Users",
+    icon: "user"
+  }
 ]);
 
 export const menuAside = supplementPath([
-	{
-		path: "/index",
-		title: "Home",
-		icon: "home"
-	},
-	dashboard,
-	cluster,
-	structures,
-	calctasks,
-	data,
-	{
-		path: "/users",
-		title: "Users",
-		icon: "user"
-	}
+  {
+    path: "/index",
+    title: "Home",
+    icon: "home"
+  }
 ]);
